@@ -1,7 +1,9 @@
+import agentRoute from './agent.route';
+import customerRoute from './customer.route';
+
 import express, { IRouter } from 'express';
 const router = express.Router();
 
-import customerRoute from './customer.route';
 
 /**
  * Function contains Application routes
@@ -13,6 +15,7 @@ const routes = (): IRouter => {
     res.json('Welcome');
   });
   router.use('/customer', new customerRoute().getRoutes());
+  router.use('/agent', new agentRoute().getRoutes());
 
   return router;
 };
