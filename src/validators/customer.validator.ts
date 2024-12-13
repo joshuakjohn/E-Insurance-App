@@ -4,8 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 class customerValidator {
   public createCustomer = (req: Request, res: Response, next: NextFunction): void => {
     const schema = Joi.object({
-      firstname: Joi.string().min(2).required(),
-      lastname: Joi.string().min(2).required(),
+      username: Joi.string().min(2).required(),
       email: Joi.string().email().required(),
       password: Joi.string().min(6).required(),
       phone: Joi.string().pattern(/^[0-9]{10}$/).required(),
