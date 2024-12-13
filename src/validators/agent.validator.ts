@@ -1,5 +1,5 @@
 import Joi from "@hapi/joi";
-import { NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 
 
 class AgentValidator{

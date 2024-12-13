@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import AgentService from "../services/agent.service";
 import httpstatus from "http-status-codes";
-import { log } from 'winston';
 
 
 class AgentController{
@@ -10,16 +9,23 @@ class AgentController{
 
     public agentLogin = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
         try{
-
+            const data = await this.agentService.signin(req.body)
+            res.status(httpstatus.ACCEPTED).json({
+                code: httpstatus.ACCEPTED,
+                data: data
+            })
         } catch(error) {
             console.log(error)
+            res.status(httpstatus.UNAUTHORIZED).json({
+                code: httpstatus.UNAUTHORIZED,
+                message: error.message
+            })
         }
 
     }
 
     public agentSignup = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
         try{
-            console.log('reached controller')
             const data = await this.agentService.signup(req.body)
             res.status(httpstatus.CREATED).json({
                 code: httpstatus.CREATED,
@@ -27,7 +33,10 @@ class AgentController{
             })
         } catch(error) {
             console.log(error);
-            
+            res.status(httpstatus.CONFLICT).json({
+                code: httpstatus.CONFLICT,
+                message: error.message
+            })
         }
     };
 
