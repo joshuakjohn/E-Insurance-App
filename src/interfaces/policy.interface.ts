@@ -4,10 +4,10 @@ export interface IPolicy extends Document {
   name: string;
   premium: number;
   duration: number;
-  plan: string | ObjectId;
-  customer: string | ObjectId;
-  scheme: string | ObjectId;
-  agent: string | ObjectId;
+  planId: string | ObjectId;
+  customerId: string | ObjectId;
+  schemeId: string | ObjectId;
+  agentId: string | ObjectId;
   dateIssued: Date;
   maturityPeriod: number;
   createdAt: Date;
