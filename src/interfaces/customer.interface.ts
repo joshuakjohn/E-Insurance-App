@@ -1,0 +1,14 @@
+import { Document, ObjectId } from 'mongoose';
+
+export interface Customer extends Document {
+  _id: string | ObjectId;
+  username: string; 
+  email: string;
+  password: string; 
+  phone: string; 
+  address?: string; 
+  agentId?:ObjectId;
+  age: number;
+  createdAt?: Date;
+  updatedAt?: Date; 
+}
