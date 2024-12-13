@@ -3,12 +3,7 @@ import { Customer } from '../interfaces/customer.interface';
 
 const customerSchema = new Schema<Customer>(
   {
-    firstname: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    lastname: {
+    username: {
       type: String,
       required: true,
       trim: true,
@@ -17,7 +12,6 @@ const customerSchema = new Schema<Customer>(
       type: String,
       required: true,
       unique: true,
-      lowercase: true,
       trim: true,
     },
     password: {
@@ -38,26 +32,11 @@ const customerSchema = new Schema<Customer>(
       type: Number,
       required: true,
     },
-    role: {
-      type: String,
-      default: 'Customer',
-    },
-    policies: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Policy',
-      },
-    ],
-    claims: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Claim',
-      },
-    ],
     agent: {
       type: Schema.Types.ObjectId,
       ref: 'Agent',
       required: false,
+      default: null, 
     },
   },
   {
@@ -65,4 +44,4 @@ const customerSchema = new Schema<Customer>(
   }
 );
 
-export default model<Customer>('Customer', customerSchema); // Ensure you're exporting as default
+export default model<Customer>('Customer', customerSchema); 
