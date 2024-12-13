@@ -7,7 +7,7 @@ class customerValidator {
       username: Joi.string().min(2).required(),
       email: Joi.string().email().required(),
       password: Joi.string().min(6).required(),
-      phone: Joi.string().pattern(/^[0-9]{10}$/).required(),
+      phno: Joi.string().pattern(/^[0-9]{10}$/).required(),
       age: Joi.number().min(18).required(),
       address: Joi.string().optional(),
     });
@@ -18,6 +18,19 @@ class customerValidator {
     }
     next();
   };
+  public customerLogin = (req: Request, res: Response, next: NextFunction): void => {
+    const schema = Joi.object({
+      email:Joi.string().email().required(),
+      password:Joi.string().min(6).required()
+    });
+    
+     const { error } = schema.validate(req.body);
+    if (error) {
+      next(error);
+    }
+    next();
+  }
+  
 }
 
 export default customerValidator;  

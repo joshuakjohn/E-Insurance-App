@@ -18,6 +18,12 @@ class UserRoutes {
       this.CustomerValidator.createCustomer, 
       this.CustomerController.createCustomer 
     );
+     this.router.post(
+      '',
+    this.CustomerValidator.customerLogin,
+    this.CustomerController.customerLogin
+   );  
+
   };
 
   public getRoutes = (): IRouter => {

@@ -1,6 +1,7 @@
 import customer from '../models/customer.model';
 import { Customer } from '../interfaces/customer.interface';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 class UserService {
   public createCustomer = async (body: Customer): Promise<Customer> => {
@@ -18,6 +19,21 @@ class UserService {
       throw new Error(`Error creating customer: ${error.message}`);
     }
   };
+  public customerLogin = async (body: Customer): Promise<any> => {
+      const customerData = await customer.findOne({ email: body.email });
+      if (!customerData) {
+        throw new Error('Customer not found');
+      }
+      const isMatch = await bcrypt.compare(body.password, customerData.password);
+
+      if (!isMatch) {
+        throw new Error('Invalid password');
+      }
+      const payload = {id: customerData._id,email: customerData.email};
+      const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: '1h' });
+      return [token,customerData.username];
+    
+  }
  
 }
 
