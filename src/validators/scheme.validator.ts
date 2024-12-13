@@ -7,7 +7,7 @@ export class SchemeValidator {
     const schema = Joi.object({
       schemeName: Joi.string().required(),
       schemeDetails: Joi.string().required(),
-      plan: Joi.string().required(),
+      planId: Joi.string().required(),
     });
     const { error } = schema.validate(req.body);
     if (error) {

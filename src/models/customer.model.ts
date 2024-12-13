@@ -32,7 +32,7 @@ const customerSchema = new Schema<Customer>(
       type: Number,
       required: true,
     },
-    agent: {
+    agentId: {
       type: Schema.Types.ObjectId,
       ref: 'Agent',
       required: false,

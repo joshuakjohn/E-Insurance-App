@@ -5,7 +5,7 @@ const schemeSchema = new Schema<IScheme>(
   {
     schemeName: { type: String, required: true },
     schemeDetails: { type: String, required: true },
-    plan: { type: Schema.Types.ObjectId, ref: 'Plan', required: true },
+    planId: { type: Schema.Types.ObjectId, ref: 'Plan', required: true },
   },
   { timestamps: true }
 );
