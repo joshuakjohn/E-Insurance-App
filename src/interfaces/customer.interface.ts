@@ -5,7 +5,7 @@ export interface Customer extends Document {
   username: string; 
   email: string;
   password: string; 
-  phone: string; 
+  phno: number; 
   address?: string; 
   agentId?:ObjectId;
   age: number;

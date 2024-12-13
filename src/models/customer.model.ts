@@ -18,7 +18,7 @@ const customerSchema = new Schema<Customer>(
       type: String,
       required: true,
     },
-    phone: {
+    phno: {
       type: String,
       required: true,
       unique: true,
