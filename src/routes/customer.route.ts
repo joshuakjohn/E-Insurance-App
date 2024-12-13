@@ -1,12 +1,12 @@
 import express, { IRouter } from 'express';
-import userController from '../controllers/user.controller';
-import CustomerValidator from '../validators/customer.validator';  // Fixed path and capitalization
+import CustomerController from '../controllers/customer.controller';
+import CustomerValidator from '../validators/customer.validator'; 
 import { userAuth } from '../middlewares/auth.middleware'; 
 
 class UserRoutes {
-  private UserController = new userController();
+  private CustomerController = new CustomerController();
   private router = express.Router();
-  private CustomerValidator = new CustomerValidator();  // Corrected instantiation
+  private CustomerValidator = new CustomerValidator();  
 
   constructor() {
     this.routes();
@@ -14,9 +14,9 @@ class UserRoutes {
 
   private routes = () => {
     this.router.post(
-      '/customer/register',
+      '/register',
       this.CustomerValidator.createCustomer, 
-      this.UserController.createCustomer 
+      this.CustomerController.createCustomer 
     );
   };
 

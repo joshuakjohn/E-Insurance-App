@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import HttpStatus from 'http-status-codes';
-import userService from '../services/user.service';
+import customerService from '../services/customer.service';
 
 import { Request, Response, NextFunction } from 'express';
 
 class UserController {
-  public UserService = new userService();
+  public CustomerService = new customerService();
 
   /**
    * Controller to create new user
@@ -19,7 +19,7 @@ class UserController {
     next: NextFunction
   ): Promise<any> => {
     try {
-      const data = await this.UserService.createCustomer(req.body);
+      const data = await this.CustomerService.createCustomer(req.body);
       res.status(HttpStatus.CREATED).json({
         code: HttpStatus.CREATED,
         data: data,
