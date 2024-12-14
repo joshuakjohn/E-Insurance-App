@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import Admin from '../models/admin.model';
 import { IAdmin } from '../interfaces/admin.interface';
 
@@ -10,7 +11,10 @@ class AdminService {
         if (existingAdmin) {
           throw new Error('Admin already exists');
         }
-  
+        
+        const hashedPassword = await bcrypt.hash(body.password, 10);
+        body.password = hashedPassword;
+
         const newAdmin = await Admin.create(body);
         return newAdmin;
       } catch (error) {
