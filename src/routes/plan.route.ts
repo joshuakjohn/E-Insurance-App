@@ -16,6 +16,9 @@ class PlanRoutes {
     // create plan route
     this.router.post('/', this.planValidator.createPlan, this.planController.createPlan);
 
+    // get plan by id
+    this.router.get('/:id', this.planController.getPlanById);
+
   };
 
   public getRoutes = (): IRouter => {

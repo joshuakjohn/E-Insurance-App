@@ -13,6 +13,18 @@ class PlanService {
         }
     };
 
+    // Get a specific plan by ID
+    public getPlanById = async (planId: string): Promise<IPlan | null> => {
+        try {
+            const res = await Plan.findById(planId);
+            if(!res) {
+                throw new Error('Plan not found');
+            }
+            return res;
+        } catch (error) {
+            throw error;
+        }
+    };
 }
 
 export default PlanService;
