@@ -50,8 +50,23 @@ class PlanService {
         } catch (error) {
             throw error;
         }
-
     };
+
+
+    // Delete a plan by ID
+    public deletePlan = async (planId: string): Promise<boolean> => {
+        try {
+            const res = await Plan.findById(planId);
+            if (!res) {
+                throw new Error('Plan not found');
+            }
+            await Plan.findByIdAndDelete(planId);
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    };
+
 }
 
 export default PlanService;

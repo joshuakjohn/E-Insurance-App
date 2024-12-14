@@ -15,7 +15,10 @@ class PlanController {
                 plan,
             });
         } catch (error) {
-            next(error);
+            res.status(HttpStatus.BAD_REQUEST).json({
+                code: HttpStatus.BAD_REQUEST,
+                message: `${error}`,
+            });
         }
     };
 
@@ -36,7 +39,10 @@ class PlanController {
                 });
             }
         } catch (error) {
-            next(error);
+            res.status(HttpStatus.BAD_REQUEST).json({
+                code: HttpStatus.BAD_REQUEST,
+                message: `${error}`,
+            });
         }
     };
 
@@ -53,7 +59,7 @@ class PlanController {
         }
     };
 
-        // Update a plan by ID
+    // Update a plan by ID
     public updatePlan = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const planId = req.params.id;
@@ -70,7 +76,34 @@ class PlanController {
                 });
             }
         } catch (error) {
-            next(error);
+            res.status(HttpStatus.NOT_FOUND).json({
+                code: HttpStatus.NOT_FOUND,
+                message: 'Plan not found',
+            });
+        }
+    };
+
+    // Delete a plan by ID
+    public deletePlan = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const planId = req.params.id;
+            const deleted = await this.planService.deletePlan(planId);
+            if (deleted) {
+                res.status(HttpStatus.OK).json({ 
+                    code: HttpStatus.OK, 
+                    message: 'Plan deleted successfully' 
+                });
+            } else {
+                res.status(HttpStatus.NOT_FOUND).json({ 
+                    code: HttpStatus.NOT_FOUND, 
+                    message: 'Plan not found' 
+                });
+            }
+        } catch (error) {
+            res.status(HttpStatus.BAD_REQUEST).json({
+                code: HttpStatus.BAD_REQUEST,
+                message: `${error}`,
+            });
         }
     };
     

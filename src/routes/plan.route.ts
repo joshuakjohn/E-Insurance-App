@@ -25,6 +25,9 @@ class PlanRoutes {
     // update a plan by id
     this.router.put('/:id', this.planValidator.updatePlan, this.planController.updatePlan);
 
+    // delete a plan bybid
+    this.router.delete('/:id', this.planController.deletePlan);
+
   };
 
   public getRoutes = (): IRouter => {
