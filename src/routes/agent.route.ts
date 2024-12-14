@@ -1,9 +1,6 @@
 import AgentController from '../controllers/agent.controller';
 import AgentValidator from '../validators/agent.validator';
-
 import express, { IRouter } from 'express';
-import { userAuth } from '../middlewares/auth.middleware';
-import { log } from 'winston';
 
 class UserRoutes {
   private agentController = new AgentController();
@@ -18,10 +15,8 @@ class UserRoutes {
     //route to login an agent
     this.router.post('', this.agentController.agentLogin);
 
-    //route to register an agent
-    console.log('reached route');
-    
-    this.router.post('/signup', this.agentController.agentSignup)
+    //route to register an agent    
+    this.router.post('/signup', this.agentValidator.newAgent, this.agentController.agentSignup)
   };
 
   public getRoutes = (): IRouter => {
