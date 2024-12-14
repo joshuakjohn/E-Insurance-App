@@ -3,15 +3,17 @@ import { IPolicy } from '../interfaces/policy.interface';
 
 const policySchema = new Schema<IPolicy>(
   {
-    name: { type: String, required: true },
-    premium: { type: Number, required: true },
-    duration: { type: Number, required: true },
+    policyName: { type: String, required: true },
+    description: { type: String, require: true},
     planId: { type: Schema.Types.ObjectId, ref: 'Plan', required: true },
-    customerId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    customerId: { type: Schema.Types.ObjectId, ref: 'Customer', required: true },
     schemeId: { type: Schema.Types.ObjectId, ref: 'Scheme', required: true },
-    agentId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    dateIssued: { type: Date, required: true },
-    maturityPeriod: { type: Number, required: true },
+    agentId: { type: Schema.Types.ObjectId, ref: 'Agent', required: true },
+    premiumPaid: { type: Number, required: true },
+    policyStartDate: { type: Date, required: true },
+    policyEndDate: { type: Date, required: true },
+    coverage: { type: Number, required: true },
+    createdAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );

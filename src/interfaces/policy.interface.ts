@@ -1,14 +1,15 @@
 import { Document, ObjectId } from 'mongoose';
 
 export interface IPolicy extends Document {
-  name: string;
-  premium: number;
-  duration: number;
+  policyName: string;
+  description: string;
   planId: string | ObjectId;
   customerId: string | ObjectId;
   schemeId: string | ObjectId;
   agentId: string | ObjectId;
-  dateIssued: Date;
-  maturityPeriod: number;
+  premiumPaid: number;
+  policyStartDate: Date;
+  policyEndDate: Date;
+  coverage: number;
   createdAt: Date;
 }
