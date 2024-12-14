@@ -5,11 +5,10 @@ import HttpStatus from 'http-status-codes';
 class PlanValidator {
     public createPlan = (req: Request, res: Response, next: NextFunction): void => {
         const schema = Joi.object({
-            name: Joi.string().min(3).required(),
-            details: Joi.string().required(),
-            rateOfInterest: Joi.number().positive().optional(),
-            eligibilityCriteria: Joi.string().optional(),
-            schemeId: Joi.string().required()
+            planName: Joi.string().min(3).required(),
+            description: Joi.string().optional(),
+            category: Joi.string().required(),
+            isActive: Joi.boolean().optional(),
         });
     
         const { error } = schema.validate(req.body);

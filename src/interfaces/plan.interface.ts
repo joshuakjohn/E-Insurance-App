@@ -1,10 +1,9 @@
-import { Document, ObjectId } from 'mongoose';
+import { Document } from 'mongoose';
 
 export interface IPlan extends Document {
   planName: string;
-  planDetails: string;
-  rateOfInterest?: number;
-  eligibilityCriteria?: string;
-  schemeId: string | ObjectId;
+  planDescription?: string;
+  category: string;
   createdAt: Date;
+  isActive: boolean;
 }
