@@ -5,7 +5,7 @@ import HttpStatus from 'http-status-codes';
 class AdminValidator {
     public createAdmin = (req: Request, res: Response, next: NextFunction): void => {
         const schema = Joi.object({
-            name: Joi.string().min(3).required(),
+            username: Joi.string().min(3).required(),
             email: Joi.string().email().required(),
             password: Joi.string().min(6).required(),
             phno: Joi.string().pattern(/^[0-9]{10}$/).optional()

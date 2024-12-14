@@ -15,7 +15,6 @@ class AgentController{
                 data: data
             })
         } catch(error) {
-            console.log(error)
             res.status(httpstatus.UNAUTHORIZED).json({
                 code: httpstatus.UNAUTHORIZED,
                 message: error.message
@@ -32,7 +31,6 @@ class AgentController{
                 message: data
             })
         } catch(error) {
-            console.log(error);
             res.status(httpstatus.CONFLICT).json({
                 code: httpstatus.CONFLICT,
                 message: error.message
