@@ -25,6 +25,19 @@ class PlanService {
             throw error;
         }
     };
+
+    // Get all plans
+    public getAllPlans = async (): Promise<IPlan[]> => {
+       try {
+            const res = await Plan.find();
+            if(!res || res.length === 0) {
+                throw new Error('No plans found');
+            }
+            return res;
+       } catch (error) {
+            throw error;
+       }
+    };
 }
 
 export default PlanService;

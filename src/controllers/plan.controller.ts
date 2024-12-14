@@ -38,7 +38,21 @@ class PlanController {
         } catch (error) {
             next(error);
         }
-      };
+    };
+
+    // Get all plans
+    public getAllPlans = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const plans = await this.planService.getAllPlans();
+            res.status(HttpStatus.OK).json({ 
+                code: HttpStatus.OK, 
+                plans 
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
+    
 }
 
 export default PlanController;

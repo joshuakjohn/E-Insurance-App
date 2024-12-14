@@ -19,6 +19,9 @@ class PlanRoutes {
     // get plan by id
     this.router.get('/:id', this.planController.getPlanById);
 
+    // get all plans
+    this.router.get('/', this.planController.getAllPlans);
+
   };
 
   public getRoutes = (): IRouter => {
