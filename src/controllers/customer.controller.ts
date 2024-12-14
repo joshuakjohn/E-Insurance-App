@@ -18,10 +18,9 @@ class UserController {
     next: NextFunction
   ): Promise<any> => {
     try {
-      const data = await this.CustomerService.createCustomer(req.body);
+      await this.CustomerService.createCustomer(req.body);
       res.status(HttpStatus.CREATED).json({
         code: HttpStatus.CREATED,
-        data: data,
         message: 'customer created successfully'
       });
     } catch (error) {
