@@ -22,6 +22,9 @@ class PlanRoutes {
     // get all plans
     this.router.get('/', this.planController.getAllPlans);
 
+    // update a plan by id
+    this.router.put('/:id', this.planValidator.updatePlan, this.planController.updatePlan);
+
   };
 
   public getRoutes = (): IRouter => {

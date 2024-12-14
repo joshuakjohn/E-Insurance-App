@@ -52,6 +52,27 @@ class PlanController {
             next(error);
         }
     };
+
+        // Update a plan by ID
+    public updatePlan = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const planId = req.params.id;
+            const updatedPlan = await this.planService.updatePlan(planId, req.body);
+            if (updatedPlan) {
+                res.status(HttpStatus.OK).json({ 
+                    code: HttpStatus.OK, 
+                    updatedPlan 
+                });
+            } else {
+                res.status(HttpStatus.NOT_FOUND).json({ 
+                    code: HttpStatus.NOT_FOUND, 
+                    message: 'Plan not found' 
+                });
+            }
+        } catch (error) {
+            next(error);
+        }
+    };
     
 }
 

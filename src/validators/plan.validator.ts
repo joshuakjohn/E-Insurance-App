@@ -22,6 +22,27 @@ class PlanValidator {
         }
         next();
     };
+
+
+    public updatePlan = (req: Request, res: Response, next: NextFunction): void => {
+        const schema = Joi.object({
+            planName: Joi.string().optional(),
+            description: Joi.string().optional(),
+            category: Joi.string().optional(),
+            isActive: Joi.boolean().optional(),
+        });
+    
+        const { error } = schema.validate(req.body);
+    
+        if (error) {
+            res.status(HttpStatus.BAD_REQUEST).send({
+                code: HttpStatus.BAD_REQUEST,
+                message: error.message
+            });
+            return;
+        }
+        next();
+    };
 }
 
 export default PlanValidator;

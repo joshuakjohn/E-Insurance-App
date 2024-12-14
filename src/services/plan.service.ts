@@ -38,6 +38,20 @@ class PlanService {
             throw error;
        }
     };
+
+    // Update a plan by ID
+    public updatePlan = async (planId: string, updatedData: Partial<IPlan>): Promise<IPlan | null> => {
+        try {
+            const res = await Plan.findByIdAndUpdate(planId, updatedData, { new: true });
+            if (!res) {
+                throw new Error('Plan not found'); 
+            }
+            return res;
+        } catch (error) {
+            throw error;
+        }
+
+    };
 }
 
 export default PlanService;
