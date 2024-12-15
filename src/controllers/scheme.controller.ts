@@ -37,6 +37,21 @@ class SchemeController{
     };
 
 
+    public getSchemeById = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const scheme  = await this.schemeService.getSchemeById(req.params.id);
+                res.status(HttpStatus.OK).json({ 
+                    code: HttpStatus.OK, 
+                    scheme:scheme
+                });
+            }catch (error) {
+            res.status(HttpStatus.BAD_REQUEST).json({
+                code: HttpStatus.BAD_REQUEST,
+                message: `${error}`,
+            });
+        }
+    };
+
 
 }
 export default SchemeController;

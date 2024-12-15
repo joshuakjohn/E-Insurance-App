@@ -24,5 +24,19 @@ import { IScheme } from '../interfaces/scheme.interface'
         }
       };
 
- }
+      public getSchemeById = async (schemeId: string): Promise<IScheme | null> => {
+        try {
+          const scheme = await Scheme.findById(schemeId);
+          if (!scheme) {
+            throw new Error('Scheme not found');
+          }
+    
+          return scheme;
+        } catch (error) {
+          throw new Error(`Error fetching scheme by ID: ${error.message}`);
+        }
+      };
+
+    }
+   
  export default SchemaService;
