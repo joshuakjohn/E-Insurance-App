@@ -10,6 +10,19 @@ import { IScheme } from '../interfaces/scheme.interface'
           throw new Error(`Error creating scheme: ${error.message}`);
         }
     }
+    
+    public getAllSchemes = async (): Promise<IScheme[]> => {
+        try {
+          const schemes = await Scheme.find();
+          if(!schemes || schemes.length === 0) {
+            throw new Error('No scheme found');
+        }
+          return schemes;
+        } catch (error) {
+         
+          throw new Error(`Error fetching schemes: ${error.message}`);
+        }
+      };
 
  }
  export default SchemaService;

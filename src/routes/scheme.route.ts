@@ -13,7 +13,8 @@ class SchemeRoutes {
      private routes = () => {
     
         this.router.post('/', this.schemeValidator.createScheme, this.schemeController.createScheme);
-
+        
+        this.router.get('/', this.schemeController.getAllSchemes);
 
      }
      public getRoutes = (): IRouter => {
