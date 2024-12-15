@@ -2,8 +2,9 @@ import agentRoute from './agent.route';
 import customerRoute from './customer.route';
 import adminRoute from './admin.route'; 
 import planRoute from './plan.route';
-
+import SchemeRoute from './scheme.route';
 import express, { IRouter } from 'express';
+
 const router = express.Router();
 
 /**
@@ -19,6 +20,7 @@ const routes = (): IRouter => {
   router.use('/agent', new agentRoute().getRoutes());
   router.use('/admin', new adminRoute().getRoutes());
   router.use('/plan', new planRoute().getRoutes());
+  router.use('/scheme',new SchemeRoute().getRoutes())
   
   return router;
 };
