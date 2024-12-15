@@ -52,6 +52,21 @@ class SchemeController{
         }
     };
 
+    public updateScheme = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const updatedScheme = await this.schemeService.updateScheme(req.params.id, req.body);
+                res.status(HttpStatus.OK).json({ 
+                    code: HttpStatus.OK, 
+                   Scheme:updatedScheme,
+                   message:'scheme updated successfully'
+                });
+            } catch (error) {
+            res.status(HttpStatus.NOT_FOUND).json({
+                code: HttpStatus.NOT_FOUND,
+                message: 'Plan not found',
+            });
+        }
+    };
 
 }
 export default SchemeController;

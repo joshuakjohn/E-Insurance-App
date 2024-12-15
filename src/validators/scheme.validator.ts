@@ -24,6 +24,29 @@ export class SchemeValidator {
     }
     next();
   };
+  public updateScheme = (req: Request, res: Response, next: NextFunction): void => {
+    const schema = Joi.object({
+      schemeName: Joi.string().optional(),
+      description: Joi.string().optional(),
+      planId: Joi.string().optional(),
+      eligibilityCriteria: Joi.string().optional(),
+      premium: Joi.number().positive().optional(),
+      maturityPeriod: Joi.number().positive().optional(),
+      coverage: Joi.number().positive().optional()
+
+    });
+
+    const { error } = schema.validate(req.body);
+
+    if (error) {
+        res.status(HttpStatus.BAD_REQUEST).send({
+            code: HttpStatus.BAD_REQUEST,
+            message: error.message
+        });
+        return;
+    }
+    next();
+};
 }
 
 export default SchemeValidator;

@@ -36,6 +36,17 @@ import { IScheme } from '../interfaces/scheme.interface'
           throw new Error(`Error fetching scheme by ID: ${error.message}`);
         }
       };
+      public updateScheme = async (id: string, updateData: Partial<IScheme>): Promise<IScheme | null> => {
+        try {
+          const updatedScheme = await Scheme.findByIdAndUpdate(id, updateData, { new: true });
+          if (!updatedScheme) {
+            throw new Error('Scheme not found');
+          }
+          return updatedScheme;
+        } catch (error) {
+          throw new Error(`Error updating scheme: ${error.message}`);
+        }
+      };
 
     }
    

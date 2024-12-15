@@ -15,7 +15,11 @@ class SchemeRoutes {
         this.router.post('/', this.schemeValidator.createScheme, this.schemeController.createScheme);
         
         this.router.get('/', this.schemeController.getAllSchemes);
+
         this.router.get('/:id', this.schemeController.getSchemeById);
+
+        this.router.put('/:id', this.schemeValidator.updateScheme, this.schemeController.updateScheme);
+
 
      }
      public getRoutes = (): IRouter => {
