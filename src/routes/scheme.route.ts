@@ -20,6 +20,7 @@ class SchemeRoutes {
 
         this.router.put('/:id', this.schemeValidator.updateScheme, this.schemeController.updateScheme);
 
+        this.router.delete('/:id', this.schemeController.deleteScheme);
 
      }
      public getRoutes = (): IRouter => {

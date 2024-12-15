@@ -44,10 +44,10 @@ class SchemeController{
                     code: HttpStatus.OK, 
                     scheme:scheme
                 });
-            }catch (error) {
-            res.status(HttpStatus.BAD_REQUEST).json({
-                code: HttpStatus.BAD_REQUEST,
-                message: `${error}`,
+            } catch (error) {
+               res.status(HttpStatus.BAD_REQUEST).json({
+                   code: HttpStatus.BAD_REQUEST,
+                   message: `${error}`,
             });
         }
     };
@@ -57,13 +57,28 @@ class SchemeController{
             const updatedScheme = await this.schemeService.updateScheme(req.params.id, req.body);
                 res.status(HttpStatus.OK).json({ 
                     code: HttpStatus.OK, 
-                   Scheme:updatedScheme,
-                   message:'scheme updated successfully'
+                    Scheme:updatedScheme,
+                    message:'scheme updated successfully'
                 });
             } catch (error) {
             res.status(HttpStatus.NOT_FOUND).json({
-                code: HttpStatus.NOT_FOUND,
-                message: 'Plan not found',
+                 code: HttpStatus.NOT_FOUND,
+                 message: 'Plan not found',
+            });
+        }
+    };
+
+    public deleteScheme = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+              await this.schemeService.deleteScheme(req.params.id);
+                 res.status(HttpStatus.OK).json({ 
+                 code: HttpStatus.OK, 
+                 message: 'scheme deleted successfully' 
+                });
+             } catch (error) {
+            res.status(HttpStatus.BAD_REQUEST).json({
+                code: HttpStatus.BAD_REQUEST,
+                message: `${error}`,
             });
         }
     };

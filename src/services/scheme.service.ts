@@ -48,6 +48,17 @@ import { IScheme } from '../interfaces/scheme.interface'
         }
       };
 
+      public deleteScheme = async (schemeId: string): Promise<IScheme | null> => {
+        try {
+          const deletedScheme = await Scheme.findByIdAndDelete(schemeId);
+          if (!deletedScheme) {
+            throw new Error('Scheme not found');
+          }
+          return deletedScheme;
+        } catch (error) {
+          throw new Error(`Error deleting scheme: ${error.message}`);
+        }
+      };
     }
    
  export default SchemaService;
