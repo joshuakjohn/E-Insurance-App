@@ -16,7 +16,10 @@ class UserRoutes {
     this.router.post('', this.agentController.agentLogin);
 
     //route to register an agent    
-    this.router.post('/register', this.agentValidator.newAgent, this.agentController.agentSignup)
+    this.router.post('/register', this.agentValidator.newAgent, this.agentController.agentSignup);
+
+    // get all agents
+    this.router.get('/', this.agentController.getAllAgents);
   };
 
   public getRoutes = (): IRouter => {

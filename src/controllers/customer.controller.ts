@@ -12,6 +12,8 @@ class UserController {
    * @param {object} Response - response object
    * @param {Function} NextFunction
    */
+
+  // register a new customer
   public createCustomer = async (
     req: Request,
     res: Response,
@@ -29,6 +31,8 @@ class UserController {
         message: `${error}`});
     }
   };
+
+  // login customer
   public customerLogin=async (
     req: Request,
     res: Response,
@@ -45,6 +49,19 @@ class UserController {
       res.status(HttpStatus.BAD_REQUEST).json({
         code: HttpStatus.BAD_REQUEST,
         message: `${error}`})
+    }
+  };
+
+  // Get all customers
+  public getAllCustomers = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const data = await this.CustomerService.getAllCustomers();
+        res.status(HttpStatus.OK).json({ 
+            code: HttpStatus.OK, 
+            data 
+        });
+    } catch (error) {
+        next(error);
     }
   };
  
