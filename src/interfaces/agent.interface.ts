@@ -4,6 +4,6 @@ export interface IAgent extends Document {
   name: string;
   email: string;
   password: string;
-  phone: number;
+  phno: number;
   region: string;
 }

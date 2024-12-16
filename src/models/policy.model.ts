@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { IPolicy } from '../interfaces/policy.interface';
+import { required } from '@hapi/joi';
 
 const policySchema = new Schema<IPolicy>(
   {
@@ -13,6 +14,7 @@ const policySchema = new Schema<IPolicy>(
     policyStartDate: { type: Date, required: true },
     policyEndDate: { type: Date, required: true },
     coverage: { type: Number, required: true },
+    status: { type: String, required: true},
     createdAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
