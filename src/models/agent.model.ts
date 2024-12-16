@@ -15,7 +15,7 @@ const agentSchema = new Schema(
         type: String,
         required: true
     },
-    phone: {
+    phno: {
         type: String,
         required: true
     },
