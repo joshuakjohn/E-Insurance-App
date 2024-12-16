@@ -6,4 +6,5 @@ export interface IAdmin extends Document {
   password: string;
   phno?: number;
   createdAt?: Date;
+  refreshToken?:string;
 }

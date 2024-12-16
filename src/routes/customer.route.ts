@@ -31,6 +31,8 @@ class UserRoutes {
     '/',
     this.CustomerController.getAllCustomers
     ); 
+    
+    this.router.get('/refreshtoken/',this.CustomerController.refreshToken)
 
   };
 
