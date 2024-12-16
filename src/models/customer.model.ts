@@ -21,8 +21,8 @@ const customerSchema = new Schema<Customer>(
     phno: {
       type: String,
       required: true,
-      unique: true,
       match: /^[0-9]{10}$/,
+      sparse:true
     },
     address: {
       type: String,
@@ -32,11 +32,14 @@ const customerSchema = new Schema<Customer>(
       type: Number,
       required: true,
     },
+    region: {
+      type: String,
+      required: true
+    },
     agentId: {
       type: Schema.Types.ObjectId,
       ref: 'Agent',
-      required: false,
-      default: null, 
+      required: false 
     },
   },
   {

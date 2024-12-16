@@ -7,8 +7,9 @@ export interface Customer extends Document {
   password: string; 
   phno: number; 
   address?: string; 
-  agentId?:ObjectId;
+  agentId?:ObjectId| null;
   age: number;
+  region:string;
   createdAt?: Date;
   updatedAt?: Date; 
 }

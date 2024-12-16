@@ -10,6 +10,7 @@ class customerValidator {
       email: Joi.string().email().required(),
       password: Joi.string().min(6).required(),
       phno: Joi.string().pattern(/^[0-9]{10}$/).required(),
+      region:Joi.string().required(),
       age: Joi.number().min(18).required(),
       address: Joi.string().optional(),
     });
