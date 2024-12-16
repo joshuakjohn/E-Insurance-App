@@ -13,16 +13,25 @@ class UserRoutes {
   }
 
   private routes = () => {
+    //route to register a customer
     this.router.post(
       '/register',
       this.CustomerValidator.createCustomer, 
       this.CustomerController.createCustomer 
     );
-     this.router.post(
+
+    //route to login a customer
+    this.router.post(
       '',
-    this.CustomerValidator.customerLogin,
-    this.CustomerController.customerLogin
-   );  
+      this.CustomerValidator.customerLogin,
+      this.CustomerController.customerLogin
+    ); 
+   
+   //route to get all customer
+   this.router.get(
+    '/',
+    this.CustomerController.getAllCustomers
+    ); 
 
   };
 

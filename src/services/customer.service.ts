@@ -34,6 +34,19 @@ class UserService {
       return [token,customerData.username];
     
   }
+
+  // Get all customers
+  public getAllCustomers = async (): Promise<Customer[]> => {
+      try {
+          const res = await customer.find();
+          if(!res || res.length === 0) {
+              throw new Error('No customers found');
+          }
+          return res;
+      } catch (error) {
+          throw error;
+      }
+  };
  
 }
 

@@ -2,6 +2,8 @@ import Joi from '@hapi/joi';
 import { Request, Response, NextFunction } from 'express';
 
 class customerValidator {
+
+  // Validation for customer registration
   public createCustomer = (req: Request, res: Response, next: NextFunction): void => {
     const schema = Joi.object({
       username: Joi.string().min(2).required(),
@@ -18,6 +20,8 @@ class customerValidator {
     }
     next();
   };
+
+  // Validation for customer login
   public customerLogin = (req: Request, res: Response, next: NextFunction): void => {
     const schema = Joi.object({
       email:Joi.string().email().required(),
