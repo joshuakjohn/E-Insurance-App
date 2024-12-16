@@ -2,7 +2,7 @@ import express, { IRouter } from "express";
 import PolicyValidator from "../validators/policy.validator";
 import PolicyController from "../controllers/policy.controller";
 
-class PolicyRoutes {
+class PolicyRoute {
     private router = express.Router();
     private policyController = new PolicyController();
     private policyValidator = new PolicyValidator();
@@ -28,4 +28,4 @@ class PolicyRoutes {
       };
 
 }
-export default PolicyRoutes;
+export default PolicyRoute;
