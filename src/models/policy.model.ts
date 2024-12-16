@@ -14,8 +14,7 @@ const policySchema = new Schema<IPolicy>(
     policyStartDate: { type: Date, required: true },
     policyEndDate: { type: Date, required: true },
     coverage: { type: Number, required: true },
-    status: { type: String, required: true},
-    createdAt: { type: Date, default: Date.now },
+    status: { type: String, required: true, default: "submitted"}
   },
   { timestamps: true }
 );
