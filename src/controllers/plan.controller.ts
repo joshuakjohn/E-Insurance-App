@@ -32,12 +32,7 @@ class PlanController {
                     code: HttpStatus.OK, 
                     plan 
                 });
-            } else {
-                res.status(HttpStatus.NOT_FOUND).json({ 
-                    code: HttpStatus.NOT_FOUND, 
-                    message: 'Plan not found' 
-                });
-            }
+            } 
         } catch (error) {
             res.status(HttpStatus.BAD_REQUEST).json({
                 code: HttpStatus.BAD_REQUEST,
@@ -69,11 +64,6 @@ class PlanController {
                     code: HttpStatus.OK, 
                     updatedPlan 
                 });
-            } else {
-                res.status(HttpStatus.NOT_FOUND).json({ 
-                    code: HttpStatus.NOT_FOUND, 
-                    message: 'Plan not found' 
-                });
             }
         } catch (error) {
             res.status(HttpStatus.NOT_FOUND).json({
@@ -92,11 +82,6 @@ class PlanController {
                 res.status(HttpStatus.OK).json({ 
                     code: HttpStatus.OK, 
                     message: 'Plan deleted successfully' 
-                });
-            } else {
-                res.status(HttpStatus.NOT_FOUND).json({ 
-                    code: HttpStatus.NOT_FOUND, 
-                    message: 'Plan not found' 
                 });
             }
         } catch (error) {
