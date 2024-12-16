@@ -32,11 +32,16 @@ class AgentService{
     }
     const match = await bcrypt.compare(body.password, res.password);
     if(match){
+      const payload = { userId: res._id, email: res.email };
       const token = jwt.sign({ userId: res._id, email: res.email }, process.env.AGENT_SECRET);
+      const refreshToken = jwt.sign(payload, process.env.AGENT_SECRET, { expiresIn: '7d' });
+      await agentModel.findByIdAndUpdate(res._id, { refreshToken });
+
       return {
         message: "Login Successful",
         name: res.name,
-        token: token
+        token: token,
+        refreshToken:refreshToken
       }   
     }
     else{
@@ -56,6 +61,24 @@ class AgentService{
             throw error;
         }
     };
+    public refreshToken = async (refreshToken: string): Promise<{ newAccessToken: string }> => {
+      const agent = await agentModel.findOne({ refreshToken });
+      if (!agent) {
+        throw new Error("Invalid refresh token");
+      }
+      try {
+        const payload = jwt.verify(refreshToken, process.env.AGENT_SECRET);
+        if (typeof payload === 'string') {
+          throw new Error('Invalid token payload');
+        }
+        const newAccessToken = jwt.sign({ userId: agent._id, email: agent.email },process.env.AGENT_SECRET,{ expiresIn: '1h' } );
+        return { newAccessToken };
+      } catch (error) {
+        throw new Error('Error verifying refresh token');
+      }
+    };
+  
+    
 
 }
 
