@@ -22,6 +22,21 @@ const agentSchema = new Schema(
     region: {
         type: String,
         required: true
+    },
+    num_of_customers: {
+      type: Number,
+      required: true,
+      default: 0
+    },
+    num_of_policies: {
+      type: Number,
+      required: true,
+      default: 0
+    },
+    commission: {
+      type: Number,
+      required: true,
+      default: 0
     }
   },
   {
