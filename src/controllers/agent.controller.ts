@@ -7,6 +7,7 @@ class AgentController{
 
     public agentService = new AgentService()
 
+    // Agent login
     public agentLogin = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
         try{
             const data = await this.agentService.signin(req.body)
@@ -23,6 +24,7 @@ class AgentController{
 
     }
 
+    // Agent Registration
     public agentSignup = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
         try{
             const data = await this.agentService.signup(req.body)
@@ -35,6 +37,19 @@ class AgentController{
                 code: httpstatus.CONFLICT,
                 message: error.message
             })
+        }
+    };
+
+    // Get all Agents
+    public getAllAgents = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const data = await this.agentService.getAllAgents();
+            res.status(httpstatus.OK).json({ 
+                code: httpstatus.OK, 
+                data 
+            });
+        } catch (error) {
+            next(error);
         }
     };
 

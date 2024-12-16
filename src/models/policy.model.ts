@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { IPolicy } from '../interfaces/policy.interface';
+import { required } from '@hapi/joi';
 
 const policySchema = new Schema<IPolicy>(
   {

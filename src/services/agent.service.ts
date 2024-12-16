@@ -44,6 +44,19 @@ class AgentService{
     }
     }
 
+    // Get all agents
+    public getAllAgents = async (): Promise<IAgent[]> => {
+        try {
+            const res = await agentModel.find();
+            if(!res || res.length === 0) {
+                throw new Error('No plans found');
+            }
+            return res;
+        } catch (error) {
+            throw error;
+        }
+    };
+
 }
 
 export default AgentService

@@ -12,6 +12,8 @@ class UserController {
    * @param {object} Response - response object
    * @param {Function} NextFunction
    */
+
+  // register a new customer
   public createCustomer = async (
     req: Request,
     res: Response,
@@ -29,22 +31,37 @@ class UserController {
         message: `${error}`});
     }
   };
+
+  // login customer
   public customerLogin=async (
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<any> => {
     try {
-      const token= await this.CustomerService.customerLogin(req.body);
+      const customerData= await this.CustomerService.customerLogin(req.body);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.CREATED,
-        token:token[0],
-        message: ` ${token[1]} logged in successfully`
+        token:customerData.token,
+        message: ` ${customerData.username} logged in successfully`
       });
     } catch (error) {
       res.status(HttpStatus.BAD_REQUEST).json({
         code: HttpStatus.BAD_REQUEST,
         message: `${error}`})
+    }
+  };
+
+  // Get all customers
+  public getAllCustomers = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const data = await this.CustomerService.getAllCustomers();
+        res.status(HttpStatus.OK).json({ 
+            code: HttpStatus.OK, 
+            data 
+        });
+    } catch (error) {
+        next(error);
     }
   };
  
