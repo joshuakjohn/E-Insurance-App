@@ -12,5 +12,4 @@ export interface IPolicy extends Document {
   policyEndDate: Date;
   status: string;
   coverage: number;
-  createdAt: Date;
 }
