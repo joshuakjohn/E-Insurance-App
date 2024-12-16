@@ -15,6 +15,7 @@ class AdminService {
 
             const hashedPassword = await bcrypt.hash(body.password, 10);
             body.password = hashedPassword;
+              await Admin.create(body);
 
             return 'Admin registerd successfully';
         } catch (error) {
