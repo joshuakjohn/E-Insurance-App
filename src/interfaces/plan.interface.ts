@@ -5,5 +5,4 @@ export interface IPlan extends Document {
   planDescription?: string;
   category: string;
   createdAt: Date;
-  isActive?: boolean;
 }
