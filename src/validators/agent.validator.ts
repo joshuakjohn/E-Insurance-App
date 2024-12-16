@@ -9,7 +9,7 @@ class AgentValidator{
           name: Joi.string().required(),
           email: Joi.string().email().required(),
           password: Joi.string().min(4).required(),
-          phone: Joi.string().pattern(/^[0-9]{10}$/).required(),
+          phno: Joi.string().pattern(/^[0-9]{10}$/).required(),
           region: Joi.string().required()
         });
         const { error } = schema.validate(req.body);

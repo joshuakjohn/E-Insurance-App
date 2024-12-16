@@ -10,6 +10,7 @@ export interface IPolicy extends Document {
   premiumPaid: number;
   policyStartDate: Date;
   policyEndDate: Date;
+  status: string;
   coverage: number;
   createdAt: Date;
 }
