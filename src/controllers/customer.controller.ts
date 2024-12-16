@@ -35,11 +35,11 @@ class UserController {
     next: NextFunction
   ): Promise<any> => {
     try {
-      const token= await this.CustomerService.customerLogin(req.body);
+      const customerData= await this.CustomerService.customerLogin(req.body);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.CREATED,
-        token:token[0],
-        message: ` ${token[1]} logged in successfully`
+        token:customerData.token,
+        message: ` ${customerData.username} logged in successfully`
       });
     } catch (error) {
       res.status(HttpStatus.BAD_REQUEST).json({
