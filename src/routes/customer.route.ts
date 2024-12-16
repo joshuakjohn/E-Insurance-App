@@ -1,7 +1,6 @@
 import express, { IRouter } from 'express';
 import CustomerController from '../controllers/customer.controller';
 import CustomerValidator from '../validators/customer.validator'; 
-import { userAuth } from '../middlewares/auth.middleware'; 
 
 class UserRoutes {
   private CustomerController = new CustomerController();

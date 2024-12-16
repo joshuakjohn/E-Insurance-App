@@ -11,25 +11,37 @@ import { Request, Response, NextFunction } from 'express';
  * @param {Object} res
  * @param {Function} next
  */
-export const userAuth = async (
+const auth = (secret_token1: string, secret_token2?:string) => {
+  return async (
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<void> => {
-  try {
-    let bearerToken = req.header('Authorization');
-    if (!bearerToken)
-      throw {
-        code: HttpStatus.BAD_REQUEST,
-        message: 'Authorization token is required'
-      };
-    bearerToken = bearerToken.split(' ')[1];
+  ): Promise<void> => {
+    try {
+      let bearerToken = req.header('Authorization');
+      if (!bearerToken)
+        throw {
+          code: HttpStatus.BAD_REQUEST,
+          message: 'Authorization token is required'
+        };
+      bearerToken = bearerToken.split(' ')[1];
+      if(secret_token2 === undefined){
+        const { userId }: any = await jwt.verify(bearerToken, secret_token1);
+        res.locals.id = userId;
+      } else {
+        const { userId }: any = await jwt.verify(bearerToken, secret_token2);
+        res.locals.id = userId;
+      }
+      
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+}
 
-    const { user }: any = await jwt.verify(bearerToken, 'your-secret-key');
-    res.locals.user = user;
-    res.locals.token = bearerToken;
-    next();
-  } catch (error) {
-    next(error);
-  }
-};
+export const agentAuth = auth(process.env.AGENT_SECRET);
+
+export const customerAuth = auth(process.env.CUSTOMER_SECRET)
+
+export const cusAndAgentAuth = auth(process.env.CUSTOMER_SECRET, process.env.AGENT_SECRET)

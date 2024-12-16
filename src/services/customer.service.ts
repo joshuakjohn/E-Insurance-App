@@ -29,7 +29,7 @@ class UserService {
       if (!isMatch) {
         throw new Error('Invalid password');
       }
-      const payload = {id: customerData._id,email: customerData.email};
+      const payload = {userId: customerData._id,email: customerData.email};
       const token = jwt.sign(payload, process.env.CUSTOMER_SECRET);
       return [token,customerData.username];
     

@@ -14,7 +14,6 @@ export class PolicyValidator {
       premiumPaid: Joi.number().positive().required(),
       policyStartDate: Joi.date().required(),
       policyEndDate : Joi.date().required(),
-      status: Joi.string().required(),
       coverage: Joi.number().positive().required()
     });
 
