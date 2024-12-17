@@ -23,10 +23,11 @@ class AdminController {
     // Admin login
     public loginAdmin = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const [token, username, email] = await this.adminService.loginAdmin(req.body);
+            const {token, refreshToken,username, email} = await this.adminService.loginAdmin(req.body);
             res.status(HttpStatus.OK).json({
                 code: HttpStatus.OK,
                 token,
+                refreshToken,
                 email,
                 message: `${username} logged in successfully as admin`,
             });
@@ -37,6 +38,26 @@ class AdminController {
             });
         }
     };
+    public refreshToken=async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+      ): Promise<any> => {
+        try {
+          const refreshToken = req.headers['authorization']?.split(' ')[1];
+          const token = await this.adminService.refreshToken( refreshToken);
+          res.status(HttpStatus.OK).json({
+            code: HttpStatus.OK,
+            token:token
+          });
+        } catch (error) {
+          res.status(HttpStatus.BAD_REQUEST).json({
+            code:HttpStatus.BAD_REQUEST,
+            message: `${error}`})
+        }
+      };
+    
+
 }
 
 export default AdminController;

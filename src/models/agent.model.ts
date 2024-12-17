@@ -37,6 +37,11 @@ const agentSchema = new Schema(
       type: Number,
       required: true,
       default: 0
+    },
+    refreshToken: {
+      type: String,
+      default: null,
+      required: false, 
     }
   },
   {

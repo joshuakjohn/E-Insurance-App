@@ -38,10 +38,28 @@ class AdminService {
 
             const payload = { id: adminData._id, email: adminData.email };
             const token = jwt.sign(payload, process.env.ADMIN_SECRET);
+            const refreshToken = jwt.sign(payload, process.env.ADMIN_SECRET, { expiresIn: '7d' });
+            await Admin.findByIdAndUpdate(adminData._id, { refreshToken });
 
-            return [token, adminData.username, adminData.email];
+            return {token, refreshToken, username:adminData.username, email:adminData.email};
         } catch (error) {
             throw new Error(error.message);
+        }
+    };
+    public refreshToken = async (refreshToken: string): Promise<any> => {
+        try {
+            const adminData = await Admin.findOne({ refreshToken:refreshToken });
+            if (!adminData) {
+                throw new Error('Admin not found for the provided refresh token');
+            }
+            const payload = jwt.verify(refreshToken, process.env.ADMIN_SECRET) as { id: string, email: string };
+            if (!payload) {
+                throw new Error('Invalid refresh token');
+            }
+            const newAccessToken = jwt.sign({ id: payload.id, email: payload.email }, process.env.ADMIN_SECRET, { expiresIn: '1h' });
+            return { newAccessToken };
+        } catch (error) {
+            throw new Error(`${error}`);
         }
     };
 

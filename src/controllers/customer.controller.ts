@@ -41,8 +41,9 @@ class UserController {
     try {
       const customerData= await this.CustomerService.customerLogin(req.body);
       res.status(HttpStatus.OK).json({
-        code: HttpStatus.CREATED,
+        code: HttpStatus.OK,
         token:customerData.token,
+        refreshToken: customerData.refreshToken, 
         message: ` ${customerData.username} logged in successfully`
       });
     } catch (error) {
@@ -65,6 +66,26 @@ class UserController {
         next(error);
     }
   };
+  public refreshToken=async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> => {
+    try {
+      const refreshToken = req.headers['authorization']?.split(' ')[1];
+      const token = await this.CustomerService.refreshToken( refreshToken);
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        token:token
+      });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        message: `${error}`})
+    }
+  };
+
+ 
  
 
 }
