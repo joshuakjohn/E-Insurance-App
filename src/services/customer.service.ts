@@ -55,15 +55,15 @@ class CustomerService {
     return { token, refreshToken, username: customerData.username };
   };
 
-  public getAllCustomers = async (): Promise<Customer[]> => {
+  public getAllCustomers = async (agentId: ObjectId): Promise<Customer[]> => {
     try {
-      const res = await customer.find();
-      if (!res || res.length === 0) {
-        throw new Error('No customers found');
+      const customers = await customer.find({ agentId }).select('-password'); 
+      if (!customers || customers.length === 0) {
+        throw new Error('No customers found for this agent.');
       }
-      return res;
+      return customers;
     } catch (error) {
-      throw error;
+      throw new Error(`Error retrieving customers: ${error.message}`);
     }
   };
   public refreshToken = async (refreshToken: string): Promise<{ newRefreshToken: string }> => {
