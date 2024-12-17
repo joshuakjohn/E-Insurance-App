@@ -1,10 +1,14 @@
-import customer from '../models/customer.model';
 import { Customer } from '../interfaces/customer.interface';
-import agent from '../models/agent.model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { ObjectId } from 'mongoose';
+import agent from '../models/agent.model'; 
+import customer from '../models/customer.model'
+
 
 class UserService {
+
+  // customer registration
   public createCustomer = async (body: Customer): Promise<Customer> => {
     try {
       const agents = await agent.find({ region: body.region }).sort({ num_of_customers: 1 }).exec();
@@ -27,6 +31,8 @@ class UserService {
       throw new Error(`Error creating customer: ${error.message}`);
     }
    };
+
+  // customer login
   public customerLogin = async (body: Customer): Promise<any> => {
       const customerData = await customer.findOne({ email: body.email });
       if (!customerData) {
@@ -44,17 +50,19 @@ class UserService {
   }
 
   // Get all customers
-  public getAllCustomers = async (): Promise<Customer[]> => {
-      try {
-          const res = await customer.find();
-          if(!res || res.length === 0) {
-              throw new Error('No customers found');
-          }
-          return res;
-      } catch (error) {
-          throw error;
+  public getAllCustomers = async (agentId: ObjectId): Promise<Customer[]> => {
+    try {
+      const customers = await customer.find({ agentId }).select('-password');
+      if (!customers || customers.length === 0) {
+        throw new Error('No customers found for this agent.');
       }
+      return customers;
+    } catch (error) {
+      throw new Error(`Error retrieving customers: ${error.message}`);
+    }
   };
+  
+
  
 }
 
