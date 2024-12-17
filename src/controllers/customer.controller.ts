@@ -56,7 +56,8 @@ class UserController {
   // Get all customers
   public getAllCustomers = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const data = await this.CustomerService.getAllCustomers();
+        const agentId = res.locals.id;
+        const data = await this.CustomerService.getAllCustomers(agentId);
         res.status(HttpStatus.OK).json({ 
             code: HttpStatus.OK, 
             data 

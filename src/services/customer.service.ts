@@ -1,8 +1,10 @@
-import customer from '../models/customer.model';
 import { Customer } from '../interfaces/customer.interface';
-import agent from '../models/agent.model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { ObjectId } from 'mongoose';
+import agent from '../models/agent.model'; 
+import customer from '../models/customer.model'
+
 
 class CustomerService {
   public createCustomer = async (body: Customer): Promise<Customer> => {
@@ -29,8 +31,9 @@ class CustomerService {
     } catch (error) {
       throw new Error(`Error creating customer: ${error.message}`);
     }
-  };
+   };
 
+  // customer login
   public customerLogin = async (body: Customer): Promise<any> => {
     const customerData = await customer.findOne({ email: body.email });
     if (!customerData) {
