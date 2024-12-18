@@ -7,9 +7,7 @@ export interface IPolicy extends Document {
   customerId: string | ObjectId;
   schemeId: string | ObjectId;
   agentId: string | ObjectId;
-  premiumPaid: number;
-  policyStartDate: Date;
-  policyEndDate: Date;
-  status: string;
+  premiumAmount: number;
+  duration: number;
   coverage: number;
 }

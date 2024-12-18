@@ -10,10 +10,12 @@ const policySchema = new Schema<IPolicy>(
     customerId: { type: Schema.Types.ObjectId, ref: 'Customer', required: true },
     schemeId: { type: Schema.Types.ObjectId, ref: 'Scheme', required: true },
     agentId: { type: Schema.Types.ObjectId, ref: 'Agent', required: true },
-    premiumPaid: { type: Number, required: true },
-    policyStartDate: { type: Date, required: true },
-    policyEndDate: { type: Date, required: true },
+    premiumAmount: {type: Number, required: true},
+    premiumPaid: { type: Number, required: true, default: 0},
+    policyStartDate: { type: Date, required: true, default: new Date()},
+    duration: { type: Number, required: true },
     coverage: { type: Number, required: true },
+    pendingPremium: {type: Number, required: true, default: 0},
     status: { type: String, required: true, default: "submitted"}
   },
   { timestamps: true }
