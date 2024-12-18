@@ -11,11 +11,9 @@ export class PolicyValidator {
       customerId: Joi.string().required(),
       schemeId: Joi.string().required(),
       agentId: Joi.string().required(),
-      premiumPaid: Joi.number().positive().required(),
-      policyStartDate: Joi.date().required(),
-      policyEndDate : Joi.date().required(),
-      status: Joi.string().required(),
-      coverage: Joi.number().positive().required()
+      premiumAmount: Joi.number().required(),
+      coverage: Joi.number().required(),
+      duration: Joi.number().required(),
     });
 
     const { error } = schema.validate(req.body);

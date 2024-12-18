@@ -5,13 +5,17 @@ import { ObjectId } from 'mongoose';
 import agent from '../models/agent.model'; 
 import customer from '../models/customer.model'
 import { sendEmail } from '../utils/user.util';
+import { error } from 'winston';
+
 
 class CustomerService {
   public createCustomer = async (body: Customer): Promise<Customer> => {
     try {
       const agents = await agent.find({ region: body.region }).sort({ num_of_customers: 1 }).exec();
-      const assignedAgent = agents.length > 0 ? agents[0] : null;
-
+      if (agents.length === 0) {
+        throw new Error('No agent available in this region');
+      }
+      const assignedAgent = agents[0] ;
       const existingCustomer = await customer.findOne({ email: body.email });
       if (existingCustomer) {
         throw new Error('Customer with this email already exists.');
