@@ -71,7 +71,25 @@ class AdminController {
               message: 'User not found'
           });
         }
-    };
+      };
+
+      //Reset Password
+      public resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+        try {
+          const adminId = res.locals.id;
+          await this.adminService.resetPassword(req.body, adminId);
+
+          res.status(HttpStatus.OK).json({
+            code: HttpStatus.OK,
+            message: 'Password reset successfully',
+          });
+        } catch (error) {
+          res.status(HttpStatus.UNAUTHORIZED).send({
+            code: HttpStatus.UNAUTHORIZED,
+            message : error.message
+          });
+        }
+      };
     
 
 }

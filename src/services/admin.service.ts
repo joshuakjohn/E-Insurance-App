@@ -78,6 +78,17 @@ class AdminService {
         }
     };
 
+    //reset password
+    public resetPassword = async (body: any, userId): Promise<void> => {
+    const adminData = await Admin.findById(userId);
+    if (!adminData) {
+        throw new Error('User not found');
+    }
+    const hashedPassword = await bcrypt.hash(body.newPassword, 10);
+    adminData.password = hashedPassword;
+    await adminData.save();
+  };
+
 }
 
 export default AdminService;

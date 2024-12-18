@@ -22,6 +22,9 @@ class AdminRoutes {
         // forget password route
         this.router.post('/forgot-password', this.adminValidator.validateForgotPassword, this.adminController.forgotPassword);
 
+        // Reset Password
+        this.router.post('/reset-password', this.adminValidator.validateResetPassword, this.adminController.resetPassword);
+        
     };
 
     public getRoutes = (): IRouter => {
