@@ -85,7 +85,26 @@ class UserController {
     }
   };
 
- 
+  // forget password 
+  public forgotPassword = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> => {
+    try {
+      await this.CustomerService.forgotPassword(req.body.email);
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        message: "Reset password token sent to registered email id"
+      });
+    } catch (error) {
+      res.status(HttpStatus.NOT_FOUND).json({
+        code: HttpStatus.NOT_FOUND,
+        message: 'User not found'
+      });
+    }
+  };
+  
  
 
 }

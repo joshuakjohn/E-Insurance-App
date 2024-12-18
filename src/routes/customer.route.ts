@@ -36,6 +36,13 @@ class UserRoutes {
     
     this.router.get('/refreshtoken/',this.CustomerController.refreshToken)
 
+    // forget password route
+    this.router.post(
+      '/forgot-password',
+      this.CustomerValidator.validateForgotPassword,
+      this.CustomerController.forgotPassword
+    );
+    
   };
 
   public getRoutes = (): IRouter => {

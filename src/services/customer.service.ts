@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongoose';
 import agent from '../models/agent.model'; 
 import customer from '../models/customer.model'
-
+import { sendEmail } from '../utils/customer.util';
 
 class CustomerService {
   public createCustomer = async (body: Customer): Promise<Customer> => {
@@ -82,6 +82,20 @@ class CustomerService {
         throw new Error('Refresh token has expired');
       }
       throw new Error('Error verifying or updating refresh token');
+    }
+  };
+
+  // forget password
+  public forgotPassword = async (email: string): Promise<void> => {
+    try{
+      const customerData = await customer.findOne({ email });
+      if (!customerData) {
+        throw new Error('Email not found');
+      }
+      const token = jwt.sign({ id: customerData._id }, process.env.JWT_FORGOTPASSWORD, { expiresIn: '1h' });
+      await sendEmail(email, token);
+    } catch(error){
+      throw new Error("Error occured cannot send email: "+error)
     }
   };
       
