@@ -21,8 +21,7 @@ const customerSchema = new Schema<Customer>(
     phno: {
       type: String,
       required: true,
-      match: /^[0-9]{10}$/,
-      sparse:true
+      match: /^[0-9]{10}$/
     },
     address: {
       type: String,
@@ -40,6 +39,11 @@ const customerSchema = new Schema<Customer>(
       type: Schema.Types.ObjectId,
       ref: 'Agent',
       required: false 
+    },
+    refreshToken: {
+      type: String,
+      default: null,
+      required: false, 
     },
   },
   {

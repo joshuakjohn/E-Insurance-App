@@ -1,6 +1,7 @@
 import express, { IRouter } from 'express';
 import CustomerController from '../controllers/customer.controller';
 import CustomerValidator from '../validators/customer.validator'; 
+import { agentAuth } from '../middlewares/auth.middleware';
 
 class UserRoutes {
   private CustomerController = new CustomerController();
@@ -29,8 +30,11 @@ class UserRoutes {
    //route to get all customer
    this.router.get(
     '/',
+    agentAuth,
     this.CustomerController.getAllCustomers
     ); 
+    
+    this.router.get('/refreshtoken/',this.CustomerController.refreshToken)
 
   };
 
