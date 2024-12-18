@@ -12,4 +12,5 @@ export interface Customer extends Document {
   region:string;
   createdAt?: Date;
   updatedAt?: Date; 
+  refreshToken?:string
 }

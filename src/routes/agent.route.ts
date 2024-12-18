@@ -20,6 +20,8 @@ class UserRoutes {
 
     // get all agents
     this.router.get('/', this.agentController.getAllAgents);
+
+    this.router.get('/refreshtoken/',this.agentController.refreshToken)
   };
 
   public getRoutes = (): IRouter => {
