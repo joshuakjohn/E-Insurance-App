@@ -14,7 +14,7 @@ class UserRoutes {
 
   private routes = () => {
     //route to login an agent
-    this.router.post('', this.agentController.agentLogin);
+    this.router.post('', this.agentValidator.loginAgent, this.agentController.agentLogin);
 
     //route to register an agent    
     this.router.post('/register', this.agentValidator.newAgent, this.agentController.agentSignup);

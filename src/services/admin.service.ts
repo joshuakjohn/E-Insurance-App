@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import Admin from '../models/admin.model';
 import { IAdmin } from '../interfaces/admin.interface';
+import { sendEmail } from '../utils/user.util';
 
 
 class AdminService {
@@ -60,6 +61,20 @@ class AdminService {
             return { newAccessToken };
         } catch (error) {
             throw new Error(`${error}`);
+        }
+    };
+
+    // forget password
+    public forgotPassword = async (email: string): Promise<void> => {
+        try{
+        const adminData = await Admin.findOne({ email });
+        if (!adminData) {
+            throw new Error('Email not found');
+        }
+        const token = jwt.sign({ id: adminData._id }, process.env.JWT_FORGOTPASSWORD, { expiresIn: '1h' });
+        await sendEmail(email, token);
+        } catch(error){
+        throw new Error("Error occured cannot send email: "+error)
         }
     };
 
