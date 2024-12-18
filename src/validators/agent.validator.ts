@@ -1,6 +1,6 @@
 import Joi from "@hapi/joi";
 import { NextFunction, Request, Response } from "express";
-
+import HttpStatus from 'http-status-codes';
 
 class AgentValidator{
 
@@ -15,6 +15,42 @@ class AgentValidator{
         const { error } = schema.validate(req.body);
         if (error) {
           next(error);
+        }
+        next();
+      };
+
+      // Validation for agent login
+      public loginAgent = (req: Request, res: Response, next: NextFunction): void => {
+        const schema = Joi.object({
+          email: Joi.string().email().required(),
+          password: Joi.string().min(6).required(),
+        });
+    
+        const { error } = schema.validate(req.body);
+    
+        if (error) {
+          res.status(HttpStatus.BAD_REQUEST).send({
+            code: HttpStatus.BAD_REQUEST,
+            message: error.message,
+          });
+          return;
+        }
+        next();
+      };
+
+      // Validation for forget password
+      public validateForgotPassword = (req: Request, res: Response, next: NextFunction): void => {
+        const schema = Joi.object({
+          email: Joi.string().email().required(),
+        });
+      
+        const { error } = schema.validate(req.body);
+        if (error) {
+          res.status(HttpStatus.BAD_REQUEST).send({
+            code: HttpStatus.BAD_REQUEST,
+            message: error.message,
+          });
+          return;
         }
         next();
       };

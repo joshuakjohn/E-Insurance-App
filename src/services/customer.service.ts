@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongoose';
 import agent from '../models/agent.model'; 
 import customer from '../models/customer.model'
-import { sendEmail } from '../utils/customer.util';
+import { sendEmail } from '../utils/user.util';
 
 class CustomerService {
   public createCustomer = async (body: Customer): Promise<Customer> => {

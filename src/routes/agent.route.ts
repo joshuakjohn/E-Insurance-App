@@ -21,7 +21,10 @@ class UserRoutes {
     // get all agents
     this.router.get('/', this.agentController.getAllAgents);
 
-    this.router.get('/refreshtoken/',this.agentController.refreshToken)
+    this.router.get('/refreshtoken/',this.agentController.refreshToken);
+
+    // forget password route
+    this.router.post('/forgot-password', this.agentValidator.validateForgotPassword, this.agentController.forgotPassword);
   };
 
   public getRoutes = (): IRouter => {
