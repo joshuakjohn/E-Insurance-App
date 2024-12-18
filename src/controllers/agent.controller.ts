@@ -88,6 +88,24 @@ class AgentController{
         }
     };
 
+    //Reset Password
+    public resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+        try {
+        const agentId = res.locals.id;
+        await this.agentService.resetPassword(req.body, agentId);
+
+        res.status(httpstatus.OK).json({
+            code: httpstatus.OK,
+            message: 'Password reset successfully',
+        });
+        } catch (error) {
+        res.status(httpstatus.UNAUTHORIZED).send({
+            code: httpstatus.UNAUTHORIZED,
+            message : error.message
+        });
+        }
+      };
+
 }
 
 export default AgentController

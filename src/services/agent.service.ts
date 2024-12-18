@@ -93,6 +93,16 @@ class AgentService{
       }
     };
   
+    //reset password
+    public resetPassword = async (body: any, userId): Promise<void> => {
+      const agentData = await agentModel.findById(userId);
+      if (!agentData) {
+        throw new Error('Email not found');
+      }
+      const hashedPassword = await bcrypt.hash(body.newPassword, 10);
+      agentData.password = hashedPassword;
+      await agentData.save();
+    };
     
 
 }

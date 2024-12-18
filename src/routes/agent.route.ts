@@ -1,4 +1,5 @@
 import AgentController from '../controllers/agent.controller';
+import { agentAuth } from '../middlewares/auth.middleware';
 import AgentValidator from '../validators/agent.validator';
 import express, { IRouter } from 'express';
 
@@ -25,6 +26,9 @@ class UserRoutes {
 
     // forget password route
     this.router.post('/forgot-password', this.agentValidator.validateForgotPassword, this.agentController.forgotPassword);
+
+    // Reset Password
+    this.router.post('/reset-password', this.agentValidator.validateResetPassword, agentAuth, this.agentController.resetPassword);
   };
 
   public getRoutes = (): IRouter => {
