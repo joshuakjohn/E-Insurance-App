@@ -36,6 +36,8 @@ class UserRoutes {
     
     this.router.get('/refreshtoken/',this.CustomerController.refreshToken)
 
+    this.router.post('/paypremium',this.CustomerController.payPremium )
+
   };
 
   public getRoutes = (): IRouter => {

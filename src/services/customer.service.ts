@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongoose';
 import agent from '../models/agent.model'; 
 import customer from '../models/customer.model'
+import Policy from '../models/policy.model';
+import Agent from '../models/agent.model'
 import { error } from 'winston';
 
 
@@ -87,7 +89,24 @@ class CustomerService {
       throw new Error('Error verifying or updating refresh token');
     }
   };
-
+  public payPremium = async (body): Promise<any> => {
+    const { policyId, paymentAmount, agentId, commissionRate = 5 } = body;
+    const policy = await Policy.findById(policyId);
+    const amountPerMonth = policy.premiumAmount;
+    if (paymentAmount !== amountPerMonth) {
+      throw new Error(`Payment amount must match the monthly premium of ${amountPerMonth}`);
+    }
+    policy.premiumPaid += 1;
+    policy.pendingPremium = Math.max(0, policy.pendingPremium - 1);
+    await policy.save();
+    const commissionEarned = paymentAmount * (commissionRate / 100);
+    if (agentId) {
+      await Agent.findByIdAndUpdate(agentId,{ $inc: { commission: commissionEarned } }, { new: true } );
+    }
+  
+    return { totalMonthsPaid: policy.premiumPaid,monthsRemaining: policy.pendingPremium};
+  };
+  
       
 }
 
