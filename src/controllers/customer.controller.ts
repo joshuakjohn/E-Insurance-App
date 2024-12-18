@@ -104,6 +104,24 @@ class UserController {
       });
     }
   };
+
+  //Reset Password
+  public resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    try {
+      const customerId = res.locals.id;
+      await this.CustomerService.resetPassword(req.body, customerId);
+
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        message: 'Password reset successfully',
+      });
+    } catch (error) {
+      res.status(HttpStatus.UNAUTHORIZED).send({
+        code: HttpStatus.UNAUTHORIZED,
+        message : error.message
+      });
+    }
+  };
   
  
 

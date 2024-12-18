@@ -98,6 +98,17 @@ class CustomerService {
       throw new Error("Error occured cannot send email: "+error)
     }
   };
+
+  //reset password
+  public resetPassword = async (body: any, userId): Promise<void> => {
+    const customerData = await customer.findById(userId);
+    if (!customerData) {
+      throw new Error('User not found');
+    }
+    const hashedPassword = await bcrypt.hash(body.newPassword, 10);
+    customerData.password = hashedPassword;
+    await customerData.save();
+  };
       
 }
 

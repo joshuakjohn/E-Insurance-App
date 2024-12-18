@@ -53,6 +53,22 @@ class customerValidator {
     }
     next();
   };
+
+  // Validation for reset password
+  public validateResetPassword = (req: Request, res: Response, next: NextFunction): void => {
+    const schema = Joi.object({
+      newPassword: Joi.string().min(6).required(), 
+    });
+    const { error } = schema.validate(req.body);
+    if (error) {
+      res.status(HttpStatus.BAD_REQUEST).send({
+        code: HttpStatus.BAD_REQUEST,
+        message: error.message,
+      });
+      return;
+    }
+    next();
+  };
   
   
 }

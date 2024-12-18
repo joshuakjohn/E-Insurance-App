@@ -1,7 +1,7 @@
 import express, { IRouter } from 'express';
 import CustomerController from '../controllers/customer.controller';
 import CustomerValidator from '../validators/customer.validator'; 
-import { agentAuth } from '../middlewares/auth.middleware';
+import { agentAuth, customerAuth } from '../middlewares/auth.middleware';
 
 class UserRoutes {
   private CustomerController = new CustomerController();
@@ -41,6 +41,14 @@ class UserRoutes {
       '/forgot-password',
       this.CustomerValidator.validateForgotPassword,
       this.CustomerController.forgotPassword
+    );
+    
+    // Reset Password
+    this.router.post(
+      '/reset-password', 
+      this.CustomerValidator.validateResetPassword, 
+      customerAuth, 
+      this.CustomerController.resetPassword
     );
     
   };
