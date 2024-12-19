@@ -90,20 +90,6 @@ class AgentService{
         throw new Error("Error occured cannot send email: "+error)
       }
     };
-
-    // forget password
-    public forgotPassword = async (email: string): Promise<void> => {
-      try{
-        const agentData = await agentModel.findOne({ email });
-        if (!agentData) {
-          throw new Error('Email not found');
-        }
-        const token = jwt.sign({ id: agentData._id }, process.env.JWT_FORGOTPASSWORD, { expiresIn: '1h' });
-        await sendEmail(email, token);
-      } catch(error){
-        throw new Error("Error occured cannot send email: "+error)
-      }
-    };
   
     //reset password
     public resetPassword = async (body: any, userId): Promise<void> => {
