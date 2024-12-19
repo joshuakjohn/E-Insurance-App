@@ -1,7 +1,7 @@
 import express, { IRouter } from 'express';
 import CustomerController from '../controllers/customer.controller';
 import CustomerValidator from '../validators/customer.validator'; 
-import { adminAuth, agentAuth, customerAuth } from '../middlewares/auth.middleware';
+import { adminAuth, agentAuth, customerAuth, customerResetAuth } from '../middlewares/auth.middleware';
 
 class UserRoutes {
   private CustomerController = new CustomerController();
@@ -13,7 +13,7 @@ class UserRoutes {
   }
 
   private routes = () => {
-    
+
     //route to login a customer
     this.router.post('', this.CustomerValidator.customerLogin, this.CustomerController.customerLogin); 
 
@@ -30,10 +30,10 @@ class UserRoutes {
     this.router.post('/paypremium', customerAuth, this.CustomerController.payPremium )
 
     // forget password route
-    this.router.post('/forgot-password', customerAuth, this.CustomerValidator.validateForgotPassword, this.CustomerController.forgotPassword);
+    this.router.post('/forgot-password', this.CustomerValidator.validateForgotPassword, this.CustomerController.forgotPassword);
     
     // Reset Password route
-    this.router.post('/reset-password', this.CustomerValidator.validateResetPassword, customerAuth, this.CustomerController.resetPassword);
+    this.router.post('/reset-password', this.CustomerValidator.validateResetPassword, customerResetAuth, this.CustomerController.resetPassword);
     
     //route to refresh token
     this.router.get('/:id/refreshtoken', this.CustomerController.refreshToken)

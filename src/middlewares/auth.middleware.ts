@@ -51,3 +51,9 @@ export const agentAuth = auth(process.env.AGENT_SECRET);
 export const customerAuth = auth(process.env.CUSTOMER_SECRET)
 
 export const adminAuth = auth(process.env.ADMIN_SECRET)
+
+export const agentResetAuth = auth(process.env.AGENT_RESET_SECRET)
+
+export const customerResetAuth = auth(process.env.CUSTOMER_RESET_SECRET)
+
+export const adminResetAuth = auth(process.env.ADMIN_RESET_SECRET)

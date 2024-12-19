@@ -1,7 +1,7 @@
 import express, { IRouter } from 'express';
 import AdminController from '../controllers/admin.controller';
 import AdminValidator from '../validators/admin.validator';
-import { adminAuth } from '../middlewares/auth.middleware';
+import { adminAuth, adminResetAuth } from '../middlewares/auth.middleware';
 
 class AdminRoutes {
     private router = express.Router();
@@ -21,10 +21,10 @@ class AdminRoutes {
         this.router.post('/register', this.adminValidator.createAdmin, this.adminController.registerAdmin);
         
         // forget password route
-        this.router.post('/forgot-password', this.adminValidator.validateForgotPassword, adminAuth, this.adminController.forgotPassword);
+        this.router.post('/forgot-password', this.adminValidator.validateForgotPassword, this.adminController.forgotPassword);
 
         // Reset Password route
-        this.router.post('/reset-password', this.adminValidator.validateResetPassword, this.adminController.resetPassword);
+        this.router.post('/reset-password', this.adminValidator.validateResetPassword, adminResetAuth, this.adminController.resetPassword);
 
         //refresh token route
         this.router.get('/:id/refreshtoken',this.adminController.refreshToken)

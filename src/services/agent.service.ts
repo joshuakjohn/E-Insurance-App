@@ -84,7 +84,7 @@ class AgentService{
         if (!agentData) {
           throw new Error('Email not found');
         }
-        const token = jwt.sign({ id: agentData._id }, process.env.JWT_FORGOTPASSWORD, { expiresIn: '1h' });
+        const token = jwt.sign({ id: agentData._id }, process.env.AGENT_RESET_SECRET, { expiresIn: '1h' });
         await sendEmail(email, token);
       } catch(error){
         throw new Error("Error occured cannot send email: "+error)
