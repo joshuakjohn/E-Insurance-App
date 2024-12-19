@@ -34,7 +34,7 @@ class UserRoutes {
     this.CustomerController.getAllCustomers
     ); 
     
-    this.router.get('/refreshtoken/',this.CustomerController.refreshToken)
+    this.router.get('/refreshtoken/:id',this.CustomerController.refreshToken)
 
     this.router.post('/paypremium',this.CustomerController.payPremium )
 

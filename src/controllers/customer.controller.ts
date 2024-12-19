@@ -43,7 +43,6 @@ class UserController {
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
         token:customerData.token,
-        refreshToken: customerData.refreshToken, 
         message: ` ${customerData.username} logged in successfully`
       });
     } catch (error) {
@@ -54,7 +53,10 @@ class UserController {
   };
 
   // Get all customers
-  public getAllCustomers = async (req: Request, res: Response, next: NextFunction) => {
+  public getAllCustomers = async (req: Request,
+     res: Response,
+     next: NextFunction
+    ) => {
     try {
         const agentId = res.locals.id;
         const data = await this.CustomerService.getAllCustomers(agentId);
@@ -66,25 +68,26 @@ class UserController {
         next(error);
     }
   };
-  public refreshToken=async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<any> => {
+  
+  public refreshToken = async (req: Request,
+     res: Response, 
+     next: NextFunction
+    ): Promise<any> => {
     try {
-      const refreshToken = req.headers['authorization']?.split(' ')[1];
-      const token = await this.CustomerService.refreshToken( refreshToken);
+      const customerId = req.params.id;
+      const newAccessToken = await this.CustomerService.refreshToken(customerId);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
-        token:token
+        message: 'Access token refreshed successfully',
+        token: newAccessToken,
       });
     } catch (error) {
       res.status(HttpStatus.BAD_REQUEST).json({
         code: HttpStatus.BAD_REQUEST,
-        message: `${error}`})
+        message: error instanceof Error ? error.message : 'An unknown error occurred',
+      });
     }
   };
-
   public payPremium =async (
     req: Request,
     res: Response,
