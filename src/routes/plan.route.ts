@@ -1,6 +1,7 @@
 import express, { IRouter } from 'express';
 import PlanController from '../controllers/plan.controller';
 import PlanValidator from '../validators/plan.validator';
+import { adminAuth, agentAuth, customerAuth } from '../middlewares/auth.middleware';
 
 class PlanRoutes {
   private router = express.Router();
@@ -13,20 +14,32 @@ class PlanRoutes {
 
   private routes = () => {
 
-    // create plan route
-    this.router.post('/', this.planValidator.createPlan, this.planController.createPlan);
+    // create plan route by admin
+    this.router.post('/', adminAuth, this.planValidator.createPlan, this.planController.createPlan);
 
-    // get plan by id
-    this.router.get('/:id', this.planController.getPlanById);
+    // get all plans by admin
+    this.router.get('/', adminAuth, this.planController.getAllPlans);
 
-    // get all plans
-    this.router.get('/', this.planController.getAllPlans);
+    // get all plans by customer
+    this.router.get('/customer', customerAuth, this.planController.getAllPlans);
 
-    // update a plan by id
-    this.router.put('/:id', this.planValidator.updatePlan, this.planController.updatePlan);
+    // get all plans by agent
+    this.router.get('/agent', agentAuth, this.planController.getAllPlans);
 
-    // delete a plan bybid
-    this.router.delete('/:id', this.planController.deletePlan);
+    // get plan by id, by admin
+    this.router.get('/:id', adminAuth, this.planController.getPlanById);
+
+    // update a plan by id, by admin
+    this.router.put('/:id', adminAuth, this.planValidator.updatePlan, this.planController.updatePlan);
+
+    // delete a plan by id, by admin
+    this.router.delete('/:id', adminAuth, this.planController.deletePlan);
+
+    // get plan by id, by customer
+    this.router.get('/:id/customer', customerAuth, this.planController.getPlanById);
+
+    // get plan by id, by agent
+    this.router.get('/:id/agent', customerAuth, this.planController.getPlanById);
 
   };
 
