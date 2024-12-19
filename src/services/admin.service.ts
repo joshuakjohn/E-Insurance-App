@@ -36,7 +36,7 @@ class AdminService {
                 throw new Error('Invalid password');
             }
 
-            const payload = { id: adminData._id, email: adminData.email };
+            const payload = { userId: adminData._id, email: adminData.email };
             const token = jwt.sign(payload, process.env.ADMIN_SECRET);
             const refreshToken = jwt.sign(payload, process.env.ADMIN_SECRET, { expiresIn: '7d' });
             await Admin.findByIdAndUpdate(adminData._id, { refreshToken });
