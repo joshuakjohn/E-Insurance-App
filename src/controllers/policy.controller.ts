@@ -25,7 +25,7 @@ class PolicyController{
 
     public getAllPolicy = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const policy = await this.policyService.getAllPolicy();
+            const policy = await this.policyService.getAllPolicy(res.locals.id, req.params.id);
             res.status(HttpStatus.OK).json({
                 code: HttpStatus.OK,
                 data: policy
