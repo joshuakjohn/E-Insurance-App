@@ -29,8 +29,14 @@ const auth = (secret_token1: string, secret_token2?:string) => {
         const { userId }: any = await jwt.verify(bearerToken, secret_token1);
         res.locals.id = userId;
       } else {
-        const { userId }: any = await jwt.verify(bearerToken, secret_token2);
-        res.locals.id = userId;
+        try{
+          const { userId }: any = await jwt.verify(bearerToken, secret_token1);
+          res.locals.id = userId;
+        } catch(error){
+          console.log('customer validation failed')
+          await jwt.verify(bearerToken, secret_token2);
+        }
+        // res.locals.id = userId;
       }
       
       next();
@@ -44,4 +50,10 @@ export const agentAuth = auth(process.env.AGENT_SECRET);
 
 export const customerAuth = auth(process.env.CUSTOMER_SECRET)
 
-export const cusAndAgentAuth = auth(process.env.CUSTOMER_SECRET, process.env.AGENT_SECRET)
+export const adminAuth = auth(process.env.ADMIN_SECRET)
+
+export const agentResetAuth = auth(process.env.AGENT_RESET_SECRET)
+
+export const customerResetAuth = auth(process.env.CUSTOMER_RESET_SECRET)
+
+export const adminResetAuth = auth(process.env.ADMIN_RESET_SECRET)

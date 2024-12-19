@@ -1,10 +1,12 @@
 import { IPolicy } from '../interfaces/policy.interface';
+import Agent from '../models/agent.model'
 import policyModel from '../models/policy.model';
 
  class PolicyService{
     public createPolicy = async (body: IPolicy): Promise<any> => {
         try{
             const data = policyModel.create(body)
+            await Agent.updateOne({ _id: body.agentId }, { $inc: { num_of_policies: 1 } });
             return data
         } catch(error) {
             throw new Error(error.message)
@@ -12,9 +14,16 @@ import policyModel from '../models/policy.model';
         
     }
     
-    public getAllPolicy = async (): Promise<any> => {
+    public getAllPolicy = async (customerReq: string, agentReq: string): Promise<any> => {
         try {
-            const policy = await policyModel.find();
+            let policy = []
+            if(agentReq === undefined){
+              policy = await policyModel.find({customerId: customerReq});
+            }
+            else{
+              policy = await policyModel.find({customerId: agentReq});
+            }
+            
             if(!policy || policy.length === 0) {
               throw new Error('No policy found');
             }
@@ -28,7 +37,7 @@ import policyModel from '../models/policy.model';
         try {
             const policy = await policyModel.findById(id);
             if (!policy) {
-              throw new Error('Scheme not found');
+              throw new Error('Policy not found');
             }
             return policy;
           } catch (error) {

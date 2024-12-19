@@ -1,6 +1,7 @@
 import express, { IRouter } from 'express';
 import SchemeController from '../controllers/scheme.controller';
 import SchemeValidator from '../validators/scheme.validator';
+import { adminAuth, agentAuth, customerAuth } from '../middlewares/auth.middleware';
 
 class SchemeRoutes {
     private router = express.Router();
@@ -12,15 +13,32 @@ class SchemeRoutes {
      }
      private routes = () => {
     
-        this.router.post('/', this.schemeValidator.createScheme, this.schemeController.createScheme);
-        
-        this.router.get('/',this.schemeValidator.validatePagination, this.schemeController.getAllSchemes);
+         // route to create a scheme by admin
+         this.router.post('/', adminAuth, this.schemeValidator.createScheme, this.schemeController.createScheme);
+         
+         //route to get all schemes by admin
+         this.router.get('/', adminAuth, this.schemeValidator.validatePagination, this.schemeController.getAllSchemes);
 
-        this.router.get('/:id', this.schemeController.getSchemeById);
+         //route to get all schemes by customer
+         this.router.get('/customer', customerAuth, this.schemeController.getAllSchemes);
 
-        this.router.put('/:id', this.schemeValidator.updateScheme, this.schemeController.updateScheme);
+         //route to get all schemes by agent
+         this.router.get('/agent', agentAuth, this.schemeController.getAllSchemes);
 
-        this.router.delete('/:id', this.schemeController.deleteScheme);
+         //route to get a scheme by id, by admin
+         this.router.get('/:id', adminAuth, this.schemeController.getSchemeById);
+
+         //route to update a scheme by admin
+         this.router.put('/:id', adminAuth, this.schemeValidator.updateScheme, this.schemeController.updateScheme);
+
+         //route to delete a scheme by admin
+         this.router.delete('/:id', adminAuth, this.schemeController.deleteScheme);
+
+         //route to get a scheme by id, by customer
+         this.router.get('/:id/customer', customerAuth, this.schemeController.getSchemeById);
+
+         //route to get a scheme by id, by agent
+         this.router.get('/:id/agent', agentAuth, this.schemeController.getSchemeById);
 
      }
      public getRoutes = (): IRouter => {

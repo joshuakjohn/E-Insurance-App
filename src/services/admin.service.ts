@@ -37,7 +37,7 @@ class AdminService {
                 throw new Error('Invalid password');
             }
 
-            const payload = { id: adminData._id, email: adminData.email };
+            const payload = { userId: adminData._id, email: adminData.email };
             const token = jwt.sign(payload, process.env.ADMIN_SECRET);
             const refreshToken = jwt.sign(payload, process.env.ADMIN_SECRET, { expiresIn: '7d' });
             await Admin.findByIdAndUpdate(adminData._id, { refreshToken });
@@ -70,7 +70,7 @@ class AdminService {
         if (!adminData) {
             throw new Error('Email not found');
         }
-        const token = jwt.sign({ id: adminData._id }, process.env.JWT_FORGOTPASSWORD, { expiresIn: '1h' });
+        const token = jwt.sign({ id: adminData._id }, process.env.ADMIN_RESET_SECRET, { expiresIn: '1h' });
         await sendEmail(email, token);
         } catch(error){
         throw new Error("Error occured cannot send email: "+error)
