@@ -14,7 +14,7 @@ class SchemeRoutes {
     
         this.router.post('/', this.schemeValidator.createScheme, this.schemeController.createScheme);
         
-        this.router.get('/', this.schemeController.getAllSchemes);
+        this.router.get('/',this.schemeValidator.validatePagination, this.schemeController.getAllSchemes);
 
         this.router.get('/:id', this.schemeController.getSchemeById);
 
