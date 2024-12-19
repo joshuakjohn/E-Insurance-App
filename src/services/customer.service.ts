@@ -92,6 +92,9 @@ class CustomerService {
   public payPremium = async (body): Promise<any> => {
     const { policyId, paymentAmount, agentId, commissionRate = 5 } = body;
     const policy = await Policy.findById(policyId);
+    if(policy.duration===policy.premiumPaid){
+       throw new Error(`your policy is matured don't need to pay`)
+    }
     const amountPerMonth = policy.premiumAmount;
     if (paymentAmount !== amountPerMonth) {
       throw new Error(`Payment amount must match the monthly premium of ${amountPerMonth}`);
