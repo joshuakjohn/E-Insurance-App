@@ -52,29 +52,65 @@ class AgentController{
             next(error);
         }
     };
+
     public refreshToken=async (
         req: Request,
         res: Response,
         next: NextFunction
       ): Promise<any> => {
         try {
-          const refreshToken = req.headers['authorization']?.split(' ')[1];
-          const token = await this.agentService.refreshToken( refreshToken);
-          res.status(httpstatus.OK).json({
-            code: httpstatus.OK,
-            token:token
-          });
+            const agentId=req.params.id;
+            const token = await this.agentService.refreshToken(agentId);
+            res.status(httpstatus.OK).json({
+                code: httpstatus.OK,
+                message: 'Access token refreshed successfully',
+                token:token
+            });
         } catch (error) {
-          res.status(httpstatus.BAD_REQUEST).json({
-            code: httpstatus.BAD_REQUEST,
-            message: `${error}`})
-        }
-      };
-    
-     
-     
+            res.status(httpstatus.BAD_REQUEST).json({
+                code: httpstatus.BAD_REQUEST,
+                message: error.message 
+            })
+        };
+    }
     
 
+    // forget password 
+    public forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+        try {
+        await this.agentService.forgotPassword(req.body.email);
+        res.status(httpstatus.OK).json({
+            code: httpstatus.OK,
+            message: "Reset password token sent to registered email id"
+        });
+        } catch (error) {
+        res.status(httpstatus.NOT_FOUND).json({
+            code: httpstatus.NOT_FOUND,
+            message: 'User not found'
+        });
+        }
+    };
+
+    //Reset Password
+    public resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+        try {
+        const agentId = res.locals.id;
+        await this.agentService.resetPassword(req.body, agentId);
+
+        res.status(httpstatus.OK).json({
+            code: httpstatus.OK,
+            message: 'Password reset successfully',
+        });
+        } catch (error) {
+        res.status(httpstatus.UNAUTHORIZED).send({
+            code: httpstatus.UNAUTHORIZED,
+            message : error.message
+        });
+        }
+      };
+
 }
+
+
 
 export default AgentController

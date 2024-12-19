@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import Admin from '../models/admin.model';
 import { IAdmin } from '../interfaces/admin.interface';
+import { sendEmail } from '../utils/user.util';
 
 
 class AdminService {
@@ -40,28 +41,52 @@ class AdminService {
             const token = jwt.sign(payload, process.env.ADMIN_SECRET);
             const refreshToken = jwt.sign(payload, process.env.ADMIN_SECRET, { expiresIn: '7d' });
             await Admin.findByIdAndUpdate(adminData._id, { refreshToken });
-
-            return {token, refreshToken, username:adminData.username, email:adminData.email};
+            return {token, username:adminData.username, email:adminData.email};
         } catch (error) {
             throw new Error(error.message);
         }
     };
-    public refreshToken = async (refreshToken: string): Promise<any> => {
+    public refreshToken = async (adminId: string): Promise<any> => {
         try {
-            const adminData = await Admin.findOne({ refreshToken:refreshToken });
-            if (!adminData) {
-                throw new Error('Admin not found for the provided refresh token');
+            const adminData = await Admin.findById(adminId);
+            const refreshToken=adminData.refreshToken
+            if (!refreshToken) {
+                throw new Error('Refresh token is missing');
             }
-            const payload = jwt.verify(refreshToken, process.env.ADMIN_SECRET) as { id: string, email: string };
-            if (!payload) {
-                throw new Error('Invalid refresh token');
-            }
-            const newAccessToken = jwt.sign({ id: payload.id, email: payload.email }, process.env.ADMIN_SECRET, { expiresIn: '1h' });
-            return { newAccessToken };
+            const payload : any= jwt.verify(refreshToken, process.env.ADMIN_SECRET );
+            const { userId, email } = payload;
+            const newAccessToken = jwt.sign({ userId, email }, process.env.CUSTOMER_SECRET, { expiresIn: '1h' });
+            return newAccessToken;
         } catch (error) {
-            throw new Error(`${error}`);
+            throw new Error(`Error: ${error.message}`);
         }
     };
+
+
+    // forget password
+    public forgotPassword = async (email: string): Promise<void> => {
+        try{
+        const adminData = await Admin.findOne({ email });
+        if (!adminData) {
+            throw new Error('Email not found');
+        }
+        const token = jwt.sign({ id: adminData._id }, process.env.JWT_FORGOTPASSWORD, { expiresIn: '1h' });
+        await sendEmail(email, token);
+        } catch(error){
+        throw new Error("Error occured cannot send email: "+error)
+        }
+    };
+
+    //reset password
+    public resetPassword = async (body: any, userId): Promise<void> => {
+    const adminData = await Admin.findById(userId);
+    if (!adminData) {
+        throw new Error('User not found');
+    }
+    const hashedPassword = await bcrypt.hash(body.newPassword, 10);
+    adminData.password = hashedPassword;
+    await adminData.save();
+  };
 
 }
 

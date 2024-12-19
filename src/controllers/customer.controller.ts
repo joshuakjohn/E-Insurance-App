@@ -43,7 +43,6 @@ class UserController {
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
         token:customerData.token,
-        refreshToken: customerData.refreshToken, 
         message: ` ${customerData.username} logged in successfully`
       });
     } catch (error) {
@@ -54,7 +53,10 @@ class UserController {
   };
 
   // Get all customers
-  public getAllCustomers = async (req: Request, res: Response, next: NextFunction) => {
+  public getAllCustomers = async (req: Request,
+     res: Response,
+     next: NextFunction
+    ) => {
     try {
         const agentId = res.locals.id;
         const data = await this.CustomerService.getAllCustomers(agentId);
@@ -66,17 +68,37 @@ class UserController {
         next(error);
     }
   };
-  public refreshToken=async (
+  
+  public refreshToken = async (req: Request,
+     res: Response, 
+     next: NextFunction
+    ): Promise<any> => {
+    try {
+      const customerId = req.params.id;
+      const newAccessToken = await this.CustomerService.refreshToken(customerId);
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        message: 'Access token refreshed successfully',
+        token: newAccessToken,
+      });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        message: error instanceof Error ? error.message : 'An unknown error occurred',
+      });
+    }
+  };
+  public payPremium =async (
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<any> => {
     try {
-      const refreshToken = req.headers['authorization']?.split(' ')[1];
-      const token = await this.CustomerService.refreshToken( refreshToken);
+      const paymentDetails= await this.CustomerService.payPremium (req.body);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
-        token:token
+        data:paymentDetails,
+       message:'payment is successful'
       });
     } catch (error) {
       res.status(HttpStatus.BAD_REQUEST).json({
@@ -85,7 +107,45 @@ class UserController {
     }
   };
 
- 
+
+  // forget password 
+  public forgotPassword = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> => {
+    try {
+      await this.CustomerService.forgotPassword(req.body.email);
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        message: "Reset password token sent to registered email id"
+      });
+    } catch (error) {
+      res.status(HttpStatus.NOT_FOUND).json({
+        code: HttpStatus.NOT_FOUND,
+        message: 'User not found'
+      });
+    }
+  };
+
+  //Reset Password
+  public resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    try {
+      const customerId = res.locals.id;
+      await this.CustomerService.resetPassword(req.body, customerId);
+
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        message: 'Password reset successfully',
+      });
+    } catch (error) {
+      res.status(HttpStatus.UNAUTHORIZED).send({
+        code: HttpStatus.UNAUTHORIZED,
+        message : error.message
+      });
+    }
+  };
+  
  
 
 }

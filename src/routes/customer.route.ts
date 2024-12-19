@@ -1,7 +1,7 @@
 import express, { IRouter } from 'express';
 import CustomerController from '../controllers/customer.controller';
 import CustomerValidator from '../validators/customer.validator'; 
-import { agentAuth } from '../middlewares/auth.middleware';
+import { agentAuth, customerAuth } from '../middlewares/auth.middleware';
 
 class UserRoutes {
   private CustomerController = new CustomerController();
@@ -34,8 +34,25 @@ class UserRoutes {
     this.CustomerController.getAllCustomers
     ); 
     
-    this.router.get('/refreshtoken/',this.CustomerController.refreshToken)
+    this.router.get('/refreshtoken/:id',this.CustomerController.refreshToken)
 
+    this.router.post('/paypremium',this.CustomerController.payPremium )
+
+    // forget password route
+    this.router.post(
+      '/forgot-password',
+      this.CustomerValidator.validateForgotPassword,
+      this.CustomerController.forgotPassword
+    );
+    
+    // Reset Password
+    this.router.post(
+      '/reset-password', 
+      this.CustomerValidator.validateResetPassword, 
+      customerAuth, 
+      this.CustomerController.resetPassword
+    );
+    
   };
 
   public getRoutes = (): IRouter => {

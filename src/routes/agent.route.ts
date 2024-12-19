@@ -1,4 +1,5 @@
 import AgentController from '../controllers/agent.controller';
+import { agentAuth } from '../middlewares/auth.middleware';
 import AgentValidator from '../validators/agent.validator';
 import express, { IRouter } from 'express';
 
@@ -13,7 +14,7 @@ class UserRoutes {
 
   private routes = () => {
     //route to login an agent
-    this.router.post('', this.agentController.agentLogin);
+    this.router.post('', this.agentValidator.loginAgent, this.agentController.agentLogin);
 
     //route to register an agent    
     this.router.post('/register', this.agentValidator.newAgent, this.agentController.agentSignup);
@@ -21,7 +22,13 @@ class UserRoutes {
     // get all agents
     this.router.get('/', this.agentController.getAllAgents);
 
-    this.router.get('/refreshtoken/',this.agentController.refreshToken)
+    this.router.get('/refreshtoken/:id',this.agentController.refreshToken)
+
+    // forget password route
+    this.router.post('/forgot-password', this.agentValidator.validateForgotPassword, this.agentController.forgotPassword);
+
+    // Reset Password
+    this.router.post('/reset-password', this.agentValidator.validateResetPassword, agentAuth, this.agentController.resetPassword);
   };
 
   public getRoutes = (): IRouter => {
