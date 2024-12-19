@@ -44,10 +44,15 @@ class PlanController {
     // Get all plans
     public getAllPlans = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const plans = await this.planService.getAllPlans();
-            res.status(HttpStatus.OK).json({ 
-                code: HttpStatus.OK, 
-                plans 
+            // Safely cast `req.query` to the expected type(use unknown)
+            const { page, limit } = req.query as unknown as { page: number; limit: number }; 
+            const plans = await this.planService.getAllPlans(page, limit);
+            res.status(HttpStatus.OK).json({
+                code: HttpStatus.OK,
+                data: plans.data,
+                total: plans.total,       // Total number of records
+                page: plans.page,         // Current page
+                totalPages: plans.totalPages, // Total pages
             });
         } catch (error) {
             next(error);

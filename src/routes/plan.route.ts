@@ -20,7 +20,7 @@ class PlanRoutes {
     this.router.get('/:id', this.planController.getPlanById);
 
     // get all plans
-    this.router.get('/', this.planController.getAllPlans);
+    this.router.get('/', this.planValidator.validatePagination, this.planController.getAllPlans);
 
     // update a plan by id
     this.router.put('/:id', this.planValidator.updatePlan, this.planController.updatePlan);
