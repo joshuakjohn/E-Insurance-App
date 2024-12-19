@@ -1,10 +1,12 @@
 import { IPolicy } from '../interfaces/policy.interface';
+import Agent from '../models/agent.model'
 import policyModel from '../models/policy.model';
 
  class PolicyService{
     public createPolicy = async (body: IPolicy): Promise<any> => {
         try{
             const data = policyModel.create(body)
+            await Agent.updateOne({ _id: body.agentId }, { $inc: { num_of_policies: 1 } });
             return data
         } catch(error) {
             throw new Error(error.message)
