@@ -12,9 +12,16 @@ import policyModel from '../models/policy.model';
         
     }
     
-    public getAllPolicy = async (): Promise<any> => {
+    public getAllPolicy = async (customerReq: string, agentReq: string): Promise<any> => {
         try {
-            const policy = await policyModel.find();
+            let policy = []
+            if(agentReq === undefined){
+              policy = await policyModel.find({customerId: customerReq});
+            }
+            else{
+              policy = await policyModel.find({customerId: agentReq});
+            }
+            
             if(!policy || policy.length === 0) {
               throw new Error('No policy found');
             }
@@ -28,7 +35,7 @@ import policyModel from '../models/policy.model';
         try {
             const policy = await policyModel.findById(id);
             if (!policy) {
-              throw new Error('Scheme not found');
+              throw new Error('Policy not found');
             }
             return policy;
           } catch (error) {
