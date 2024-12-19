@@ -41,7 +41,6 @@ class AgentService{
         message: "Login Successful",
         name: res.name,
         token: token,
-        refreshToken:refreshToken
       }   
     }
     else{
