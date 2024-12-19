@@ -71,9 +71,40 @@ class AgentController{
         }
       };
     
-     
-     
-    
+
+    // forget password 
+    public forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+        try {
+        await this.agentService.forgotPassword(req.body.email);
+        res.status(httpstatus.OK).json({
+            code: httpstatus.OK,
+            message: "Reset password token sent to registered email id"
+        });
+        } catch (error) {
+        res.status(httpstatus.NOT_FOUND).json({
+            code: httpstatus.NOT_FOUND,
+            message: 'User not found'
+        });
+        }
+    };
+
+    //Reset Password
+    public resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+        try {
+        const agentId = res.locals.id;
+        await this.agentService.resetPassword(req.body, agentId);
+
+        res.status(httpstatus.OK).json({
+            code: httpstatus.OK,
+            message: 'Password reset successfully',
+        });
+        } catch (error) {
+        res.status(httpstatus.UNAUTHORIZED).send({
+            code: httpstatus.UNAUTHORIZED,
+            message : error.message
+        });
+        }
+      };
 
 }
 

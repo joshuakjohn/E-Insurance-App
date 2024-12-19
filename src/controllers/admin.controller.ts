@@ -56,6 +56,40 @@ class AdminController {
             message: `${error}`})
         }
       };
+
+      // forget password 
+      public forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+        try {
+          await this.adminService.forgotPassword(req.body.email);
+          res.status(HttpStatus.OK).json({
+              code: HttpStatus.OK,
+              message: "Reset password token sent to registered email id"
+          });
+        } catch (error) {
+          res.status(HttpStatus.NOT_FOUND).json({
+              code: HttpStatus.NOT_FOUND,
+              message: 'User not found'
+          });
+        }
+      };
+
+      //Reset Password
+      public resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+        try {
+          const adminId = res.locals.id;
+          await this.adminService.resetPassword(req.body, adminId);
+
+          res.status(HttpStatus.OK).json({
+            code: HttpStatus.OK,
+            message: 'Password reset successfully',
+          });
+        } catch (error) {
+          res.status(HttpStatus.UNAUTHORIZED).send({
+            code: HttpStatus.UNAUTHORIZED,
+            message : error.message
+          });
+        }
+      };
     
 
 }

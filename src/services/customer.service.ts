@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongoose';
 import agent from '../models/agent.model'; 
 import customer from '../models/customer.model'
+import { sendEmail } from '../utils/user.util';
 import { error } from 'winston';
 
 
@@ -88,6 +89,30 @@ class CustomerService {
     }
   };
 
+  // forget password
+  public forgotPassword = async (email: string): Promise<void> => {
+    try{
+      const customerData = await customer.findOne({ email });
+      if (!customerData) {
+        throw new Error('Email not found');
+      }
+      const token = jwt.sign({ id: customerData._id }, process.env.JWT_FORGOTPASSWORD, { expiresIn: '1h' });
+      await sendEmail(email, token);
+    } catch(error){
+      throw new Error("Error occured cannot send email: "+error)
+    }
+  };
+
+  //reset password
+  public resetPassword = async (body: any, userId): Promise<void> => {
+    const customerData = await customer.findById(userId);
+    if (!customerData) {
+      throw new Error('User not found');
+    }
+    const hashedPassword = await bcrypt.hash(body.newPassword, 10);
+    customerData.password = hashedPassword;
+    await customerData.save();
+  };
       
 }
 
