@@ -27,7 +27,6 @@ class AdminController {
             res.status(HttpStatus.OK).json({
                 code: HttpStatus.OK,
                 token,
-                refreshToken,
                 email,
                 message: `${username} logged in successfully as admin`,
             });
@@ -44,18 +43,19 @@ class AdminController {
         next: NextFunction
       ): Promise<any> => {
         try {
-          const refreshToken = req.headers['authorization']?.split(' ')[1];
-          const token = await this.adminService.refreshToken( refreshToken);
-          res.status(HttpStatus.OK).json({
-            code: HttpStatus.OK,
-            token:token
-          });
+            const adminId = req.params.id;
+            const token = await this.adminService.refreshToken(adminId);
+            res.status(HttpStatus.OK).json({
+                code: HttpStatus.OK,
+                message: 'Access token refreshed successfully',
+                token:token
+            });
         } catch (error) {
-          res.status(HttpStatus.BAD_REQUEST).json({
-            code:HttpStatus.BAD_REQUEST,
-            message: `${error}`})
-        }
-      };
+            res.status(HttpStatus.BAD_REQUEST).json({
+                code:HttpStatus.BAD_REQUEST,
+                message: `${error}`})
+            }
+        };
 
       // forget password 
       public forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<any> => {

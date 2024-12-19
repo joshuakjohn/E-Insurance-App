@@ -17,7 +17,8 @@ class AdminRoutes {
 
         // Admin login route
         this.router.post('', this.adminValidator.loginAdmin, this.adminController.loginAdmin);
-        this.router.get('/refreshtoken/',this.adminController.refreshToken)
+
+        this.router.get('/refreshtoken/:id',this.adminController.refreshToken)
 
         // forget password route
         this.router.post('/forgot-password', this.adminValidator.validateForgotPassword, this.adminController.forgotPassword);

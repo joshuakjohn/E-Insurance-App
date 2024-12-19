@@ -10,4 +10,6 @@ export interface IPolicy extends Document {
   premiumAmount: number;
   duration: number;
   coverage: number;
+  pendingPremium:number;
+  premiumPaid:number;
 }

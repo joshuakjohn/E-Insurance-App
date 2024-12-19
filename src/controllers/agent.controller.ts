@@ -52,24 +52,27 @@ class AgentController{
             next(error);
         }
     };
+
     public refreshToken=async (
         req: Request,
         res: Response,
         next: NextFunction
       ): Promise<any> => {
         try {
-          const refreshToken = req.headers['authorization']?.split(' ')[1];
-          const token = await this.agentService.refreshToken( refreshToken);
-          res.status(httpstatus.OK).json({
-            code: httpstatus.OK,
-            token:token
-          });
+            const agentId=req.params.id;
+            const token = await this.agentService.refreshToken(agentId);
+            res.status(httpstatus.OK).json({
+                code: httpstatus.OK,
+                message: 'Access token refreshed successfully',
+                token:token
+            });
         } catch (error) {
-          res.status(httpstatus.BAD_REQUEST).json({
-            code: httpstatus.BAD_REQUEST,
-            message: `${error}`})
-        }
-      };
+            res.status(httpstatus.BAD_REQUEST).json({
+                code: httpstatus.BAD_REQUEST,
+                message: error.message 
+            })
+        };
+    }
     
 
     // forget password 
@@ -107,5 +110,7 @@ class AgentController{
       };
 
 }
+
+
 
 export default AgentController

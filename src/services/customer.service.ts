@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongoose';
 import agent from '../models/agent.model'; 
 import customer from '../models/customer.model'
+import Policy from '../models/policy.model';
+import Agent from '../models/agent.model'
 import { sendEmail } from '../utils/user.util';
 import { error } from 'winston';
 
@@ -70,25 +72,41 @@ class CustomerService {
       throw new Error(`Error retrieving customers: ${error.message}`);
     }
   };
-  public refreshToken = async (refreshToken: string): Promise<{ newRefreshToken: string }> => {
-    const foundCustomer = await customer.findOne({ refreshToken:refreshToken});
-    if (!foundCustomer) {
-      throw new Error('Invalid refresh token');
-    }
+
+  public refreshToken = async (customerId: string): Promise<string> => {
     try {
-      const newRefreshToken = jwt.sign(
-        { userId: foundCustomer._id, email: foundCustomer.email }, process.env.CUSTOMER_SECRET as string,{ expiresIn: '7d' });
-      await customer.findByIdAndUpdate(foundCustomer._id,{ refreshToken: newRefreshToken },{ new: true });
-      return { newRefreshToken };
-  
-    } catch (error) {
-      if (error instanceof jwt.TokenExpiredError) {
-        throw new Error('Refresh token has expired');
+      const customerRecord = await customer.findById(customerId);
+      const refreshToken = customerRecord?.refreshToken;
+      if (!refreshToken) {
+        throw new Error('Refresh token is missing');
       }
-      throw new Error('Error verifying or updating refresh token');
+      const payload : any= jwt.verify(refreshToken, process.env.CUSTOMER_SECRET );
+      const { userId, email } = payload;
+      const newAccessToken = jwt.sign({ userId, email }, process.env.CUSTOMER_SECRET, { expiresIn: '1h' });
+      return newAccessToken;
+    } catch (error) {
+      throw new Error(`Error: ${error.message}`);
     }
   };
 
+  public payPremium = async (body): Promise<any> => {
+    const { policyId, paymentAmount, agentId, commissionRate = 5 } = body;
+    const policy = await Policy.findById(policyId);
+    const amountPerMonth = policy.premiumAmount;
+    if (paymentAmount !== amountPerMonth) {
+      throw new Error(`Payment amount must match the monthly premium of ${amountPerMonth}`);
+    }
+    policy.premiumPaid += 1;
+    policy.pendingPremium = Math.max(0, policy.pendingPremium - 1);
+    await policy.save();
+    const commissionEarned = paymentAmount * (commissionRate / 100);
+    if (agentId) {
+      await Agent.findByIdAndUpdate(agentId,{ $inc: { commission: commissionEarned } }, { new: true } );
+    }
+  
+    return { totalMonthsPaid: policy.premiumPaid,monthsRemaining: policy.pendingPremium};
+  };
+  
   // forget password
   public forgotPassword = async (email: string): Promise<void> => {
     try{

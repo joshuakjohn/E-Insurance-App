@@ -42,7 +42,6 @@ class AgentService{
         message: "Login Successful",
         name: res.name,
         token: token,
-        refreshToken:refreshToken
       }   
     }
     else{
@@ -62,21 +61,20 @@ class AgentService{
             throw error;
         }
     };
-    public refreshToken = async (refreshToken: string): Promise<{ newAccessToken: string }> => {
-      const agent = await agentModel.findOne({ refreshToken });
-      if (!agent) {
-        throw new Error("Invalid refresh token");
-      }
+    public refreshToken = async (agentId: string): Promise<any> => {
       try {
-        const payload = jwt.verify(refreshToken, process.env.AGENT_SECRET);
-        if (typeof payload === 'string') {
-          throw new Error('Invalid token payload');
+        const agentRecord=await agentModel.findById(agentId);
+        const refreshToken=agentRecord.refreshToken;
+        if (!refreshToken) {
+          throw new Error('Refresh token is missing');
         }
-        const newAccessToken = jwt.sign({ userId: agent._id, email: agent.email },process.env.AGENT_SECRET,{ expiresIn: '1h' } );
-        return { newAccessToken };
+        const payload : any= jwt.verify(refreshToken, process.env.AGENT_SECRET );
+        const { userId, email } = payload;
+        const newAccessToken = jwt.sign({ userId, email }, process.env.CUSTOMER_SECRET, { expiresIn: '1h' });
+        return newAccessToken;
       } catch (error) {
-        throw new Error('Error verifying refresh token');
-      }
+        throw new Error(`Error: ${error.message}`);  
+      } 
     };
 
     // forget password
