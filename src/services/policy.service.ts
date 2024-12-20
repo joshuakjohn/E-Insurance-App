@@ -14,23 +14,21 @@ import policyModel from '../models/policy.model';
         
     }
     
-    public getAllPolicies = async (customerReq: string, agentReq: string, page: number, limit: number): Promise<{ data: IPolicy[]; total: number; page: number; totalPages: number }> => {
+    public getAllPolicies = async (customerReq: string, agentOrAdminReq: string, page: number, limit: number): Promise<{ data: IPolicy[]; total: number; page: number; totalPages: number }> => {
       try {
           let policies = [];
           let total = 0;
 
-          if (agentReq === undefined) {
-              // Customer-specific policies
+          if (agentOrAdminReq === undefined) {
               total = await policyModel.countDocuments({ customerId: customerReq });
               policies = await policyModel
                   .find({ customerId: customerReq })
                   .skip((page - 1) * limit)
                   .limit(limit);
           } else {
-              // Agent-specific policies
-              total = await policyModel.countDocuments({ agentId: agentReq });
+              total = await policyModel.countDocuments({ customerId: agentOrAdminReq });
               policies = await policyModel
-                  .find({ agentId: agentReq })
+                  .find({ customerId: agentOrAdminReq })
                   .skip((page - 1) * limit)
                   .limit(limit);
           }

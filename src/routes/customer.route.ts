@@ -33,7 +33,7 @@ class UserRoutes {
     this.router.post('/forgot-password', this.CustomerValidator.validateForgotPassword, this.CustomerController.forgotPassword);
     
     // Reset Password route
-    this.router.post('/reset-password', this.CustomerValidator.validateResetPassword, customerResetAuth, this.CustomerController.resetPassword);
+    this.router.post('/reset-password', customerResetAuth, this.CustomerValidator.validateResetPassword, this.CustomerController.resetPassword);
     
     //route to refresh token
     this.router.get('/:id/refreshtoken', this.CustomerController.refreshToken)
