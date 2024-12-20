@@ -27,6 +27,10 @@ class SchemeRoutes {
          //route to get the scheme which match with search key
          this.router.get('/search',this.schemeController.search)
 
+        //route to get the filter scheme
+         this.router.get('/filter', this.schemeController.filter)
+
+
          //route to get a scheme by id, by admin
          this.router.get('/:id', adminAuth, this.schemeController.getSchemeById);
 

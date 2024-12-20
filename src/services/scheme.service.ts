@@ -77,8 +77,19 @@ import { IScheme } from '../interfaces/scheme.interface'
             throw new Error(`Error performing search: ${error.message}`);
         }
     };
-    
-       
+
+    public filter = async (): Promise<any> => {
+        try {
+          const filterResult = await Scheme.find().sort({ premium: 1 });
+          if (filterResult.length === 0) {
+            throw new Error('No results found');
+          }
+          return filterResult;
+        } catch (error) {
+          throw new Error(`Error sorting the schemes: ${error.message}`);
+        }
+      };
+           
 }
    
  export default SchemaService;  

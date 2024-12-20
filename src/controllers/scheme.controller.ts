@@ -103,5 +103,19 @@ class SchemeController{
         }
     }
 
+    public filter=async(req:Request,res:Response,next:NextFunction)=>{
+        try{
+            const filterResult=await this.schemeService.filter()
+            res.status(HttpStatus.OK).json({ 
+                code: HttpStatus.OK, 
+                data:filterResult
+            });
+        }catch (error) {
+            res.status(HttpStatus.BAD_REQUEST).json({
+                code: HttpStatus.BAD_REQUEST,
+                message: `${error}`,
+                });
+            }
+        }
 }
 export default SchemeController;
