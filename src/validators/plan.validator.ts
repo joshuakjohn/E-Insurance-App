@@ -28,7 +28,6 @@ class PlanValidator {
             planName: Joi.string().optional(),
             description: Joi.string().optional(),
             category: Joi.string().optional(),
-            isActive: Joi.boolean().optional(),
         });
     
         const { error } = schema.validate(req.body);
