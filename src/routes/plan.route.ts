@@ -18,10 +18,10 @@ class PlanRoutes {
     this.router.post('/', adminAuth, this.planValidator.createPlan, this.planController.createPlan);
 
     // get all plans by admin
-    this.router.get('/', adminAuth, this.planController.getAllPlans);
+    this.router.get('/', adminAuth, this.planValidator.validatePagination, this.planController.getAllPlans);
 
     // get all plans by customer
-    this.router.get('/customer', customerAuth, this.planController.getAllPlans);
+    this.router.get('/customer', customerAuth, this.planValidator.validatePagination, this.planController.getAllPlans);
 
     // get all plans by agent
     this.router.get('/agent', agentAuth, this.planValidator.validatePagination, this.planController.getAllPlans);
