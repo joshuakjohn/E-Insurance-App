@@ -17,13 +17,13 @@ class SchemeRoutes {
          this.router.post('/', adminAuth, this.schemeValidator.createScheme, this.schemeController.createScheme);
          
          //route to get all schemes by admin
-         this.router.get('/', adminAuth, this.schemeController.getAllSchemes);
+         this.router.get('/', adminAuth, this.schemeValidator.validatePagination, this.schemeController.getAllSchemes);
 
          //route to get all schemes by customer
-         this.router.get('/customer', customerAuth, this.schemeController.getAllSchemes);
+         this.router.get('/customer', customerAuth, this.schemeValidator.validatePagination, this.schemeController.getAllSchemes);
 
          //route to get all schemes by agent
-         this.router.get('/agent', agentAuth, this.schemeController.getAllSchemes);
+         this.router.get('/agent', agentAuth, this.schemeValidator.validatePagination, this.schemeController.getAllSchemes);
 
          //route to get a scheme by id, by admin
          this.router.get('/:id', adminAuth, this.schemeController.getSchemeById);

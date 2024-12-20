@@ -11,16 +11,22 @@ import { IScheme } from '../interfaces/scheme.interface'
         }
     }
     
-    public getAllSchemes = async (): Promise<IScheme[]> => {
+      public getAllSchemes = async (page: number, limit: number): Promise<{ data: IScheme[]; total: number; page: number; totalPages: number }> => {
         try {
-          const schemes = await Scheme.find();
-          if(!schemes || schemes.length === 0) {
-            throw new Error('No scheme found');
-        }
-          return schemes;
+            const total = await Scheme.countDocuments(); // Total number of schemes
+            const totalPages = Math.ceil(total / limit); // Total number of pages
+            const data = await Scheme.find()
+                .skip((page - 1) * limit) // Skip records for previous pages
+                .limit(limit);           // Limit the number of records fetched
+
+            return {
+                data,
+                total,
+                page,
+                totalPages,
+            };
         } catch (error) {
-         
-          throw new Error(`Error fetching schemes: ${error.message}`);
+            throw new Error(`Error fetching schemes: ${error.message}`);
         }
       };
 
