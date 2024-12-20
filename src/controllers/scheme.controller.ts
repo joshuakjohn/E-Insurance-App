@@ -23,16 +23,18 @@ class SchemeController{
 
     public getAllSchemes = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const scheme = await this.schemeService.getAllSchemes();
-            res.status(HttpStatus.OK).json({ 
-                code: HttpStatus.OK, 
-               scheme:scheme 
+            const { page, limit } = req.query as unknown as { page: number; limit: number };
+            const schemes = await this.schemeService.getAllSchemes(page, limit);
+
+            res.status(HttpStatus.OK).json({
+                code: HttpStatus.OK,
+                data: schemes.data,
+                total: schemes.total,       // Total number of records
+                page: schemes.page,         // Current page
+                totalPages: schemes.totalPages, // Total pages
             });
         } catch (error) {
-            res.status(HttpStatus.BAD_REQUEST).json({
-                code: HttpStatus.BAD_REQUEST,
-                message: `${error}`
-            });
+            next(error);
         }
     };
 
