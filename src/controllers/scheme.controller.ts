@@ -83,5 +83,23 @@ class SchemeController{
         }
     };
 
+    public search =async(req:Request,res:Response,next:NextFunction)=>{
+        try{
+            const searchText=req.query.q as string
+            let page = Number(req.query.page);
+            let limit = Number(req.query.limit);
+            const searchResult=await this.schemeService.search(searchText,page,limit)
+            res.status(HttpStatus.OK).json({ 
+                code: HttpStatus.OK, 
+                data:searchResult 
+               });
+        }catch (error) {
+            res.status(HttpStatus.BAD_REQUEST).json({
+                code: HttpStatus.BAD_REQUEST,
+                message: `${error}`,
+            });
+        }
+    }
+
 }
 export default SchemeController;

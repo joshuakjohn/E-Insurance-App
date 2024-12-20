@@ -12,7 +12,6 @@ class SchemeRoutes {
         this.routes();
      }
      private routes = () => {
-    
          // route to create a scheme by admin
          this.router.post('/', adminAuth, this.schemeValidator.createScheme, this.schemeController.createScheme);
          
@@ -24,6 +23,9 @@ class SchemeRoutes {
 
          //route to get all schemes by agent
          this.router.get('/agent', agentAuth, this.schemeController.getAllSchemes);
+
+         //route to get the scheme which match with search key
+         this.router.get('/search',this.schemeController.search)
 
          //route to get a scheme by id, by admin
          this.router.get('/:id', adminAuth, this.schemeController.getSchemeById);

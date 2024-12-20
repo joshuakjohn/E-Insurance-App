@@ -59,6 +59,20 @@ import { IScheme } from '../interfaces/scheme.interface'
           throw new Error(`Error deleting scheme: ${error.message}`);
         }
       };
-    }
+
+      public search = async (search: string, page: number, limit: number): Promise<any> => {
+        try {
+            const searchResult = await Scheme.find({$or: [{ schemeName: { $regex: search, $options:'i' } },{ description: { $regex: search, $options:'i' } }]}).skip((page - 1) * limit) .limit(limit); 
+            if (searchResult.length === 0) {
+                throw new Error('No results found');
+            }
+            return { results: searchResult};
+         } catch (error) {
+            throw new Error(`Error performing search: ${error.message}`);
+        }
+    };
+    
+       
+}
    
- export default SchemaService;
+ export default SchemaService;  
