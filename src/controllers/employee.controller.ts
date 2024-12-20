@@ -10,12 +10,13 @@ class EmployeeController{
     //login employee
     public loginEmployee = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const {token, refreshToken,username, email} = await this.employeeService.loginEmployee(req.body);
+            const {token, username, email} = await this.employeeService.loginEmployee(req.body);
             res.status(HttpStatus.OK).json({
                 code: HttpStatus.OK,
                 token,
                 email,
-                message: `${username} logged in successfully as admin`,
+                username,
+                message: `${username} logged in successfully as employee`,
             });
         } catch (error) {
             res.status(HttpStatus.BAD_REQUEST).json({

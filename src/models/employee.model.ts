@@ -11,4 +11,4 @@ const employeeSchema = new Schema<IEmployee>(
   { timestamps: true }
 );
 
-export default model<IEmployee>('Admin', employeeSchema);
+export default model<IEmployee>('Employee', employeeSchema);

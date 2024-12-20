@@ -5,4 +5,5 @@ export interface IEmployee extends Document {
   email: string;
   password: string;
   phno: number;
+  refreshToken?:string;
 }

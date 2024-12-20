@@ -38,7 +38,7 @@ class PolicyRoute {
          this.router.get('/:id/agent/all', agentAuth, this.policyController.getAllPolicy);
 
          //route to get all policy by admin
-         this.router.get('/:id//admin/all', adminAuth, this.policyController.getAllPolicy);
+         this.router.get('/:id/admin/all', adminAuth, this.policyController.getAllPolicy);
      }
      
      public getRoutes = (): IRouter => {
