@@ -12,6 +12,7 @@ class SchemeRoutes {
         this.routes();
      }
      private routes = () => {
+
          // route to create a scheme by admin
          this.router.post('/', adminAuth, this.schemeValidator.createScheme, this.schemeController.createScheme);
          
@@ -29,7 +30,6 @@ class SchemeRoutes {
 
         //route to get the filter scheme
          this.router.get('/filter', this.schemeController.filter)
-
 
          //route to get a scheme by id, by admin
          this.router.get('/:id', adminAuth, this.schemeController.getSchemeById);
