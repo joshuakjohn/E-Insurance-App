@@ -14,24 +14,43 @@ import policyModel from '../models/policy.model';
         
     }
     
-    public getAllPolicy = async (customerReq: string, agentReq: string): Promise<any> => {
-        try {
-            let policy = []
-            if(agentReq === undefined){
-              policy = await policyModel.find({customerId: customerReq});
-            }
-            else{
-              policy = await policyModel.find({customerId: agentReq});
-            }
-            
-            if(!policy || policy.length === 0) {
-              throw new Error('No policy found');
-            }
-            return policy;
-          } catch (error) {
-            throw new Error(`Error fetching policy: ${error.message}`);
+    public getAllPolicies = async (customerReq: string, agentReq: string, page: number, limit: number): Promise<{ data: IPolicy[]; total: number; page: number; totalPages: number }> => {
+      try {
+          let policies = [];
+          let total = 0;
+
+          if (agentReq === undefined) {
+              // Customer-specific policies
+              total = await policyModel.countDocuments({ customerId: customerReq });
+              policies = await policyModel
+                  .find({ customerId: customerReq })
+                  .skip((page - 1) * limit)
+                  .limit(limit);
+          } else {
+              // Agent-specific policies
+              total = await policyModel.countDocuments({ agentId: agentReq });
+              policies = await policyModel
+                  .find({ agentId: agentReq })
+                  .skip((page - 1) * limit)
+                  .limit(limit);
           }
-      };
+
+          if(!policies || policies.length === 0) {
+            throw new Error('No policy found');
+          }
+
+          const totalPages = Math.ceil(total / limit);
+
+          return {
+              data: policies,
+              total,
+              page,
+              totalPages,
+          };
+      } catch (error) {
+          throw new Error(`Error fetching policy: ${error.message}`);
+      }
+    };
 
       public getPolicyById = async (id: string): Promise<any> => {
         try {

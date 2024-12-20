@@ -27,17 +27,24 @@ class PlanService {
     };
 
     // Get all plans
-    public getAllPlans = async (): Promise<IPlan[]> => {
-       try {
-            const res = await Plan.find();
-            if(!res || res.length === 0) {
-                throw new Error('No plans found');
-            }
-            return res;
-       } catch (error) {
+    public getAllPlans = async (page: number, limit: number): Promise<{ data: IPlan[]; total: number; page: number; totalPages: number }> => {
+        try {
+            const total = await Plan.countDocuments(); // Total number of plans
+            const totalPages = Math.ceil(total / limit); // Total number of pages
+            const data = await Plan.find()
+                .skip((page - 1) * limit) // Skip records for previous pages
+                .limit(limit);           // Limit the number of records fetched
+    
+            return {
+                data,
+                total,
+                page,
+                totalPages,
+            };
+        } catch (error) {
             throw error;
-       }
-    };
+        }
+    };        
 
     // Update a plan by ID
     public updatePlan = async (planId: string, updatedData: Partial<IPlan>): Promise<IPlan | null> => {
