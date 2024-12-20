@@ -26,7 +26,7 @@ class UserRoutes {
     this.router.post('/forgot-password', this.agentValidator.validateForgotPassword, this.agentController.forgotPassword);
 
     // Reset Password route
-    this.router.post('/reset-password', this.agentValidator.validateResetPassword, agentResetAuth, this.agentController.resetPassword);
+    this.router.post('/reset-password', agentResetAuth, this.agentValidator.validateResetPassword, this.agentController.resetPassword);
 
     //route to refresh token
     this.router.get('/:id/refreshtoken',this.agentController.refreshToken)
