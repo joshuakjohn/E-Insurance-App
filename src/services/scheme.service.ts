@@ -11,16 +11,22 @@ import { IScheme } from '../interfaces/scheme.interface'
         }
     }
     
-    public getAllSchemes = async (): Promise<IScheme[]> => {
+      public getAllSchemes = async (page: number, limit: number): Promise<{ data: IScheme[]; total: number; page: number; totalPages: number }> => {
         try {
-          const schemes = await Scheme.find();
-          if(!schemes || schemes.length === 0) {
-            throw new Error('No scheme found');
-        }
-          return schemes;
+            const total = await Scheme.countDocuments(); // Total number of schemes
+            const totalPages = Math.ceil(total / limit); // Total number of pages
+            const data = await Scheme.find()
+                .skip((page - 1) * limit) // Skip records for previous pages
+                .limit(limit);           // Limit the number of records fetched
+
+            return {
+                data,
+                total,
+                page,
+                totalPages,
+            };
         } catch (error) {
-         
-          throw new Error(`Error fetching schemes: ${error.message}`);
+            throw new Error(`Error fetching schemes: ${error.message}`);
         }
       };
 
@@ -59,6 +65,31 @@ import { IScheme } from '../interfaces/scheme.interface'
           throw new Error(`Error deleting scheme: ${error.message}`);
         }
       };
-    }
+
+      public search = async (search: string, page: number, limit: number): Promise<any> => {
+        try {
+            const searchResult = await Scheme.find({$or: [{ schemeName: { $regex: search, $options:'i' } },{ description: { $regex: search, $options:'i' } }]}).skip((page - 1) * limit) .limit(limit); 
+            if (searchResult.length === 0) {
+                throw new Error('No results found');
+            }
+            return { results: searchResult};
+         } catch (error) {
+            throw new Error(`Error performing search: ${error.message}`);
+        }
+    };
+
+    public filter = async (): Promise<any> => {
+        try {
+          const filterResult = await Scheme.find().sort({ premium: 1 });
+          if (filterResult.length === 0) {
+            throw new Error('No results found');
+          }
+          return filterResult;
+        } catch (error) {
+          throw new Error(`Error sorting the schemes: ${error.message}`);
+        }
+      };
+           
+}
    
- export default SchemaService;
+ export default SchemaService;  

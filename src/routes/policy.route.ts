@@ -17,7 +17,7 @@ class PolicyRoute {
          this.router.post('/', customerAuth, this.policyValidator.createPolicy, this.policyController.createPolicy);
          
          //route to get all policy by customer
-         this.router.get('/', customerAuth, this.policyController.getAllPolicy);
+         this.router.get('/', customerAuth, this.policyValidator.validatePagination, this.policyController.getAllPolicies);
 
          //route to update policy by customer
          this.router.put('/:id', customerAuth, this.policyValidator.createPolicy, this.policyController.updatePolicy);
@@ -35,7 +35,7 @@ class PolicyRoute {
          this.router.get('/:id/admin', adminAuth, this.policyController.getPolicyById);
 
          //route to get all policy by agent
-         this.router.get('/:id/agent/all', agentAuth, this.policyController.getAllPolicy);
+         this.router.get('/:id/agent/all', agentAuth, this.policyValidator.validatePagination, this.policyController.getAllPolicies);
 
          //route to get all policy by admin
          this.router.get('/:id/admin/all', adminAuth, this.policyController.getAllPolicy);

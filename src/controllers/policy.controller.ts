@@ -23,12 +23,21 @@ class PolicyController{
         }
     };
 
-    public getAllPolicy = async (req: Request, res: Response, next: NextFunction) => {
+
+    public getAllPolicies = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const policy = await this.policyService.getAllPolicy(res.locals.id, req.params.id);
+            const { page, limit } = req.query as unknown as { page: number; limit: number }; // Pagination parameters
+            const customerId = res.locals.id; // Customer ID from middleware
+            const agentId = req.params.id;   // Agent ID from params
+
+            const policies = await this.policyService.getAllPolicies(customerId, agentId, page, limit);
+
             res.status(HttpStatus.OK).json({
                 code: HttpStatus.OK,
-                data: policy
+                data: policies.data,
+                total: policies.total,
+                page: policies.page,
+                totalPages: policies.totalPages,
             });
         } catch (error) {
             res.status(HttpStatus.BAD_REQUEST).json({
