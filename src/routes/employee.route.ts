@@ -2,6 +2,7 @@ import express, { IRouter } from 'express';
 import EmployeeController from '../controllers/employee.controller';
 import EmployeeValidator from '../validators/employee.validator';
 import { adminAuth, employeeResetAuth } from '../middlewares/auth.middleware';
+import { employeeResetAuth } from '../middlewares/auth.middleware';
 
 class EmployeeRoutes {
     private router = express.Router();

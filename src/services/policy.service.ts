@@ -23,13 +23,11 @@ import policyModel from '../models/policy.model';
               .find({ customerId })
               .skip((page - 1) * limit)
               .limit(limit);
-
+        
           if(!policies || policies.length === 0) {
             throw new Error('No policy found');
           }
-
           const totalPages = Math.ceil(total / limit);
-
           return {
               data: policies,
               total,

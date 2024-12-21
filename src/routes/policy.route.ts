@@ -54,6 +54,7 @@ class PolicyRoute {
 
          //route to get all policy by employee
          this.router.get('/:id/getall/employee', employeeAuth, this.policyValidator.validatePagination, this.policyController.getAllPolicies);
+
      }
      
      public getRoutes = (): IRouter => {
