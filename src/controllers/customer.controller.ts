@@ -20,7 +20,10 @@ class UserController {
     next: NextFunction
   ): Promise<any> => {
     try {
+      if(req.file)
+      req.body.profilePhoto=req.file.buffer
       await this.CustomerService.createCustomer(req.body);
+      
       res.status(HttpStatus.CREATED).json({
         code: HttpStatus.CREATED,
         message: 'customer created successfully'
