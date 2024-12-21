@@ -3,7 +3,7 @@ import { IAgent } from '../interfaces/agent.interface';
 
 const agentSchema = new Schema(
   {
-    name: {
+    username: {
       type: String,
       required: true
     },
