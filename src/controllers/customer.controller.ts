@@ -58,12 +58,17 @@ class UserController {
      next: NextFunction
     ) => {
     try {
-        const agentId = res.locals.id;
-        const data = await this.CustomerService.getAllCustomers(agentId);
-        res.status(HttpStatus.OK).json({ 
-            code: HttpStatus.OK, 
-            data 
-        });
+      let agentId;
+      if(req.params.id === undefined){
+        agentId = res.locals.id;
+      } else {
+        agentId = req.params.id;
+      }
+      const data = await this.CustomerService.getAllCustomers(agentId);
+      res.status(HttpStatus.OK).json({ 
+          code: HttpStatus.OK, 
+          data 
+      });
     } catch (error) {
         next(error);
     }
