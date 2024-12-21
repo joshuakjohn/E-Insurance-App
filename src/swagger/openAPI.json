@@ -1,0 +1,135 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "E-Insurance App",
+      "description": "This is a online insurance application. Application includes 4 user api and 3 service api"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:4000/api/v1"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Customer",
+        "description": "Operations related to customer management"
+      },
+      {
+        "name": "Agent",
+        "description": "Operations related to agent management"
+      },
+      {
+        "name": "Admin",
+        "description": "Operations related to admin management"
+      },
+      {
+        "name": "Employee",
+        "description": "Operations related to employee management"
+      },
+      {
+        "name": "Policy",
+        "description": "Operations related to agent management"
+      },
+      {
+        "name": "Plan",
+        "description": "Operations related to agent management"
+      },
+      {
+        "name": "Scheme",
+        "description": "Operations related to agent management"
+      }
+    ],
+    "paths": {
+      "/agent/register": {
+        "post": {
+          "tags": ["Agent"],
+          "summary": "Register a new agent",
+          "requestBody": {
+            "description": "Agent registration details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Agent"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Agent created successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/agent/{id}/refreshtoken": {
+        "get": {
+          "tags": ["Agent"],
+          "summary": "Refresh access token of a specific agent",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Access token refreshed successfully"
+            },
+            "404": {
+              "description": "Note not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Admin":{
+          "type": "object",
+          "properties": {
+            "username": { "type": "String", "required": true },
+            "email": { "type": "String", "required": true, "unique": true },
+            "password": { "type": "String", "required": true },
+            "phno": {"type": "Number", "match": "/^[0-9]{10}$/"},
+            "refreshToken": {"type": "String", "default": null,  "required": false }
+          }
+        },
+        "Agent": {
+          "type": "object",
+          "properties": {
+            "username": {"type": "String", "required": true},
+            "email": {"type": "String", "required": true},
+            "password": {"type": "String", "required": true},
+            "phno": {"type": "String", "required": true},
+            "region": {"type": "String", "required": true},
+            "num_of_customers": {"type": "Number", "required": true, "default": 0},
+            "num_of_policies": {"type": "Number", "required": true, "default": 0},
+            "commission": {"type": "Number", "required": true, "default": 0},
+            "refreshToken": {"type": "String", "default": null, "required": false}
+          }
+        }
+      },
+      "securitySchemes": {
+        "JWT": {
+          "type": "apiKey",
+          "name": "Authorization",
+          "in": "header"
+        }
+      }
+    }
+}
+  

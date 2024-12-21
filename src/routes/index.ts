@@ -6,6 +6,8 @@ import SchemeRoute from './scheme.route';
 import express, { IRouter } from 'express';
 import PolicyRoute from './policy.route';
 import EmployeeRoute from './employee.route';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from '../swagger/openapi.json';
 
 const router = express.Router();
 
@@ -25,6 +27,7 @@ const routes = (): IRouter => {
   router.use('/scheme',new SchemeRoute().getRoutes());
   router.use('/policy', new PolicyRoute().getRoutes());
   router.use('/employee', new EmployeeRoute().getRoutes())
+  router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   
   return router;
 };
