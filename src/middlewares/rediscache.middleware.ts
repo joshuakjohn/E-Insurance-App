@@ -2,12 +2,21 @@ import { Request, Response, NextFunction } from 'express';
 import redisClient from '../config/redis';
 import HttpStatus from 'http-status-codes';
 
-
-export const cachePlans = async (req: Request, res: Response, next: NextFunction) => {
+export const cacheData = async (req: Request, res: Response, next: NextFunction) => {
     const { page, limit } = req.query as unknown as { page: number; limit: number };
-    const cacheKey = `plans:page=${page}:limit=${limit}`;
+    const basePath = req.baseUrl.split('/').pop(); // Extracts 'plan' or 'policy' from the route
+    let cacheKey = '';
 
     try {
+        if (basePath === 'plan') {
+            cacheKey = `plans:page=${page}:limit=${limit}`;
+        } else if (basePath === 'policy') {
+            const customerId = req.params.id || res.locals.id; // Customer ID from route params or middleware
+            cacheKey = `policies:customer:${customerId}:page=${page}:limit=${limit}`;
+        } else {
+            return next(); // Skip caching if the route doesn't match 'plan' or 'policy'
+        }
+
         const cachedData = await redisClient.get(cacheKey);
 
         if (cachedData) {
