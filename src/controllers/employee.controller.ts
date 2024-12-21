@@ -41,6 +41,19 @@ class EmployeeController{
         }
     };
 
+    // Get all Employee
+    public getAllEmployee = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const data = await this.employeeService.getAllEmployee();
+            res.status(HttpStatus.OK).json({ 
+                code: HttpStatus.OK, 
+                data 
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
+
     public forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
         try {
           await this.employeeService.forgotPassword(req.body.email);

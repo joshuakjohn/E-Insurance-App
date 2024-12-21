@@ -48,6 +48,19 @@ class EmployeeService{
         }
     };
 
+    // Get all employee
+    public getAllEmployee = async (): Promise<any> => {
+        try {
+            const res = await employeeModel.find().select('-password');
+            if(!res || res.length === 0) {
+                throw new Error('No employee found');
+            }
+            return res;
+        } catch (error) {
+            throw error;
+        }
+    };
+
     public refreshToken = async (employeeId: string): Promise<any> => {
         try {
             const employeeData = await employeeModel.findById(employeeId);
