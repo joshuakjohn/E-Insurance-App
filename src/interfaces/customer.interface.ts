@@ -12,5 +12,6 @@ export interface Customer extends Document {
   region:string;
   createdAt?: Date;
   updatedAt?: Date; 
-  refreshToken?:string
+  refreshToken?:string;
+  profilePhoto?: Buffer;
 }

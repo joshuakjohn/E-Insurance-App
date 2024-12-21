@@ -45,6 +45,11 @@ const customerSchema = new Schema<Customer>(
       default: null,
       required: false, 
     },
+    profilePhoto: {
+       type: Buffer,
+       required:false,
+       default: null
+     }
   },
   {
     timestamps: true,
