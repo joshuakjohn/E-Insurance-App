@@ -2,6 +2,7 @@ import express, { IRouter } from "express";
 import PolicyValidator from "../validators/policy.validator";
 import PolicyController from "../controllers/policy.controller";
 import { adminAuth, agentAuth, customerAuth, employeeAuth } from "../middlewares/auth.middleware";
+import { cacheData } from "../middlewares/rediscache.middleware";
 
 class PolicyRoute {
     private router = express.Router();
@@ -17,7 +18,7 @@ class PolicyRoute {
          this.router.post('/', customerAuth, this.policyValidator.createPolicy, this.policyController.createPolicy);
          
          //route to get all policy by customer
-         this.router.get('/', customerAuth, this.policyValidator.validatePagination, this.policyController.getAllPolicies);
+         this.router.get('/', customerAuth, this.policyValidator.validatePagination, cacheData, this.policyController.getAllPolicies);
 
          //route to update policy by customer
          this.router.put('/:id', customerAuth, this.policyValidator.createPolicy, this.policyController.updatePolicy);
@@ -47,13 +48,13 @@ class PolicyRoute {
          this.router.delete('/:id/admin', adminAuth, this.policyController.deletePolicy);
 
          //route to get all policy by agent
-         this.router.get('/:id/getall/agent', agentAuth, this.policyValidator.validatePagination, this.policyController.getAllPolicies);
+         this.router.get('/:id/getall/agent', agentAuth, this.policyValidator.validatePagination, cacheData, this.policyController.getAllPolicies);
 
          //route to get all policy by admin
-         this.router.get('/:id/getall/admin', adminAuth, this.policyValidator.validatePagination, this.policyController.getAllPolicies);
+         this.router.get('/:id/getall/admin', adminAuth, this.policyValidator.validatePagination, cacheData, this.policyController.getAllPolicies);
 
          //route to get all policy by employee
-         this.router.get('/:id/getall/employee', employeeAuth, this.policyValidator.validatePagination, this.policyController.getAllPolicies);
+         this.router.get('/:id/getall/employee', employeeAuth, this.policyValidator.validatePagination, cacheData, this.policyController.getAllPolicies);
 
      }
      
