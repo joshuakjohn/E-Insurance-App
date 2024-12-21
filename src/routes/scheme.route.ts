@@ -1,7 +1,7 @@
 import express, { IRouter } from 'express';
 import SchemeController from '../controllers/scheme.controller';
 import SchemeValidator from '../validators/scheme.validator';
-import { adminAuth, agentAuth, customerAuth } from '../middlewares/auth.middleware';
+import { adminAuth, agentAuth, customerAuth, employeeAuth } from '../middlewares/auth.middleware';
 
 class SchemeRoutes {
     private router = express.Router();
@@ -12,6 +12,7 @@ class SchemeRoutes {
         this.routes();
      }
      private routes = () => {
+
          // route to create a scheme by admin
          this.router.post('/', adminAuth, this.schemeValidator.createScheme, this.schemeController.createScheme);
          
@@ -24,12 +25,14 @@ class SchemeRoutes {
          //route to get all schemes by agent
          this.router.get('/agent', agentAuth, this.schemeValidator.validatePagination, this.schemeController.getAllSchemes);
 
+         //route to get all schemes by employee
+         this.router.get('/employee', employeeAuth, this.schemeValidator.validatePagination, this.schemeController.getAllSchemes);
+
          //route to get the scheme which match with search key
          this.router.get('/search',this.schemeController.search)
 
         //route to get the filter scheme
          this.router.get('/filter', this.schemeController.filter)
-
 
          //route to get a scheme by id, by admin
          this.router.get('/:id', adminAuth, this.schemeController.getSchemeById);
@@ -45,6 +48,9 @@ class SchemeRoutes {
 
          //route to get a scheme by id, by agent
          this.router.get('/:id/agent', agentAuth, this.schemeController.getSchemeById);
+
+         //route to get a scheme by id, by employee
+         this.router.get('/:id/employee', employeeAuth, this.schemeController.getSchemeById);
 
      }
      public getRoutes = (): IRouter => {

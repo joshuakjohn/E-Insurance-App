@@ -61,6 +61,7 @@ class AgentService{
             throw error;
         }
     };
+    
     public refreshToken = async (agentId: string): Promise<any> => {
       try {
         const agentRecord=await agentModel.findById(agentId);
