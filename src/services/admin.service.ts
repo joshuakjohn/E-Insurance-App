@@ -55,7 +55,7 @@ class AdminService {
             }
             const payload : any= jwt.verify(refreshToken, process.env.ADMIN_SECRET );
             const { userId, email } = payload;
-            const newAccessToken = jwt.sign({ userId, email }, process.env.CUSTOMER_SECRET, { expiresIn: '1h' });
+            const newAccessToken = jwt.sign({ userId, email }, process.env.ADMIN_SECRET, { expiresIn: '1h' });
             return newAccessToken;
         } catch (error) {
             throw new Error(`Error: ${error.message}`);

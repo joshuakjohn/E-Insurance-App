@@ -20,7 +20,10 @@ class UserController {
     next: NextFunction
   ): Promise<any> => {
     try {
+      if(req.file)
+      req.body.profilePhoto=req.file.buffer
       await this.CustomerService.createCustomer(req.body);
+      
       res.status(HttpStatus.CREATED).json({
         code: HttpStatus.CREATED,
         message: 'customer created successfully'
@@ -58,12 +61,17 @@ class UserController {
      next: NextFunction
     ) => {
     try {
-        const agentId = res.locals.id;
-        const data = await this.CustomerService.getAllCustomers(agentId);
-        res.status(HttpStatus.OK).json({ 
-            code: HttpStatus.OK, 
-            data 
-        });
+      let agentId;
+      if(req.params.id === undefined){
+        agentId = res.locals.id;
+      } else {
+        agentId = req.params.id;
+      }
+      const data = await this.CustomerService.getAllCustomers(agentId);
+      res.status(HttpStatus.OK).json({ 
+          code: HttpStatus.OK, 
+          data 
+      });
     } catch (error) {
         next(error);
     }

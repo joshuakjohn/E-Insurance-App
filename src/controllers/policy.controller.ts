@@ -26,12 +26,14 @@ class PolicyController{
 
     public getAllPolicies = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            let customerId;
             const { page, limit } = req.query as unknown as { page: number; limit: number }; // Pagination parameters
-            const customerId = res.locals.id; // Customer ID from middleware
-            const agentId = req.params.id;   // Agent ID from params
-
-            const policies = await this.policyService.getAllPolicies(customerId, agentId, page, limit);
-
+            if(req.params.id === undefined){
+                customerId = res.locals.id; // Customer ID from middleware
+            } else {
+                customerId = req.params.id;
+            }  
+            const policies = await this.policyService.getAllPolicies(customerId, page, limit);
             res.status(HttpStatus.OK).json({
                 code: HttpStatus.OK,
                 data: policies.data,

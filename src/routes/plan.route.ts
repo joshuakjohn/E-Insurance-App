@@ -1,7 +1,7 @@
 import express, { IRouter } from 'express';
 import PlanController from '../controllers/plan.controller';
 import PlanValidator from '../validators/plan.validator';
-import { adminAuth, agentAuth, customerAuth } from '../middlewares/auth.middleware';
+import { adminAuth, agentAuth, customerAuth, employeeAuth } from '../middlewares/auth.middleware';
 
 class PlanRoutes {
   private router = express.Router();
@@ -26,6 +26,9 @@ class PlanRoutes {
     // get all plans by agent
     this.router.get('/agent', agentAuth, this.planValidator.validatePagination, this.planController.getAllPlans);
 
+    // get all plans by employee
+    this.router.get('/employee', employeeAuth, this.planValidator.validatePagination, this.planController.getAllPlans);
+
     // get plan by id, by admin
     this.router.get('/:id', adminAuth, this.planController.getPlanById);
 
@@ -39,7 +42,10 @@ class PlanRoutes {
     this.router.get('/:id/customer', customerAuth, this.planController.getPlanById);
 
     // get plan by id, by agent
-    this.router.get('/:id/agent', customerAuth, this.planController.getPlanById);
+    this.router.get('/:id/agent', agentAuth, this.planController.getPlanById);
+
+    // get plan by id, by employee
+    this.router.get('/:id/employee', employeeAuth, this.planController.getPlanById);
 
   };
 

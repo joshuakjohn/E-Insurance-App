@@ -61,6 +61,7 @@ class AgentService{
             throw error;
         }
     };
+    
     public refreshToken = async (agentId: string): Promise<any> => {
       try {
         const agentRecord=await agentModel.findById(agentId);
@@ -70,7 +71,7 @@ class AgentService{
         }
         const payload : any= jwt.verify(refreshToken, process.env.AGENT_SECRET );
         const { userId, email } = payload;
-        const newAccessToken = jwt.sign({ userId, email }, process.env.CUSTOMER_SECRET, { expiresIn: '1h' });
+        const newAccessToken = jwt.sign({ userId, email }, process.env.AGENT_SECRET, { expiresIn: '1h' });
         return newAccessToken;
       } catch (error) {
         throw new Error(`Error: ${error.message}`);  
