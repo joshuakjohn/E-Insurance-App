@@ -1,7 +1,7 @@
 import express, { IRouter } from 'express';
 import EmployeeController from '../controllers/employee.controller';
 import EmployeeValidator from '../validators/employee.validator';
-import { employeeResetAuth } from '../middlewares/auth.middleware';
+import { adminAuth, employeeResetAuth } from '../middlewares/auth.middleware';
 
 class EmployeeRoutes {
     private router = express.Router();
@@ -16,6 +16,9 @@ class EmployeeRoutes {
 
         // Employee login route
         this.router.post('', this.employeeValidator.loginEmployee, this.employeeController.loginEmployee);
+
+        // get all employee by admin
+        this.router.get('', adminAuth, this.employeeController.getAllEmployee);
 
         // Employee registration route
         this.router.post('/register', this.employeeValidator.createEmployee, this.employeeController.registerEmployee);
