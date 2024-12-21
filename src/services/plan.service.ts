@@ -1,5 +1,6 @@
 import Plan from '../models/plan.model';
 import { IPlan } from '../interfaces/plan.interface';
+import redisClient from '../config/redis';
 
 class PlanService {
 
@@ -27,24 +28,87 @@ class PlanService {
     };
 
     // Get all plans
-    public getAllPlans = async (page: number, limit: number): Promise<{ data: IPlan[]; total: number; page: number; totalPages: number }> => {
+    public getAllPlans = async (page: number, limit: number): Promise<{ data: IPlan[]; total: number; page: number; totalPages: number; source: string }> => {
+        const cacheKey = `plans:page=${page}:limit=${limit}`;
+    
         try {
-            const total = await Plan.countDocuments(); // Total number of plans
-            const totalPages = Math.ceil(total / limit); // Total number of pages
+            const total = await Plan.countDocuments();
+            const totalPages = Math.ceil(total / limit);
             const data = await Plan.find()
-                .skip((page - 1) * limit) // Skip records for previous pages
-                .limit(limit);           // Limit the number of records fetched
+                .skip((page - 1) * limit)
+                .limit(limit);
+    
+            // Cache the data for 60 seconds
+            await redisClient.setEx(cacheKey, 60, JSON.stringify({ data, total, page, totalPages }));
     
             return {
                 data,
                 total,
                 page,
                 totalPages,
+                source: 'Database', // Indicate data is from the database
             };
         } catch (error) {
             throw error;
         }
-    };        
+    };
+    
+
+
+
+    // public getAllPlans = async (page: number, limit: number): Promise<{ data: IPlan[]; total: number; page: number; totalPages: number; source: string}> => {
+    //     const cacheKey = `plans:page=${page}:limit=${limit}`;
+      
+    //     try {
+    //         // Check Redis cache
+    //         const cachedData = await redisClient.get(cacheKey);
+    //         if (cachedData) {
+    //             return JSON.parse(cachedData); // Return cached data
+    //         }
+        
+    //         // Fetch from database
+    //         const total = await Plan.countDocuments(); // Total number of plans
+    //         const totalPages = Math.ceil(total / limit); // Total number of pages
+    //         const data = await Plan.find()
+    //             .skip((page - 1) * limit) // Skip records for previous pages
+    //             .limit(limit);           // Limit the number of records fetched
+        
+    //         const result = {
+    //             source: 'database',
+    //             data,
+    //             total,
+    //             page,
+    //             totalPages,
+    //         };
+        
+    //         // Cache the result in Redis with a TTL of 60 seconds
+    //         await redisClient.setEx(cacheKey, 60, JSON.stringify(result));
+        
+    //         return result;
+    //     } catch (error) {
+    //         throw error;
+    //     }
+    // };
+
+
+    // public getAllPlans = async (page: number, limit: number): Promise<{ data: IPlan[]; total: number; page: number; totalPages: number }> => {
+    //     try {
+    //         const total = await Plan.countDocuments(); // Total number of plans
+    //         const totalPages = Math.ceil(total / limit); // Total number of pages
+    //         const data = await Plan.find()
+    //             .skip((page - 1) * limit) // Skip records for previous pages
+    //             .limit(limit);           // Limit the number of records fetched
+    
+    //         return {
+    //             data,
+    //             total,
+    //             page,
+    //             totalPages,
+    //         };
+    //     } catch (error) {
+    //         throw error;
+    //     }
+    // };        
 
     // Update a plan by ID
     public updatePlan = async (planId: string, updatedData: Partial<IPlan>): Promise<IPlan | null> => {

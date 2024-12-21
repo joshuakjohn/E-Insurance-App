@@ -2,6 +2,7 @@ import express, { IRouter } from 'express';
 import PlanController from '../controllers/plan.controller';
 import PlanValidator from '../validators/plan.validator';
 import { adminAuth, agentAuth, customerAuth, employeeAuth } from '../middlewares/auth.middleware';
+import { cachePlans } from '../middlewares/rediscache.middleware';
 
 class PlanRoutes {
   private router = express.Router();
@@ -18,16 +19,16 @@ class PlanRoutes {
     this.router.post('/', adminAuth, this.planValidator.createPlan, this.planController.createPlan);
 
     // get all plans by admin
-    this.router.get('/', adminAuth, this.planValidator.validatePagination, this.planController.getAllPlans);
+    this.router.get('/', adminAuth, this.planValidator.validatePagination, cachePlans, this.planController.getAllPlans);
 
     // get all plans by customer
-    this.router.get('/customer', customerAuth, this.planValidator.validatePagination, this.planController.getAllPlans);
+    this.router.get('/customer', customerAuth, this.planValidator.validatePagination, cachePlans, this.planController.getAllPlans);
 
     // get all plans by agent
-    this.router.get('/agent', agentAuth, this.planValidator.validatePagination, this.planController.getAllPlans);
+    this.router.get('/agent', agentAuth, this.planValidator.validatePagination, cachePlans, this.planController.getAllPlans);
 
     // get all plans by employee
-    this.router.get('/employee', employeeAuth, this.planValidator.validatePagination, this.planController.getAllPlans);
+    this.router.get('/employee', employeeAuth, this.planValidator.validatePagination, cachePlans, this.planController.getAllPlans);
 
     // get plan by id, by admin
     this.router.get('/:id', adminAuth, this.planController.getPlanById);
