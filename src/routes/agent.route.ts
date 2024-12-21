@@ -1,5 +1,5 @@
 import AgentController from '../controllers/agent.controller';
-import { agentAuth, agentResetAuth } from '../middlewares/auth.middleware';
+import { adminAuth, agentResetAuth, employeeAuth } from '../middlewares/auth.middleware';
 import AgentValidator from '../validators/agent.validator';
 import express, { IRouter } from 'express';
 
@@ -16,8 +16,11 @@ class UserRoutes {
     //route to login an agent
     this.router.post('', this.agentValidator.loginAgent, this.agentController.agentLogin);
 
-    // get all agents
-    this.router.get('', this.agentController.getAllAgents);
+    // get all agents by admin
+    this.router.get('', adminAuth, this.agentController.getAllAgents);
+
+    // get all agents by employee
+    this.router.get('/employee', employeeAuth, this.agentController.getAllAgents);
 
     //route to register an agent    
     this.router.post('/register', this.agentValidator.newAgent, this.agentController.agentSignup);

@@ -1,7 +1,7 @@
 import express, { IRouter } from 'express';
 import CustomerController from '../controllers/customer.controller';
 import CustomerValidator from '../validators/customer.validator'; 
-import { adminAuth, agentAuth, customerAuth, customerResetAuth } from '../middlewares/auth.middleware';
+import { adminAuth, agentAuth, customerAuth, customerResetAuth, employeeAuth } from '../middlewares/auth.middleware';
 
 class UserRoutes {
   private CustomerController = new CustomerController();
@@ -22,12 +22,9 @@ class UserRoutes {
 
     //route to register a customer
     this.router.post( '/register', this.CustomerValidator.createCustomer, this.CustomerController.createCustomer);
-    
-    //route to get all customer, by admin
-    this.router.get('/admin', adminAuth, this.CustomerController.getAllCustomers);
 
     //route for customer to pay premium
-    this.router.post('/paypremium', customerAuth, this.CustomerController.payPremium )
+    this.router.post('/paypremium', customerAuth, this.CustomerController.payPremium);
 
     // forget password route
     this.router.post('/forgot-password', this.CustomerValidator.validateForgotPassword, this.CustomerController.forgotPassword);
@@ -36,7 +33,13 @@ class UserRoutes {
     this.router.post('/reset-password', customerResetAuth, this.CustomerValidator.validateResetPassword, this.CustomerController.resetPassword);
     
     //route to refresh token
-    this.router.get('/:id/refreshtoken', this.CustomerController.refreshToken)
+    this.router.get('/:id/refreshtoken', this.CustomerController.refreshToken);
+
+    //route to get all customer, by admin
+    this.router.get('/:id/admin', adminAuth, this.CustomerController.getAllCustomers);
+
+    //route to get all customer, by employee
+    this.router.get('/:id/employee', employeeAuth, this.CustomerController.getAllCustomers);
 
   };
 
