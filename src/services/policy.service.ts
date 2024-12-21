@@ -14,33 +14,20 @@ import policyModel from '../models/policy.model';
         
     }
     
-    public getAllPolicies = async (customerReq: string, agentReq: string, page: number, limit: number): Promise<{ data: IPolicy[]; total: number; page: number; totalPages: number }> => {
+    public getAllPolicies = async (customerId: string, page: number, limit: number): Promise<{ data: IPolicy[]; total: number; page: number; totalPages: number }> => {
       try {
           let policies = [];
           let total = 0;
-
-          if (agentReq === undefined) {
-              // Customer-specific policies
-              total = await policyModel.countDocuments({ customerId: customerReq });
-              policies = await policyModel
-                  .find({ customerId: customerReq })
-                  .skip((page - 1) * limit)
-                  .limit(limit);
-          } else {
-              // Agent-specific policies
-              total = await policyModel.countDocuments({ agentId: agentReq });
-              policies = await policyModel
-                  .find({ agentId: agentReq })
-                  .skip((page - 1) * limit)
-                  .limit(limit);
-          }
-
+          total = await policyModel.countDocuments({ customerId });
+          policies = await policyModel
+              .find({ customerId })
+              .skip((page - 1) * limit)
+              .limit(limit);
+        
           if(!policies || policies.length === 0) {
             throw new Error('No policy found');
           }
-
           const totalPages = Math.ceil(total / limit);
-
           return {
               data: policies,
               total,
@@ -52,41 +39,41 @@ import policyModel from '../models/policy.model';
       }
     };
 
-      public getPolicyById = async (id: string): Promise<any> => {
-        try {
-            const policy = await policyModel.findById(id);
-            if (!policy) {
-              throw new Error('Policy not found');
-            }
-            return policy;
-          } catch (error) {
-            throw new Error(`Error fetching policy by ID: ${error.message}`);
+    public getPolicyById = async (id: string): Promise<any> => {
+      try {
+          const policy = await policyModel.findById(id);
+          if (!policy) {
+            throw new Error('Policy not found');
           }
-      };
+          return policy;
+        } catch (error) {
+          throw new Error(`Error fetching policy by ID: ${error.message}`);
+        }
+    };
 
-      public updatePolicy = async (id: string, updateData: Partial<IPolicy>): Promise<any> => {
-        try {
-            const updatedPolicy = await policyModel.findByIdAndUpdate(id, updateData, { new: true });
-            if (!updatedPolicy) {
-              throw new Error('Policy not found');
-            }
-            return updatedPolicy;
-          } catch (error) {
-            throw new Error(`Error updating policy: ${error.message}`);
+    public updatePolicy = async (id: string, updateData: Partial<IPolicy>): Promise<any> => {
+      try {
+          const updatedPolicy = await policyModel.findByIdAndUpdate(id, updateData, { new: true });
+          if (!updatedPolicy) {
+            throw new Error('Policy not found');
           }
-      };
+          return updatedPolicy;
+        } catch (error) {
+          throw new Error(`Error updating policy: ${error.message}`);
+        }
+    };
 
-      public deletePolicy = async (id: string): Promise<any> => {
-        try {
-            const deletedPolicy = await policyModel.findByIdAndDelete(id);
-            if (!deletedPolicy) {
-              throw new Error('Policy not found');
-            }
-            return deletedPolicy;
-          } catch (error) {
-            throw new Error(`Error deleting scheme: ${error.message}`);
+    public deletePolicy = async (id: string): Promise<any> => {
+      try {
+          const deletedPolicy = await policyModel.findByIdAndDelete(id);
+          if (!deletedPolicy) {
+            throw new Error('Policy not found');
           }
-      };
-    }
+          return deletedPolicy;
+        } catch (error) {
+          throw new Error(`Error deleting scheme: ${error.message}`);
+        }
+    };
+  }
    
  export default PolicyService;
