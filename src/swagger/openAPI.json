@@ -211,7 +211,7 @@
           },
           "responses": {
             "201": {
-              "description": "Reset password token sent successfully"
+              "description": "Password reset successfully"
             },
             "400": {
               "description": "Bad Request"
@@ -226,6 +226,194 @@
         "get": {
           "tags": ["Agent"],
           "summary": "Refresh access token of a specific agent",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Access token refreshed successfully"
+            },
+            "404": {
+              "description": "Note not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/employee/register": {
+        "post": {
+          "tags": ["Employee"],
+          "summary": "Register a new employee",
+          "requestBody": {
+            "description": "Employee registration details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "phno": {
+                      "type": "string"
+                    }
+                  } 
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Employee created successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/employee/": {
+        "post": {
+          "tags": ["Employee"],
+          "summary": "login a employee",
+          "requestBody": {
+            "description": "Employee login details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    }
+                  } 
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Employee logged in successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "get": {
+          "tags": ["Employee"],
+          "summary": "get all employee by admin, require authorization token from admin",
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "All employee fetched successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/employee/forgot-password": {
+        "post": {
+          "tags": ["Employee"],
+          "summary": "forgot password for employee",
+          "requestBody": {
+            "description": "Email of employee",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    }                    
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Reset password token sent successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/employee/reset-password": {
+        "post": {
+          "tags": ["Employee"],
+          "summary": "Reset password for employee",
+          "security": [{ "JWT": [] }],
+          "requestBody": {
+            "description": "New Password for employee",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "newPassword": {
+                      "type": "string"
+                    }                    
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Password reset successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/employee/{id}/refreshtoken": {
+        "get": {
+          "tags": ["Employee"],
+          "summary": "Refresh access token of a specific employee",
           "parameters": [
             {
               "name": "id",
@@ -274,6 +462,16 @@
             "num_of_policies": {"type": "Number", "required": true, "default": 0},
             "commission": {"type": "Number", "required": true, "default": 0},
             "refreshToken": {"type": "String", "default": null, "required": false}
+          }
+        },
+        "Employee": {
+          "type": "object",
+          "properties": {
+            "username": { "type": "String", "required": true },
+            "email": { "type": "String", "required": true, "unique": true },
+            "password": { "type": "String", "required": true },
+            "phno": { "type": "Number", "match": "/^[0-9]{10}$/"},
+            "refreshToken": { "type": "String", "default": null,  "required": false }
           }
         }
       },
