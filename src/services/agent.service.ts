@@ -3,6 +3,7 @@ import { IAgent } from "../interfaces/agent.interface"
 import agentModel from "../models/agent.model"
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../utils/user.util';
+import redisClient from '../config/redis';
 
 class AgentService{
 
@@ -12,10 +13,14 @@ class AgentService{
             if(!res){
                 try{
                     body.password = await bcrypt.hash(body.password, 10);
-                  }catch(err){
+                }catch(err){
                     throw new Error("Error occured in hash: "+err);
-                  }
+                }
                 await agentModel.create(body)
+
+                // Invalidate cache for all agents
+                await redisClient.del('agents:all');
+
                 return "Agent created successfully"
             }
             else
@@ -40,7 +45,7 @@ class AgentService{
 
       return {
         message: "Login Successful",
-        name: res.name,
+        name: res.username,
         token: token,
       }   
     }
@@ -50,13 +55,26 @@ class AgentService{
     }
 
     // Get all agents
-    public getAllAgents = async (): Promise<IAgent[]> => {
+    public getAllAgents = async (): Promise<{data: IAgent[]; source: string}> => {
         try {
+            const cachedData = await redisClient.get('agents:all'); 
+            if (cachedData) {
+              return {
+                data: JSON.parse(cachedData),
+                source: 'Redis Cache',
+              };
+            }
             const res = await agentModel.find().select('-password');
             if(!res || res.length === 0) {
                 throw new Error('No plans found');
             }
-            return res;
+            // Cache the agents data for 60 seconds
+            await redisClient.setEx('agents:all', 60, JSON.stringify(res));
+
+            return {
+              data: res,
+              source: 'Database'
+            };
         } catch (error) {
             throw error;
         }
@@ -94,14 +112,20 @@ class AgentService{
   
     //reset password
     public resetPassword = async (body: any, userId): Promise<void> => {
-      const agentData = await agentModel.findById(userId);
-      if (!agentData) {
-        throw new Error('Email not found');
+      try {
+          const agentData = await agentModel.findById(userId);
+          if (!agentData) {
+              throw new Error('User not found');
+          }
+
+          const hashedPassword = await bcrypt.hash(body.newPassword, 10);
+          agentData.password = hashedPassword;
+          await agentData.save();
+
+      } catch (error) {
+          throw new Error(`Error resetting password: ${error.message}`);
       }
-      const hashedPassword = await bcrypt.hash(body.newPassword, 10);
-      agentData.password = hashedPassword;
-      await agentData.save();
-    };
+    };
     
 
 }
