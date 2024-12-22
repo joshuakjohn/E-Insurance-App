@@ -485,7 +485,389 @@
           }
         }
       }
+    },
+    "/plan": {
+  "post": {
+    "tags": ["Plan"],
+    "summary": "Create a new plan",
+    "operationId": "createPlan",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Plan"
+          }
+        }
+      }
+    },
+    "responses": {
+      "201": {
+        "description": "Plan created successfully"
+      },
+      "400": {
+        "description": "Bad request"
+      },
+      "500": {
+        "description": "Internal server error"
+      }
     }
+  }
+},
+"/plan/": {
+  "get": {
+    "tags": ["Admin"],
+    "summary": "Get all plans by admin",
+    "operationId": "getAllPlansAdmin",
+    "parameters": [
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "default": 10
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of plans"
+      },
+      "400": {
+        "description": "Bad request"
+      },
+      "500": {
+        "description": "Internal server error"
+      }
+    }
+  }
+},
+"/plan/customer": {
+  "get": {
+    "tags": ["Customer"],
+    "summary": "Get all plans by customer",
+    "operationId": "getAllPlansCustomer",
+    "parameters": [
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "default": 10
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of plans"
+      },
+      "400": {
+        "description": "Bad request"
+      },
+      "500": {
+        "description": "Internal server error"
+      }
+    }
+  }
+},
+"/plan/agent": {
+  "get": {
+    "tags": ["Agent"],
+    "summary": "Get all plans by agent",
+    "operationId": "getAllPlansAgent",
+    "parameters": [
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "default": 10
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of plans"
+      },
+      "400": {
+        "description": "Bad request"
+      },
+      "500": {
+        "description": "Internal server error"
+      }
+    }
+  }
+},
+"/plan/employee":{
+  "get":{
+      "tags": ["Employee"],
+      "summary": "Get all plans by employee",
+      "operationId": "getAllPlansEmployee",
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "default": 10
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "List of plans"
+        },
+        "400": {
+          "description": "Bad request"
+        },
+        "500": {
+        "description": "Internal server error"
+      }
+      }
+    }   
+},
+"/plan/{id}":{
+  "get":{
+    "tags": ["Admin"],
+    "summary": "Get plan by ID for admin",
+    "operationId": "getPlanByIdAdmin",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Plan ID",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Plan details"
+      },
+      "404": {
+        "description": "Plan not found"
+      },
+      "400": {
+        "description": "Bad request"
+      },
+      "500": {
+        "description": "Internal server error"
+      }
+    }
+  }  
+},
+"/plan/{id}/customer": {
+  "get": {
+    "tags": ["Customer"],
+    "summary": "Get plan details by ID for customer",
+    "operationId": "getPlanByIdCustomer",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Plan ID",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Plan details retrieved successfully"
+      },
+      "400": {
+        "description": "Bad request"
+      },
+      "404": {
+        "description": "Plan not found"
+      },
+      "500": {
+        "description": "Internal server error"
+      }
+    }
+  }
+},
+"/plan/{id}/agent": {
+  "get": {
+    "tags": ["Agent"],
+    "summary": "Get plan details by ID for agent",
+    "operationId": "getPlanByIdAgent",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Plan ID",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Plan details retrieved successfully"
+      },
+      "400": {
+        "description": "Bad request"
+      },
+      "404": {
+        "description": "Plan not found"
+      },
+      "500": {
+        "description": "Internal server error"
+      }
+    }
+  }
+},
+"/plan/{id}/employee": {
+  "get": {
+    "tags": ["Employee"],
+    "summary": "Get plan details by ID for employee",
+    "operationId": "getPlanByIdEmployee",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Plan ID",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Plan details retrieved successfully"
+      },
+      "400": {
+        "description": "Bad request"
+      },
+      "404": {
+        "description": "Plan not found"
+      },
+      "500": {
+        "description": "Internal server error"
+      }
+    }
+  }
+},
+"/plan/{id}/": {
+  "put": {
+    "tags": ["Admin"],
+    "summary": "Update a plan by ID",
+    "operationId": "updatePlan",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Plan ID",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Plan"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Plan updated successfully"
+      },
+      "400": {
+        "description": "Bad request"
+      },
+      "404": {
+        "description": "Plan not found"
+      },
+      "500": {
+        "description": "Internal server error"
+      }
+    }
+  },
+  "delete": {
+    "tags": ["Admin"],
+    "summary": "Delete a plan by ID",
+    "operationId": "deletePlan",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Plan ID",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Plan deleted successfully"
+      },
+      "400": {
+        "description": "Bad request"
+      },
+      "404": {
+        "description": "Plan not found"
+      },
+      "500": {
+        "description": "Internal server error"
+      }
+    }
+  }
+}
+
+
   },
   "components": {
     "schemas": {
@@ -527,6 +909,14 @@
           "profilePhoto": { "type": "string", "format": "binary" }
         },
         "required": ["username", "email", "password", "phno", "age", "region"]
+      }, "Plan": {
+        "type": "object",
+        "properties": {
+          "planName": {"type": "string"},
+          "description": {"type": "string"},
+          "category": {"type": "string"}
+        },
+        "required": ["planName", "category"]
       }
     },
     "securitySchemes": {
