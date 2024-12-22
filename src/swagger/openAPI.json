@@ -50,7 +50,24 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Agent"
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "phno": {
+                      "type": "string"
+                    },
+                    "region": {
+                      "type": "string"
+                    }
+                  } 
                 }
               }
             }
@@ -58,6 +75,143 @@
           "responses": {
             "201": {
               "description": "Agent created successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/agent/": {
+        "post": {
+          "tags": ["Agent"],
+          "summary": "Login a new agent",
+          "requestBody": {
+            "description": "Agent login details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    } 
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Agent created successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "get": {
+          "tags": ["Agent"],
+          "summary": "get all agents by admin, require authorization token from admin",
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "All agents fetched successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/agent/employee": {
+        "get": {
+          "tags": ["Agent"],
+          "summary": "get all agents by employee, require authorization token from employee",
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "All agents fetched successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/agent/forgot-password": {
+        "post": {
+          "tags": ["Agent"],
+          "summary": "forgot password for agent",
+          "requestBody": {
+            "description": "Email of agent",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    }                    
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Reset password token sent successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/agent/reset-password": {
+        "post": {
+          "tags": ["Agent"],
+          "summary": "Reset password for agent",
+          "security": [{ "JWT": [] }],
+          "requestBody": {
+            "description": "New Password for agent",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "newPassword": {
+                      "type": "string"
+                    }                    
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Reset password token sent successfully"
             },
             "400": {
               "description": "Bad Request"
@@ -114,7 +268,7 @@
             "username": {"type": "String", "required": true},
             "email": {"type": "String", "required": true},
             "password": {"type": "String", "required": true},
-            "phno": {"type": "String", "required": true},
+            "phno": {"type": "Number", "match": "/^[0-9]{10}$/"},
             "region": {"type": "String", "required": true},
             "num_of_customers": {"type": "Number", "required": true, "default": 0},
             "num_of_policies": {"type": "Number", "required": true, "default": 0},
