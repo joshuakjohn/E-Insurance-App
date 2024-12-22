@@ -40,7 +40,7 @@ class AgentService{
 
       return {
         message: "Login Successful",
-        name: res.name,
+        name: res.username,
         token: token,
       }   
     }
