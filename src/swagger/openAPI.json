@@ -865,8 +865,477 @@
       }
     }
   }
-}
-
+},
+  "/scheme": {
+    "post": {
+      "tags": ["Admin"],
+      "summary": "Create a new scheme",
+      "operationId": "createScheme",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Scheme"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Scheme created successfully"
+        },
+        "400": {
+          "description": "Bad request, validation failed"
+        },
+        "401": {
+          "description": "Unauthorized, admin privileges required"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    },
+    "get": {
+      "tags": ["Admin"],
+      "summary": "Get all schemes with pagination",
+      "operationId": "getAllSchemes",
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "description": "Page number for pagination",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "Number of items per page for pagination",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "default": 10
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "A list of schemes with pagination"
+        },
+        "401": {
+          "description": "Unauthorized, admin privileges required"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    }
+},
+"/scheme/customer": {
+    "get": {
+      "tags": ["Customer"],
+      "summary": "Get all schemes for customer with pagination",
+      "operationId": "getAllSchemesForCustomer",
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "description": "Page number for pagination",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "Number of items per page for pagination",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "default": 10
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "A list of schemes for customer with pagination"            
+        },
+        "401": {
+          "description": "Unauthorized, customer privileges required"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    }
+  },
+  "/scheme/agent": {
+    "get": {
+      "tags": ["Agent"],
+      "summary": "Get all schemes for agent with pagination",
+      "operationId": "getAllSchemesForAgent",
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "description": "Page number for pagination",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "Number of items per page for pagination",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "default": 10
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "A list of schemes for agent with pagination"
+        },
+        "400": {
+          "description": "Unauthorized, agent privileges required"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    }
+  },
+  "/scheme/employee": {
+    "get": {
+      "tags": ["Employee"],
+      "summary": "Get all schemes for employee with pagination",
+      "operationId": "getAllSchemesForEmployee",
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "description": "Page number for pagination",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "Number of items per page for pagination",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "default": 10
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "A list of schemes for employee with pagination"
+        },
+        "400": {
+          "description": "Unauthorized, employee privileges required"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    }
+  },
+  "/scheme/search": {
+    "get": {
+      "summary": "Search for schemes based on a query",
+      "tags": ["Scheme"],
+      "parameters": [
+        {
+          "name": "q",
+          "in": "query",
+          "description": "Search query string",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "page",
+          "in": "query",
+          "description": "Page number",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "default": 1
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "Number of results per page",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "default": 10
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Search results for schemes"
+        },
+        "400": {
+          "description": "Bad request, invalid query parameters"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+      }
+    },
+     "/scheme/filter": {
+    "get": {
+      "summary": "Get schemes sorted by premium",
+      "tags": ["Scheme"],
+      "responses": {
+        "200": {
+          "description": "Schemes sorted by premium successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "integer",
+                    "description": "HTTP status code"
+                  },
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Scheme"
+                    },
+                    "description": "List of schemes sorted by premium"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Bad request, error occurred during filtering"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    }
+  }, "/scheme/{id}": {
+    "get": {
+      "summary": "Get scheme by ID (admin access)",
+      "tags": ["Scheme"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of the scheme to retrieve",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Scheme details retrieved successfully"
+        },
+        "401": {
+          "description": "Unauthorized, admin privileges required"
+        },
+        "404": {
+          "description": "Scheme not found"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    }
+  },
+  "/scheme/{id}/customer": {
+    "get": {
+      "tags": ["Scheme"],
+      "summary": "Get scheme by ID (customer access)",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of the scheme to retrieve",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Scheme details retrieved successfully"
+        },
+        "401": {
+          "description": "Unauthorized, customer privileges required"
+        },
+        "404": {
+          "description": "Scheme not found"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    }
+  },
+  "/scheme/{id}/agent": {
+    "get": {
+      "summary": "Get scheme by ID (agent access)",
+      "tags": ["Scheme"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of the scheme to retrieve",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Scheme details retrieved successfully"
+        },
+        "401": {
+          "description": "Unauthorized, agent privileges required"
+        },
+        "404": {
+          "description": "Scheme not found"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    }
+  },
+  "/scheme/{id}/employee": {
+    "get": {
+      "tags": ["Scheme"],
+      "summary": "Get scheme by ID (employee access)",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of the scheme to retrieve",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Scheme details retrieved successfully"
+        },
+        "401": {
+          "description": "Unauthorized, employee privileges required"
+        },
+        "404": {
+          "description": "Scheme not found"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    }
+  },
+  "/scheme/{id}/": {
+    "put": {
+      "summary": "Update a scheme by ID (admin access)",
+      "tags": ["Scheme"],
+      "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID of the scheme to update",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+      "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Scheme"
+          }
+        }
+      }
+    },
+      "responses": {
+        "200": {
+          "description": "Scheme updated successfully"
+        },
+        "400": {
+          "description": "Bad request, validation failed"
+        },
+        "401": {
+          "description": "Unauthorized, admin privileges required"
+        },
+        "404": {
+          "description": "Scheme not found"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete a scheme by ID (admin access)",
+      "tags": ["Scheme"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of the scheme to delete",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Scheme deleted successfully"
+        },
+        "401": {
+          "description": "Unauthorized, admin privileges required"
+        },
+        "404": {
+          "description": "Scheme not found"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    }
+  }
 
   },
   "components": {
@@ -909,7 +1378,8 @@
           "profilePhoto": { "type": "string", "format": "binary" }
         },
         "required": ["username", "email", "password", "phno", "age", "region"]
-      }, "Plan": {
+      },
+       "Plan": {
         "type": "object",
         "properties": {
           "planName": {"type": "string"},
@@ -917,6 +1387,18 @@
           "category": {"type": "string"}
         },
         "required": ["planName", "category"]
+      },
+      "Scheme": {
+        "type": "object",
+        "properties": {
+          "schemeName": { "type": "string" },
+          "description": { "type": "string" },
+          "planId": { "type": "string" },
+          "eligibilityCriteria": { "type": "string" },
+          "premium": { "type": "number", "format": "float" },
+          "maturityPeriod": { "type": "number" },
+          "coverage": { "type": "number" }
+        }
       }
     },
     "securitySchemes": {
