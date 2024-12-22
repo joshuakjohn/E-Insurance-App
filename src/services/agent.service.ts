@@ -64,7 +64,7 @@ class AgentService{
                 source: 'Redis Cache',
               };
             }
-            const res = await agentModel.find().select('-password');
+            const res = await agentModel.find().select('-password -refreshToken');
             if(!res || res.length === 0) {
                 throw new Error('No plans found');
             }

@@ -81,7 +81,7 @@ class CustomerService {
         }
 
         // If no cached data, fetch from the database
-        const customers = await customer.find({ agentId }).select('-password');
+        const customers = await customer.find({ agentId }).select('-password -refreshToken');
         if (!customers || customers.length === 0) {
             throw new Error('No customers found for this agent.');
         }

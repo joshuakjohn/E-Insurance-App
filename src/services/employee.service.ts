@@ -65,7 +65,7 @@ class EmployeeService{
             }
     
             // Fetch employee data from the database
-            const employees = await employeeModel.find().select('-password');
+            const employees = await employeeModel.find().select('-password -refreshToken');
             if (!employees || employees.length === 0) {
                 throw new Error('No employees found.');
             }
