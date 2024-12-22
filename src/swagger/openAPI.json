@@ -241,7 +241,7 @@
               "description": "Access token refreshed successfully"
             },
             "404": {
-              "description": "Note not found"
+              "description": "Agent not found"
             },
             "500": {
               "description": "Internal server error"
@@ -436,6 +436,454 @@
             }
           }
         }
+      },
+      "/policy": {
+        "post": {
+          "tags": ["Policy"],
+          "summary": "Create a policy by customer, require authorization token from customer",
+          "security": [{ "JWT": [] }],
+          "requestBody": {
+            "description": "Policy creation details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "policyName": { "type": "string" },
+                    "description": { "type": "string" },
+                    "planId": { "type": "string" },
+                    "customerId": { "type": "string" },
+                    "schemeId": { "type": "string" },
+                    "agentId": { "type": "string" },
+                    "premiumAmount": { "type": "number" },
+                    "duration": { "type": "number" },
+                    "coverage": { "type": "number" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Policy created successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "get": {
+          "tags": ["Policy"],
+          "summary": "get all policy by customer, require authorization token from customer",
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "All policies fetched successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/policy/{id}": {
+        "put": {
+          "tags": ["Policy"],
+          "summary": "update a policy by customer, require authorization token from customer",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "requestBody": {
+            "description": "Policy updation details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "policyName": { "type": "string" },
+                    "description": { "type": "string" },
+                    "planId": { "type": "string" },
+                    "customerId": { "type": "string" },
+                    "schemeId": { "type": "string" },
+                    "agentId": { "type": "string" },
+                    "premiumAmount": { "type": "number" },
+                    "duration": { "type": "number" },
+                    "coverage": { "type": "number" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Policy updated successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "delete": {
+          "tags": ["Policy"],
+          "summary": "delete policy by customer, require authorization token from customer",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "Policy deleted successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "get": {
+          "tags": ["Policy"],
+          "summary": "Get a policy by id, by customer, require authorization token from customer",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "200": {
+              "description": "Policy fetched successfully"
+            },
+            "404": {
+              "description": "Policy not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/policy/{id}/agent": {
+        "get": {
+          "tags": ["Policy"],
+          "summary": "Get a policy by id, by agent, require authorization token from agent",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "200": {
+              "description": "Policy fetched successfully"
+            },
+            "404": {
+              "description": "Policy not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "put": {
+          "tags": ["Policy"],
+          "summary": "update a policy by agent, require authorization token from agent",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "requestBody": {
+            "description": "Policy updation details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "policyName": { "type": "string" },
+                    "description": { "type": "string" },
+                    "planId": { "type": "string" },
+                    "customerId": { "type": "string" },
+                    "schemeId": { "type": "string" },
+                    "agentId": { "type": "string" },
+                    "premiumAmount": { "type": "number" },
+                    "duration": { "type": "number" },
+                    "coverage": { "type": "number" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Policy updated successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/policy/{id}/admin": {
+        "get": {
+          "tags": ["Policy"],
+          "summary": "Get a policy by id, by admin, require authorization token from admin",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "200": {
+              "description": "Policy fetched successfully"
+            },
+            "404": {
+              "description": "Policy not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "put": {
+          "tags": ["Policy"],
+          "summary": "update a policy by admin, require authorization token from admin",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "requestBody": {
+            "description": "Policy updation details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "policyName": { "type": "string" },
+                    "description": { "type": "string" },
+                    "planId": { "type": "string" },
+                    "customerId": { "type": "string" },
+                    "schemeId": { "type": "string" },
+                    "agentId": { "type": "string" },
+                    "premiumAmount": { "type": "number" },
+                    "duration": { "type": "number" },
+                    "coverage": { "type": "number" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Policy updated successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "delete": {
+          "tags": ["Policy"],
+          "summary": "delete policy by customer, require authorization token from customer",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "Policy deleted successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/policy/{id}/employee": {
+        "get": {
+          "tags": ["Policy"],
+          "summary": "Get a policy by id, by employee, require authorization token from employee",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "200": {
+              "description": "Policy fetched successfully"
+            },
+            "404": {
+              "description": "Policy not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/policy/{id}/getall/agent": {
+        "get": {
+          "tags": ["Policy"],
+          "summary": "get all policy by agent, require authorization token from agent",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "All policies fetched successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/policy/{id}/getall/admin": {
+        "get": {
+          "tags": ["Policy"],
+          "summary": "get all policy by admin, require authorization token from admin",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "All policies fetched successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/policy/{id}/getall/employee": {
+        "get": {
+          "tags": ["Policy"],
+          "summary": "get all policy by employee, require authorization token from employee",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "All policies fetched successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
       }
     },
     "components": {
@@ -472,6 +920,24 @@
             "password": { "type": "String", "required": true },
             "phno": { "type": "Number", "match": "/^[0-9]{10}$/"},
             "refreshToken": { "type": "String", "default": null,  "required": false }
+          }
+        },
+        "Policy": {
+          "type": "object",
+          "properties": {
+            "policyName": { "type": "String", "required": true },
+            "description": { "type": "String", "require": true},
+            "planId": { "type": "ObjectId", "required": true },
+            "customerId": { "type": "ObjectId", "required": true },
+            "schemeId": { "type": "ObjectId", "required": true },
+            "agentId": { "type": "ObjectId", "required": true },
+            "premiumAmount": {"type": "Number", "required": true},
+            "premiumPaid": { "type": "Number", "required": true, "default": 0},
+            "policyStartDate": { "type": "Date", "required": true, "default": "new Date()"},
+            "duration": { "type": "Number", "required": true },
+            "coverage": { "type": "Number", "required": true },
+            "pendingPremium": {"type": "Number", "required": true },
+            "status": { "type": "String", "required": true, "default": "submitted"}
           }
         }
       },
