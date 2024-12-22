@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import Admin from '../models/admin.model';
 import { IAdmin } from '../interfaces/admin.interface';
 import { sendEmail } from '../utils/user.util';
-
+import redisClient from '../config/redis';
 
 class AdminService {
     // Register a new admin
@@ -16,7 +16,10 @@ class AdminService {
 
             const hashedPassword = await bcrypt.hash(body.password, 10);
             body.password = hashedPassword;
-              await Admin.create(body);
+            await Admin.create(body);
+
+            // Invalidate cache for admin list
+            await redisClient.del('admins:all');
 
             return 'Admin registerd successfully';
         } catch (error) {
@@ -66,28 +69,31 @@ class AdminService {
     // forget password
     public forgotPassword = async (email: string): Promise<void> => {
         try{
-        const adminData = await Admin.findOne({ email });
-        if (!adminData) {
-            throw new Error('Email not found');
-        }
-        const token = jwt.sign({ id: adminData._id }, process.env.ADMIN_RESET_SECRET, { expiresIn: '1h' });
-        await sendEmail(email, token);
+            const adminData = await Admin.findOne({ email });
+            if (!adminData) {
+                throw new Error('Email not found');
+            }
+            const token = jwt.sign({ id: adminData._id }, process.env.ADMIN_RESET_SECRET, { expiresIn: '1h' });
+            await sendEmail(email, token);
         } catch(error){
-        throw new Error("Error occured cannot send email: "+error)
+            throw new Error("Error occured cannot send email: "+error)
         }
     };
 
     //reset password
-    public resetPassword = async (body: any, userId): Promise<void> => {
-    const adminData = await Admin.findById(userId);
-    if (!adminData) {
-        throw new Error('User not found');
-    }
-    const hashedPassword = await bcrypt.hash(body.newPassword, 10);
-    adminData.password = hashedPassword;
-    await adminData.save();
-  };
-
+    public resetPassword = async (body: any, userId: string): Promise<void> => {
+        try {
+            const adminData = await Admin.findById(userId);
+            if (!adminData) {
+                throw new Error('User not found');
+            }
+            const hashedPassword = await bcrypt.hash(body.newPassword, 10);
+            adminData.password = hashedPassword;
+            await adminData.save();
+        } catch (error) {
+            throw new Error(`Error resetting password: ${error.message}`);
+        }
+    };
 }
 
 export default AdminService;
