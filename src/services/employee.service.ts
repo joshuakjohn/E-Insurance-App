@@ -105,7 +105,7 @@ class EmployeeService{
         if (!employeeData) {
             throw new Error('Email not found');
         }
-        const token = jwt.sign({ id: employeeData._id }, process.env.EMPLOYEE_RESET_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: employeeData._id }, process.env.EMPLOYEE_RESET_SECRET, { expiresIn: '1h' });
         await sendEmail(email, token);
         } catch(error){
         throw new Error("Error occured cannot send email: "+error)

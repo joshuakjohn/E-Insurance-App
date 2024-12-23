@@ -1,547 +1,2253 @@
 {
-  "openapi": "3.0.1",
-  "info": {
-    "title": "E-Insurance App",
-    "description": "This is an online insurance application. The application includes 4 user APIs and 3 service APIs.",
-    "version": "1.0.0"
-  },
-  "servers": [
-    {
-      "url": "http://localhost:4000/api/v1",
-      "description": "Local development server"
-    }
-  ],
-  "tags": [
-    { "name": "Customer", "description": "Operations related to customer management" },
-    { "name": "Agent", "description": "Operations related to agent management" },
-    { "name": "Admin", "description": "Operations related to admin management" },
-    { "name": "Employee", "description": "Operations related to employee management" },
-    { "name": "Policy", "description": "Operations related to policy management" },
-    { "name": "Plan", "description": "Operations related to plan management" },
-    { "name": "Scheme", "description": "Operations related to scheme management" }
-  ],
-  "paths": {
-    "/customer/register": {
-      "post": {
-        "tags": ["Customer"],
-        "summary": "Register a new customer",
-        "description": "This endpoint registers a new customer in the system.",
-        "requestBody": {
-          "description": "Customer registration details",
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": { "$ref": "#/components/schemas/Customer" }
-            }
-          }
-        },
-        "responses": {
-          "201": { "description": "Customer registered successfully" },
-          "400": { "description": "Bad Request - Validation errors or missing fields" },
-          "500": { "description": "Internal server error" }
-        }
-      }
+    "openapi": "3.0.1",
+    "info": {
+      "title": "E-Insurance App",
+      "description": "This is an online insurance application. The application includes 4 user APIs and 3 service APIs.",
+      "version": "1.0.0"
     },
-    "/customer": {
-      "post": {
-        "tags": ["Customer"],
-        "summary": "Login the customer",
-        "description": "Authenticate a customer using email and password.",
-        "requestBody": {
-          "description": "Customer login credentials",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": { "type": "string", "format": "email" },
-                  "password": { "type": "string" }
-                },
-                "required": ["email", "password"]
+    "servers": [
+      {
+        "url": "http://localhost:4000/api/v1",
+        "description": "Local development server"
+      }
+    ],
+    "tags": [
+      { "name": "Customer", "description": "Operations related to customer management" },
+      { "name": "Agent", "description": "Operations related to agent management" },
+      { "name": "Admin", "description": "Operations related to admin management" },
+      { "name": "Employee", "description": "Operations related to employee management" },
+      { "name": "Policy", "description": "Operations related to policy management" },
+      { "name": "Plan", "description": "Operations related to plan management" },
+      { "name": "Scheme", "description": "Operations related to scheme management" }
+    ],
+    "paths": {
+        "/agent/register": {
+        "post": {
+          "tags": ["Agent"],
+          "summary": "Register a new agent",
+          "requestBody": {
+            "description": "Agent registration details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "phno": {
+                      "type": "string"
+                    },
+                    "region": {
+                      "type": "string"
+                    }
+                  } 
+                }
               }
             }
+          },
+          "responses": {
+            "201": {
+              "description": "Agent created successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/agent/": {
+        "post": {
+          "tags": ["Agent"],
+          "summary": "Login a new agent",
+          "requestBody": {
+            "description": "Agent login details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    } 
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Agent created successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
           }
         },
-        "responses": {
-          "200": { "description": "Login successful" },
-          "401": { "description": "Unauthorized - Invalid credentials" },
-          "500": { "description": "Internal server error" }
-        }
-      }
-    },
-    "/customer/": {
-      "get": {
-        "tags": ["Customer"],
-        "summary": "Get all customers (agent access)",
-        "description": "This endpoint allows an agent to retrieve all customer details.",
-        "security": [
-          {
-            "JWT": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved all customers"
-          },
-          "401": {
-            "description": "Unauthorized - Agent not authenticated"
-          },
-          "403": {
-            "description": "Forbidden - Agent does not have access"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
-   "/customer/forgot-password": {
-  "post": {
-    "tags": ["Customer"],
-    "summary": "Initiate password reset for a customer",
-    "description": "Sends a password reset email to the customer.",
-    "requestBody": {
-      "description": "Email of the customer",
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "email": { "type": "string", "format": "email" }
+        "get": {
+          "tags": ["Agent"],
+          "summary": "get all agents by admin, require authorization token from admin",
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "All agents fetched successfully"
             },
-            "required": ["email"]
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
           }
         }
-      }
-    },
-    "responses": {
-      "200": { "description": "Password reset email sent successfully" },
-      "404": { "description": "Customer not found" },
-      "500": { "description": "Internal server error" }
-    }
-  }
-},
-"/customer/reset-password": {
-  "post": {
-    "tags": ["Customer"],
-    "summary": "Reset customer password",
-    "description": "Allows a customer to reset their password using a reset token.",
-    "requestBody": {
-      "description": "Password reset details",
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "password": {
+      },
+      "/agent/employee": {
+        "get": {
+          "tags": ["Agent"],
+          "summary": "get all agents by employee, require authorization token from employee",
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "All agents fetched successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/agent/forgot-password": {
+        "post": {
+          "tags": ["Agent"],
+          "summary": "forgot password for agent",
+          "requestBody": {
+            "description": "Email of agent",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    }                    
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Reset password token sent successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/agent/reset-password": {
+        "post": {
+          "tags": ["Agent"],
+          "summary": "Reset password for agent",
+          "security": [{ "JWT": [] }],
+          "requestBody": {
+            "description": "New Password for agent",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "newPassword": {
+                      "type": "string"
+                    }                    
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Password reset successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/agent/{id}/refreshtoken": {
+        "get": {
+          "tags": ["Agent"],
+          "summary": "Refresh access token of a specific agent",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
                 "type": "string"
               }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Access token refreshed successfully"
             },
-            "required": ["resetToken", "newPassword"]
+            "404": {
+              "description": "Agent not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
           }
         }
-      }
-    },
-    "responses": {
-      "200": { "description": "Password reset successfully" },
-      "400": { "description": "Invalid reset token or password criteria not met" },
-      "500": { "description": "Internal server error" }
-    }
-  }
-},
-"/customer/paypremium": {
-      "post": {
-        "tags": ["Customer"],
-        "summary": "Pay premium for a customer",
-        "description": "Allows a customer to pay the premium for their insurance.",
-        "requestBody": {
-          "description": "Premium payment details",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "policyId": { "type": "string", "description": "The ID of the policy" },
-                  "paymentAmount": { "type": "number", "description": "The amount to pay" },
-                  "agentId":{"type":"string","description":"The Id of the agent"}
-                },
-                "required": ["policyId", "paymentAmount"]
+      },
+      "/employee/register": {
+        "post": {
+          "tags": ["Employee"],
+          "summary": "Register a new employee",
+          "requestBody": {
+            "description": "Employee registration details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "phno": {
+                      "type": "string"
+                    }
+                  } 
+                }
               }
             }
+          },
+          "responses": {
+            "201": {
+              "description": "Employee created successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
           }
-        },
-        "responses": {
-          "200": { "description": "Premium paid successfully" },
-          "400": { "description": "Invalid policy ID or payment amount" },
-          "500": { "description": "Internal server error" }
         }
-      }
-    },
-"/customer/{id}/refreshtoken": {
-  "get": {
-    "tags": ["Customer"],
-    "summary": "Refresh access token for a specific Customer",
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "description": "The ID of the customer",
-        "required": true,
-        "schema": { "type": "string" }
-      }
-    ],
-    "responses": {
-      "200": { "description": "Access token refreshed successfully" },
-      "404": { "description": "Customer not found" },
-      "500": { "description": "Internal server error" }
-    }
-  }
-}, "/customer/{id}/admin": {
-  "get": {
-    "tags": ["Customer"],
-    "summary": "Get all customers (admin access)",
-    "description": "This endpoint allows an admin to retrieve all customer details.",
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "description": "The ID of the agent",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      }
-    ],
-    "security": [
-      {
-        "JWT": []
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Successfully retrieved all customers"
       },
-      "401": {
-        "description": "Unauthorized - Admin not authenticated"
-      },
-      "403": {
-        "description": "Forbidden - Admin does not have access"
-      },
-      "500": {
-        "description": "Internal server error"
-      }
-    }
-  }
-},
-"/customer/{id}/employee": {
-  "get": {
-    "tags": ["Customer"],
-    "summary": "Get all customers (employee access)",
-    "description": "This endpoint allows an employee to retrieve all customer details.",
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "description": "The ID of the employee",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      }
-    ],
-    "security": [
-      {
-        "JWT": []
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Successfully retrieved all customers"
-      },
-      "401": {
-        "description": "Unauthorized - Employee not authenticated"
-      },
-      "403": {
-        "description": "Forbidden - Employee does not have access"
-      },
-      "500": {
-        "description": "Internal server error"
-      }
-    }
-  }
-},
-    "/agent/register": {
-      "post": {
-        "tags": ["Agent"],
-        "summary": "Register a new agent",
-        "description": "This endpoint registers a new agent in the system.",
-        "requestBody": {
-          "description": "Agent registration details",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/Agent" }
+      "/employee/": {
+        "post": {
+          "tags": ["Employee"],
+          "summary": "login a employee",
+          "requestBody": {
+            "description": "Employee login details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    }
+                  } 
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Employee logged in successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
             }
           }
         },
-        "responses": {
-          "201": { "description": "Agent registered successfully" },
-          "400": { "description": "Bad Request - Validation errors or missing fields" },
-          "500": { "description": "Internal server error" }
+        "get": {
+          "tags": ["Employee"],
+          "summary": "get all employee by admin, require authorization token from admin",
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "All employee fetched successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
         }
-      }
+      },
+      "/employee/forgot-password": {
+        "post": {
+          "tags": ["Employee"],
+          "summary": "forgot password for employee",
+          "requestBody": {
+            "description": "Email of employee",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    }                    
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Reset password token sent successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/employee/reset-password": {
+        "post": {
+          "tags": ["Employee"],
+          "summary": "Reset password for employee",
+          "security": [{ "JWT": [] }],
+          "requestBody": {
+            "description": "New Password for employee",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "newPassword": {
+                      "type": "string"
+                    }                    
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Password reset successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/employee/{id}/refreshtoken": {
+        "get": {
+          "tags": ["Employee"],
+          "summary": "Refresh access token of a specific employee",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Access token refreshed successfully"
+            },
+            "404": {
+              "description": "Note not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/policy": {
+        "post": {
+          "tags": ["Policy"],
+          "summary": "Create a policy by customer, require authorization token from customer",
+          "security": [{ "JWT": [] }],
+          "requestBody": {
+            "description": "Policy creation details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "policyName": { "type": "string" },
+                    "description": { "type": "string" },
+                    "planId": { "type": "string" },
+                    "customerId": { "type": "string" },
+                    "schemeId": { "type": "string" },
+                    "agentId": { "type": "string" },
+                    "premiumAmount": { "type": "number" },
+                    "duration": { "type": "number" },
+                    "coverage": { "type": "number" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Policy created successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "get": {
+          "tags": ["Policy"],
+          "summary": "get all policy by customer, require authorization token from customer",
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "All policies fetched successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/policy/{id}": {
+        "put": {
+          "tags": ["Policy"],
+          "summary": "update a policy by customer, require authorization token from customer",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "requestBody": {
+            "description": "Policy updation details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "policyName": { "type": "string" },
+                    "description": { "type": "string" },
+                    "planId": { "type": "string" },
+                    "customerId": { "type": "string" },
+                    "schemeId": { "type": "string" },
+                    "agentId": { "type": "string" },
+                    "premiumAmount": { "type": "number" },
+                    "duration": { "type": "number" },
+                    "coverage": { "type": "number" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Policy updated successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "delete": {
+          "tags": ["Policy"],
+          "summary": "delete policy by customer, require authorization token from customer",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "Policy deleted successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "get": {
+          "tags": ["Policy"],
+          "summary": "Get a policy by id, by customer, require authorization token from customer",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "200": {
+              "description": "Policy fetched successfully"
+            },
+            "404": {
+              "description": "Policy not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/policy/{id}/agent": {
+        "get": {
+          "tags": ["Policy"],
+          "summary": "Get a policy by id, by agent, require authorization token from agent",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "200": {
+              "description": "Policy fetched successfully"
+            },
+            "404": {
+              "description": "Policy not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "put": {
+          "tags": ["Policy"],
+          "summary": "update a policy by agent, require authorization token from agent",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "requestBody": {
+            "description": "Policy updation details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "policyName": { "type": "string" },
+                    "description": { "type": "string" },
+                    "planId": { "type": "string" },
+                    "customerId": { "type": "string" },
+                    "schemeId": { "type": "string" },
+                    "agentId": { "type": "string" },
+                    "premiumAmount": { "type": "number" },
+                    "duration": { "type": "number" },
+                    "coverage": { "type": "number" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Policy updated successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/policy/{id}/admin": {
+        "get": {
+          "tags": ["Policy"],
+          "summary": "Get a policy by id, by admin, require authorization token from admin",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "200": {
+              "description": "Policy fetched successfully"
+            },
+            "404": {
+              "description": "Policy not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "put": {
+          "tags": ["Policy"],
+          "summary": "update a policy by admin, require authorization token from admin",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "requestBody": {
+            "description": "Policy updation details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "policyName": { "type": "string" },
+                    "description": { "type": "string" },
+                    "planId": { "type": "string" },
+                    "customerId": { "type": "string" },
+                    "schemeId": { "type": "string" },
+                    "agentId": { "type": "string" },
+                    "premiumAmount": { "type": "number" },
+                    "duration": { "type": "number" },
+                    "coverage": { "type": "number" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Policy updated successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "delete": {
+          "tags": ["Policy"],
+          "summary": "delete policy by customer, require authorization token from customer",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "Policy deleted successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/policy/{id}/employee": {
+        "get": {
+          "tags": ["Policy"],
+          "summary": "Get a policy by id, by employee, require authorization token from employee",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "200": {
+              "description": "Policy fetched successfully"
+            },
+            "404": {
+              "description": "Policy not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/policy/{id}/getall/agent": {
+        "get": {
+          "tags": ["Policy"],
+          "summary": "get all policy by agent, require authorization token from agent",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "All policies fetched successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/policy/{id}/getall/admin": {
+        "get": {
+          "tags": ["Policy"],
+          "summary": "get all policy by admin, require authorization token from admin",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "All policies fetched successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/policy/{id}/getall/employee": {
+        "get": {
+          "tags": ["Policy"],
+          "summary": "get all policy by employee, require authorization token from employee",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "201": {
+              "description": "All policies fetched successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+
+      "/customer/register": {
+        "post": {
+          "tags": ["Customer"],
+          "summary": "Register a new customer",
+          "description": "This endpoint registers a new customer in the system.",
+          "requestBody": {
+            "description": "Customer registration details",
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": { "$ref": "#/components/schemas/Customer" }
+              }
+            }
+          },
+          "responses": {
+            "201": { "description": "Customer registered successfully" },
+            "400": { "description": "Bad Request - Validation errors or missing fields" },
+            "500": { "description": "Internal server error" }
+          }
+        }
+      },
+      "/customer": {
+        "post": {
+          "tags": ["Customer"],
+          "summary": "Login the customer",
+          "description": "Authenticate a customer using email and password.",
+          "requestBody": {
+            "description": "Customer login credentials",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": { "type": "string", "format": "email" },
+                    "password": { "type": "string" }
+                  },
+                  "required": ["email", "password"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": { "description": "Login successful" },
+            "401": { "description": "Unauthorized - Invalid credentials" },
+            "500": { "description": "Internal server error" }
+          }
+        }
+      },
+      "/customer/": {
+        "get": {
+          "tags": ["Customer"],
+          "summary": "Get all customers (agent access)",
+          "description": "This endpoint allows an agent to retrieve all customer details.",
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfully retrieved all customers"
+            },
+            "401": {
+              "description": "Unauthorized - Agent not authenticated"
+            },
+            "403": {
+              "description": "Forbidden - Agent does not have access"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+     "/customer/forgot-password": {
+        "post": {
+        "tags": ["Customer"],
+        "summary": "Initiate password reset for a customer",
+        "description": "Sends a password reset email to the customer.",
+        "requestBody": {    
+            "description": "Email of the customer",
+            "required": true,
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "email": { "type": "string", "format": "email" }
+                        },
+                        "required": ["email"]
+                    }
+                }
+            }
+        },
+        "responses": {
+            "200": { "description": "Password reset email sent successfully" },
+            "404": { "description": "Customer not found" },
+            "500": { "description": "Internal server error" }
+        }
+        }
     },
-    "/agent/{id}/refreshtoken": {
-      "get": {
-        "tags": ["Agent"],
-        "summary": "Refresh access token for a specific agent",
+    "/customer/reset-password": {
+        "post": {
+        "tags": ["Customer"],
+        "summary": "Reset customer password",
+        "description": "Allows a customer to reset their password using a reset token.",
+        "requestBody": {
+            "description": "Password reset details",
+            "required": true,
+            "content": {
+            "application/json": {
+                "schema": {
+                "type": "object",
+                "properties": {
+                    "password": {
+                    "type": "string"
+                    }
+                },
+                "required": ["resetToken", "newPassword"]
+                }
+            }
+            }
+        },
+        "responses": {
+            "200": { "description": "Password reset successfully" },
+            "400": { "description": "Invalid reset token or password criteria not met" },
+            "500": { "description": "Internal server error" }
+        }
+        }
+    },
+    "/customer/paypremium": {
+        "post": {
+          "tags": ["Customer"],
+          "summary": "Pay premium for a customer",
+          "description": "Allows a customer to pay the premium for their insurance.",
+          "requestBody": {
+            "description": "Premium payment details",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "policyId": { "type": "string", "description": "The ID of the policy" },
+                    "paymentAmount": { "type": "number", "description": "The amount to pay" },
+                    "agentId":{"type":"string","description":"The Id of the agent"}
+                  },
+                  "required": ["policyId", "paymentAmount"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": { "description": "Premium paid successfully" },
+            "400": { "description": "Invalid policy ID or payment amount" },
+            "500": { "description": "Internal server error" }
+          }
+        }
+    },
+    "/customer/{id}/refreshtoken": {
+        "get": {
+        "tags": ["Customer"],
+        "summary": "Refresh access token for a specific Customer",
         "parameters": [
-          {
+            {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the customer",
+            "required": true,
+            "schema": { "type": "string" }
+            }
+        ],
+        "responses": {
+            "200": { "description": "Access token refreshed successfully" },
+            "404": { "description": "Customer not found" },
+            "500": { "description": "Internal server error" }
+        }
+        }
+    }, 
+    "/customer/{id}/admin": {
+        "get": {
+        "tags": ["Customer"],
+        "summary": "Get all customers (admin access)",
+        "description": "This endpoint allows an admin to retrieve all customer details.",
+        "parameters": [
+            {
             "name": "id",
             "in": "path",
             "description": "The ID of the agent",
             "required": true,
-            "schema": { "type": "string" }
-          }
+            "schema": {
+                "type": "string"
+            }
+            }
+        ],
+        "security": [
+            {
+            "JWT": []
+            }
         ],
         "responses": {
-          "200": { "description": "Access token refreshed successfully" },
-          "404": { "description": "Agent not found" },
-          "500": { "description": "Internal server error" }
-        }
-      }
-    },
-    "/admin/register": {
-      "post": {
-        "tags": ["Admin"],
-        "summary": "Register Admin",
-        "description": "Registers a new admin user",
-        "operationId": "registerAdmin",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/Admin" }
-            }
-          }
-        },
-        "responses": {
-          "201": { "description": "Successfully registered" },
-          "400": { "description": "Bad Request - Validation errors or missing fields" },
-          "500": { "description": "Internal server error" }
-        }
-      }
-    },
-    "/admin": {
-      "post": {
-        "tags": ["Admin"],
-        "summary": "Admin login",
-        "description": "Logs in an admin user by email and password, and returns a JWT token upon successful authentication.",
-        "operationId": "loginAdmin",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "format": "email",
-                    "description": "Admin email"
-                  },
-                  "password": {
-                    "type": "string",
-                    "description": "Admin password"
-                  }
-                },
-                "required": ["email", "password"]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Login successful"
-          },
-
-          "400": {
-            "description": "Invalid credentials"
-          },
-          "500": {
+            "200": {
+            "description": "Successfully retrieved all customers"
+            },
+            "401": {
+            "description": "Unauthorized - Admin not authenticated"
+            },
+            "403": {
+            "description": "Forbidden - Admin does not have access"
+            },
+            "500": {
             "description": "Internal server error"
-          }
-        }
-      }
-    },   
-     "/admin/forgot-password": {
-      "post": {
-        "tags": ["Admin"],
-        "summary": "Forgot password",
-        "description": "Sends a password reset link to the provided admin email.",
-        "operationId": "forgotPasswordAdmin",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "format": "email",
-                    "description": "Admin email for password reset"
-                  }
-                },
-                "required": ["email"]
-              }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Password reset link sent successfully"
-          },
-          "400": {
-            "description": "Invalid email format"
-          },
-          "404": {
-            "description": "Admin not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
         }
-      }
-    },
-    "/admin/reset-password": {
-      "post": {
-        "tags": ["Admin"],
-        "summary": "Reset password",
-        "description": "Resets the password of an admin using a valid reset token.",
-        "operationId": "resetPasswordAdmin",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "newPassword": {
-                    "type": "string",
-                    "description": "New password for the admin"
-                  }
-                },
-                "required": ["resetToken", "newPassword"]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Password reset successful"
-          },
-          "400": {
-            "description": "Invalid reset token or password"
-          },
-          "404": {
-            "description": "Admin not found or token expired"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
         }
-      }
     },
-    "/admin/{id}/refreshtoken": {
-      "get": {
-        "tags": ["Admin"],
-        "summary": "Refresh access token for a specific admin",
-        "description": "Refreshes the JWT access token for the admin based on their ID.",
+    "/customer/{id}/employee": {
+        "get": {
+        "tags": ["Customer"],
+        "summary": "Get all customers (employee access)",
+        "description": "This endpoint allows an employee to retrieve all customer details.",
         "parameters": [
-          {
+            {
             "name": "id",
             "in": "path",
-            "description": "The ID of the admin",
+            "description": "The ID of the employee",
             "required": true,
             "schema": {
-              "type": "string"
+                "type": "string"
             }
-          }
+            }
+        ],
+        "security": [
+            {
+            "JWT": []
+            }
         ],
         "responses": {
-          "200": {
-            "description": "Access token refreshed successfully"
-          },
-          "404": {
-            "description": "Admin not found"
-          },
-          "500": {
+            "200": {
+            "description": "Successfully retrieved all customers"
+            },
+            "401": {
+            "description": "Unauthorized - Employee not authenticated"
+            },
+            "403": {
+            "description": "Forbidden - Employee does not have access"
+            },
+            "500": {
             "description": "Internal server error"
+            }
+        }
+        }
+    },
+    "/admin/register": {
+        "post": {
+          "tags": ["Admin"],
+          "summary": "Register Admin",
+          "description": "Registers a new admin user",
+          "operationId": "registerAdmin",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Admin" }
+              }
+            }
+          },
+          "responses": {
+            "201": { "description": "Successfully registered" },
+            "400": { "description": "Bad Request - Validation errors or missing fields" },
+            "500": { "description": "Internal server error" }
+            }
+        }
+    },
+    "/admin": {
+        "post": {
+          "tags": ["Admin"],
+          "summary": "Admin login",
+          "description": "Logs in an admin user by email and password, and returns a JWT token upon successful authentication.",
+          "operationId": "loginAdmin",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "format": "email",
+                      "description": "Admin email"
+                    },
+                    "password": {
+                      "type": "string",
+                      "description": "Admin password"
+                    }
+                  },
+                  "required": ["email", "password"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Login successful"
+            },
+  
+            "400": {
+              "description": "Invalid credentials"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
           }
         }
-      }
+    },   
+    "/admin/forgot-password": {
+        "post": {
+          "tags": ["Admin"],
+          "summary": "Forgot password",
+          "description": "Sends a password reset link to the provided admin email.",
+          "operationId": "forgotPasswordAdmin",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "format": "email",
+                      "description": "Admin email for password reset"
+                    }
+                  },
+                  "required": ["email"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Password reset link sent successfully"
+            },
+            "400": {
+              "description": "Invalid email format"
+            },
+            "404": {
+              "description": "Admin not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+    },
+    "/admin/reset-password": {
+        "post": {
+          "tags": ["Admin"],
+          "summary": "Reset password",
+          "description": "Resets the password of an admin using a valid reset token.",
+          "operationId": "resetPasswordAdmin",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "newPassword": {
+                      "type": "string",
+                      "description": "New password for the admin"
+                    }
+                  },
+                  "required": ["resetToken", "newPassword"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Password reset successful"
+            },
+            "400": {
+              "description": "Invalid reset token or password"
+            },
+            "404": {
+              "description": "Admin not found or token expired"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+    },
+    "/admin/{id}/refreshtoken": {
+        "get": {
+          "tags": ["Admin"],
+          "summary": "Refresh access token for a specific admin",
+          "description": "Refreshes the JWT access token for the admin based on their ID.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "The ID of the admin",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Access token refreshed successfully"
+            },
+            "404": {
+              "description": "Admin not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+    },
+    "/plan": {
+        "post": {
+        "tags": ["Plan"],
+        "summary": "Create a new plan",
+        "operationId": "createPlan",
+        "requestBody": {
+            "required": true,
+            "content": {
+            "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Plan"
+                }
+            }
+            }
+        },
+        "responses": {
+            "201": {
+            "description": "Plan created successfully"
+            },
+            "400": {
+            "description": "Bad request"
+            },
+            "500": {
+            "description": "Internal server error"
+            }
+        }
+        }
+    },
+    "/plan/": {
+        "get": {
+        "tags": ["Plan"],
+        "summary": "Get all plans by admin",
+        "operationId": "getAllPlansAdmin",
+        "parameters": [
+            {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+                "type": "integer",
+                "default": 1
+            }
+            },
+            {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+                "type": "integer",
+                "default": 10
+            }
+            }
+        ],
+        "responses": {
+            "200": {
+            "description": "List of plans"
+            },
+            "400": {
+            "description": "Bad request"
+            },
+            "500": {
+            "description": "Internal server error"
+            }
+            }
+        }
+    },
+    "/plan/customer": {
+        "get": {
+        "tags": ["Plan"],
+        "summary": "Get all plans by customer",
+        "operationId": "getAllPlansCustomer",
+        "parameters": [
+            {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+                "type": "integer",
+                "default": 1
+            }
+            },
+            {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+                "type": "integer",
+                "default": 10
+            }
+            }
+        ],
+        "responses": {
+            "200": {
+            "description": "List of plans"
+            },
+            "400": {
+            "description": "Bad request"
+            },
+            "500": {
+            "description": "Internal server error"
+            }
+        }
+        }
+    },
+    "/plan/agent": {
+        "get": {
+        "tags": ["Plan"],
+        "summary": "Get all plans by agent",
+        "operationId": "getAllPlansAgent",
+        "parameters": [
+            {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+                "type": "integer",
+                "default": 1
+            }
+            },
+            {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+                "type": "integer",
+                "default": 10
+            }
+            }
+        ],
+        "responses": {
+            "200": {
+            "description": "List of plans"
+            },
+            "400": {
+            "description": "Bad request"
+            },
+            "500": {
+            "description": "Internal server error"
+            }
+        }
+        }
+    },
+    "/plan/employee":{
+        "get":{
+            "tags": ["Plan"],
+            "summary": "Get all plans by employee",
+            "operationId": "getAllPlansEmployee",
+            "parameters": [
+            {
+                "name": "page",
+                "in": "query",
+                "required": false,
+                "schema": {
+                "type": "integer",
+                "default": 1
+                }
+            },
+            {
+                "name": "limit",
+                "in": "query",
+                "required": false,
+                "schema": {
+                "type": "integer",
+                "default": 10
+                }
+            }
+            ],
+            "responses": {
+            "200": {
+                "description": "List of plans"
+            },
+            "400": {
+                "description": "Bad request"
+            },
+            "500": {
+            "description": "Internal server error"
+            }
+            }
+        }   
+    },
+    "/plan/{id}":{
+        "get":{
+        "tags": ["Plan"],
+        "summary": "Get plan by ID for admin",
+        "operationId": "getPlanByIdAdmin",
+        "parameters": [
+            {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Plan ID",
+            "schema": {
+                "type": "string"
+            }
+            }
+        ],
+        "responses": {
+            "200": {
+            "description": "Plan details"
+            },
+            "404": {
+            "description": "Plan not found"
+            },
+            "400": {
+            "description": "Bad request"
+            },
+            "500": {
+            "description": "Internal server error"
+            }
+        }
+        }  
+    },
+    "/plan/{id}/customer": {
+        "get": {
+        "tags": ["Plan"],
+        "summary": "Get plan details by ID for customer",
+        "operationId": "getPlanByIdCustomer",
+        "parameters": [
+            {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Plan ID",
+            "schema": {
+                "type": "string"
+            }
+            }
+        ],
+        "responses": {
+            "200": {
+            "description": "Plan details retrieved successfully"
+            },
+            "400": {
+            "description": "Bad request"
+            },
+            "404": {
+            "description": "Plan not found"
+            },
+            "500": {
+            "description": "Internal server error"
+            }
+        }
+        }
+    },
+    "/plan/{id}/agent": {
+        "get": {
+        "tags": ["Plan"],
+        "summary": "Get plan details by ID for agent",
+        "operationId": "getPlanByIdAgent",
+        "parameters": [
+            {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Plan ID",
+            "schema": {
+                "type": "string"
+            }
+            }
+        ],
+        "responses": {
+            "200": {
+            "description": "Plan details retrieved successfully"
+            },
+            "400": {
+            "description": "Bad request"
+            },
+            "404": {
+            "description": "Plan not found"
+            },
+            "500": {
+            "description": "Internal server error"
+            }
+        }
+        }
+    },
+    "/plan/{id}/employee": {
+        "get": {
+        "tags": ["Plan"],
+        "summary": "Get plan details by ID for employee",
+        "operationId": "getPlanByIdEmployee",
+        "parameters": [
+            {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Plan ID",
+            "schema": {
+                "type": "string"
+            }
+            }
+        ],
+        "responses": {
+            "200": {
+            "description": "Plan details retrieved successfully"
+            },
+            "400": {
+            "description": "Bad request"
+            },
+            "404": {
+            "description": "Plan not found"
+            },
+            "500": {
+            "description": "Internal server error"
+            }
+        }
+        }
+    },
+    "/plan/{id}/": {
+        "put": {
+        "tags": ["Plan"],
+        "summary": "Update a plan by ID",
+        "operationId": "updatePlan",
+        "parameters": [
+            {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Plan ID",
+            "schema": {
+                "type": "string"
+            }
+            }
+        ],
+        "requestBody": {
+            "required": true,
+            "content": {
+            "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Plan"
+                }
+            }
+            }
+        },
+        "responses": {
+            "200": {
+            "description": "Plan updated successfully"
+            },
+            "400": {
+            "description": "Bad request"
+            },
+            "404": {
+            "description": "Plan not found"
+            },
+            "500": {
+            "description": "Internal server error"
+            }
+        }
+        },
+        "delete": {
+        "tags": ["Plan"],
+        "summary": "Delete a plan by ID",
+        "operationId": "deletePlan",
+        "parameters": [
+            {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Plan ID",
+            "schema": {
+                "type": "string"
+            }
+            }
+        ],
+        "responses": {
+            "200": {
+            "description": "Plan deleted successfully"
+            },
+            "400": {
+            "description": "Bad request"
+            },
+            "404": {
+            "description": "Plan not found"
+            },
+            "500": {
+            "description": "Internal server error"
+            }
+        }
+        }
+    },
+    "/scheme": {
+        "post": {
+            "tags": ["Scheme"],
+            "summary": "Create a new scheme",
+            "operationId": "createScheme",
+            "requestBody": {
+            "required": true,
+            "content": {
+                "application/json": {
+                "schema": {
+                    "$ref": "#/components/schemas/Scheme"
+                }
+                }
+            }
+            },
+            "responses": {
+            "201": {
+                "description": "Scheme created successfully"
+            },
+            "400": {
+                "description": "Bad request, validation failed"
+            },
+            "401": {
+                "description": "Unauthorized, admin privileges required"
+            },
+            "500": {
+                "description": "Internal server error"
+            }
+            }   
+        },
+        "get": {
+            "tags": ["Scheme"],
+            "summary": "Get all schemes with pagination",
+            "operationId": "getAllSchemes",
+            "parameters": [
+            {
+                "name": "page",
+                "in": "query",
+                "description": "Page number for pagination",
+                "required": false,
+                "schema": {
+                "type": "integer",
+                "default": 1
+                }
+            },
+            {
+                "name": "limit",
+                "in": "query",
+                "description": "Number of items per page for pagination",
+                "required": false,
+                "schema": {
+                "type": "integer",
+                "default": 10
+                }
+            }
+            ],
+            "responses": {
+            "200": {
+                "description": "A list of schemes with pagination"
+            },
+            "401": {
+                "description": "Unauthorized, admin privileges required"
+            },
+            "500": {
+                "description": "Internal server error"
+            }
+            }
+        }
+    },
+    "/scheme/customer": {
+        "get": {
+            "tags": ["Scheme"],
+            "summary": "Get all schemes for customer with pagination",
+            "operationId": "getAllSchemesForCustomer",
+            "parameters": [
+            {
+                "name": "page",
+                "in": "query",
+                "description": "Page number for pagination",
+                "required": false,
+                "schema": {
+                "type": "integer",
+                "default": 1
+                }
+            },
+            {
+                "name": "limit",
+                "in": "query",
+                "description": "Number of items per page for pagination",
+                "required": false,
+                "schema": {
+                "type": "integer",
+                "default": 10
+                }
+            }
+            ],
+            "responses": {
+            "200": {
+                "description": "A list of schemes for customer with pagination"            
+            },
+            "401": {
+                "description": "Unauthorized, customer privileges required"
+            },
+            "500": {
+                "description": "Internal server error"
+            }
+            }
+        }
+    },
+    "/scheme/agent": {
+        "get": {
+            "tags": ["Scheme"],
+            "summary": "Get all schemes for agent with pagination",
+            "operationId": "getAllSchemesForAgent",
+            "parameters": [
+            {
+                "name": "page",
+                "in": "query",
+                "description": "Page number for pagination",
+                "required": false,
+                "schema": {
+                "type": "integer",
+                "default": 1
+                }
+            },
+            {
+                "name": "limit",
+                "in": "query",
+                "description": "Number of items per page for pagination",
+                "required": false,
+                "schema": {
+                "type": "integer",
+                "default": 10
+                }
+            }
+            ],
+            "responses": {
+            "200": {
+                "description": "A list of schemes for agent with pagination"
+            },
+            "400": {
+                "description": "Unauthorized, agent privileges required"
+            },
+            "500": {
+                "description": "Internal server error"
+            }
+            }
+        }
+    },
+    "/scheme/employee": {
+        "get": {
+            "tags": ["Scheme"],
+            "summary": "Get all schemes for employee with pagination",
+            "operationId": "getAllSchemesForEmployee",
+            "parameters": [
+            {
+                "name": "page",
+                "in": "query",
+                "description": "Page number for pagination",
+                "required": false,
+                "schema": {
+                "type": "integer",
+                "default": 1
+                }
+            },
+            {
+                "name": "limit",
+                "in": "query",
+                "description": "Number of items per page for pagination",
+                "required": false,
+                "schema": {
+                "type": "integer",
+                "default": 10
+                }
+            }
+            ],
+            "responses": {
+            "200": {
+                "description": "A list of schemes for employee with pagination"
+            },
+            "400": {
+                "description": "Unauthorized, employee privileges required"
+            },
+            "500": {
+                "description": "Internal server error"
+            }
+            }
+        }
+    },
+    "/scheme/search": {
+        "get": {
+            "summary": "Search for schemes based on a query",
+            "tags": ["Scheme"],
+            "parameters": [
+            {
+                "name": "q",
+                "in": "query",
+                "description": "Search query string",
+                "required": true,
+                "schema": {
+                "type": "string"
+                }
+            },
+            {
+                "name": "page",
+                "in": "query",
+                "description": "Page number",
+                "required": false,
+                "schema": {
+                "type": "integer",
+                "default": 1
+                }
+            },
+            {
+                "name": "limit",
+                "in": "query",
+                "description": "Number of results per page",
+                "required": false,
+                "schema": {
+                "type": "integer",
+                "default": 10
+                }
+            }
+            ],
+            "responses": {
+            "200": {
+                "description": "Search results for schemes"
+            },
+            "400": {
+                "description": "Bad request, invalid query parameters"
+            },
+            "500": {
+                "description": "Internal server error"
+            }
+            }
+        }
+    },
+    "/scheme/filter": {
+        "get": {
+            "summary": "Get schemes sorted by premium",
+            "tags": ["Scheme"],
+            "responses": {
+            "200": {
+                "description": "Schemes sorted by premium successfully",
+                "content": {
+                "application/json": {
+                    "schema": {
+                    "type": "object",
+                    "properties": {
+                        "code": {
+                        "type": "integer",
+                        "description": "HTTP status code"
+                        },
+                        "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Scheme"
+                        },
+                        "description": "List of schemes sorted by premium"
+                        }
+                    }
+                    }
+                }
+                }
+            },
+            "400": {
+                "description": "Bad request, error occurred during filtering"
+            },
+            "500": {
+                "description": "Internal server error"
+            }
+            }
+        }
+    }, 
+    "/scheme/{id}": {
+        "get": {
+            "summary": "Get scheme by ID (admin access)",
+            "tags": ["Scheme"],
+            "parameters": [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "ID of the scheme to retrieve",
+                "required": true,
+                "schema": {
+                "type": "string"
+                }
+            }
+            ],
+            "responses": {
+            "200": {
+                "description": "Scheme details retrieved successfully"
+            },
+            "401": {
+                "description": "Unauthorized, admin privileges required"
+            },
+            "404": {
+                "description": "Scheme not found"
+            },
+            "500": {
+                "description": "Internal server error"
+            }
+            }
+        }
+    },
+    "/scheme/{id}/customer": {
+        "get": {
+            "tags": ["Scheme"],
+            "summary": "Get scheme by ID (customer access)",
+            "parameters": [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "ID of the scheme to retrieve",
+                "required": true,
+                "schema": {
+                "type": "string"
+                }
+            }
+            ],
+            "responses": {
+            "200": {
+                "description": "Scheme details retrieved successfully"
+            },
+            "401": {
+                "description": "Unauthorized, customer privileges required"
+            },
+            "404": {
+                "description": "Scheme not found"
+            },
+            "500": {
+                "description": "Internal server error"
+            }
+            }
+        }
+    },
+    "/scheme/{id}/agent": {
+        "get": {
+            "summary": "Get scheme by ID (agent access)",
+            "tags": ["Scheme"],
+            "parameters": [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "ID of the scheme to retrieve",
+                "required": true,
+                "schema": {
+                "type": "string"
+                }
+            }
+            ],
+            "responses": {
+            "200": {
+                "description": "Scheme details retrieved successfully"
+            },
+            "401": {
+                "description": "Unauthorized, agent privileges required"
+            },
+            "404": {
+                "description": "Scheme not found"
+            },
+            "500": {
+                "description": "Internal server error"
+            }
+            }
+        }
+    },
+    "/scheme/{id}/employee": {
+        "get": {
+            "tags": ["Scheme"],
+            "summary": "Get scheme by ID (employee access)",
+            "parameters": [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "ID of the scheme to retrieve",
+                "required": true,
+                "schema": {
+                "type": "string"
+                }
+            }
+            ],
+            "responses": {
+            "200": {
+                "description": "Scheme details retrieved successfully"
+            },
+            "401": {
+                "description": "Unauthorized, employee privileges required"
+            },
+            "404": {
+                "description": "Scheme not found"
+            },
+            "500": {
+                "description": "Internal server error"
+            }
+            }
+        }
+    },
+    "/scheme/{id}/": {
+        "put": {
+            "summary": "Update a scheme by ID (admin access)",
+            "tags": ["Scheme"],
+            "parameters": [
+            {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the scheme to update",
+            "schema": {
+                "type": "string"
+            }
+            }
+            ],
+            "requestBody": {
+            "required": true,
+            "content": {
+            "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Scheme"
+                }
+            }
+            }
+            },
+            "responses": {
+            "200": {
+                "description": "Scheme updated successfully"
+            },
+            "400": {
+                "description": "Bad request, validation failed"
+            },
+            "401": {
+                "description": "Unauthorized, admin privileges required"
+            },
+            "404": {
+                "description": "Scheme not found"
+            },
+            "500": {
+                "description": "Internal server error"
+            }
+            }
+        },
+        "delete": {
+            "summary": "Delete a scheme by ID (admin access)",
+            "tags": ["Scheme"],
+            "parameters": [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "ID of the scheme to delete",
+                "required": true,
+                "schema": {
+                "type": "string"
+                }
+            }
+            ],
+            "responses": {
+            "200": {
+                "description": "Scheme deleted successfully"
+            },
+            "401": {
+                "description": "Unauthorized, admin privileges required"
+            },
+            "404": {
+                "description": "Scheme not found"
+            },
+            "500": {
+                "description": "Internal server error"
+            }
+            }
+        }
     }
-  },
-  "components": {
-    "schemas": {
-      "Admin": {
-        "type": "object",
-        "properties": {
-          "username": { "type": "string" },
-          "email": { "type": "string", "format": "email" },
-          "password": { "type": "string" },
-          "phno": { "type": "string", "pattern": "^[0-9]{10}$" }
+  
+    },
+    "components": {
+      "schemas": {
+        "Agent": {
+          "type": "object",
+          "properties": {
+            "username": {"type": "String", "required": true},
+            "email": {"type": "String", "required": true},
+            "password": {"type": "String", "required": true},
+            "phno": {"type": "Number", "match": "/^[0-9]{10}$/"},
+            "region": {"type": "String", "required": true},
+            "num_of_customers": {"type": "Number", "required": true, "default": 0},
+            "num_of_policies": {"type": "Number", "required": true, "default": 0},
+            "commission": {"type": "Number", "required": true, "default": 0},
+            "refreshToken": {"type": "String", "default": null, "required": false}
+          }
         },
-        "required": ["username", "email", "password", "phno"]
+        "Employee": {
+          "type": "object",
+          "properties": {
+            "username": { "type": "String", "required": true },
+            "email": { "type": "String", "required": true, "unique": true },
+            "password": { "type": "String", "required": true },
+            "phno": { "type": "Number", "match": "/^[0-9]{10}$/"},
+            "refreshToken": { "type": "String", "default": null,  "required": false }
+          }
+        },
+        "Policy": {
+          "type": "object",
+          "properties": {
+            "policyName": { "type": "String", "required": true },
+            "description": { "type": "String", "require": true},
+            "planId": { "type": "ObjectId", "required": true },
+            "customerId": { "type": "ObjectId", "required": true },
+            "schemeId": { "type": "ObjectId", "required": true },
+            "agentId": { "type": "ObjectId", "required": true },
+            "premiumAmount": {"type": "Number", "required": true},
+            "premiumPaid": { "type": "Number", "required": true, "default": 0},
+            "policyStartDate": { "type": "Date", "required": true, "default": "new Date()"},
+            "duration": { "type": "Number", "required": true },
+            "coverage": { "type": "Number", "required": true },
+            "pendingPremium": {"type": "Number", "required": true },
+            "status": { "type": "String", "required": true, "default": "submitted"}
+          }
+        },
+        "Admin": {
+          "type": "object",
+          "properties": {
+            "username": { "type": "string" },
+            "email": { "type": "string", "format": "email" },
+            "password": { "type": "string" },
+            "phno": { "type": "string", "pattern": "^[0-9]{10}$" }
+          },
+          "required": ["username", "email", "password", "phno"]
+        },
+        "Customer": {
+          "type": "object",
+          "properties": {
+            "username": { "type": "string" },
+            "email": { "type": "string", "format": "email" },
+            "password": { "type": "string" },
+            "phno": { "type": "string", "pattern": "^[0-9]{10}$" },
+            "address": { "type": "string" },
+            "age": { "type": "integer" },
+            "region": { "type": "string" },
+            "profilePhoto": { "type": "string", "format": "binary" }
+          },
+          "required": ["username", "email", "password", "phno", "age", "region"]
+        },
+        "Plan": {
+          "type": "object",
+          "properties": {
+            "planName": {"type": "string"},
+            "description": {"type": "string"},
+            "category": {"type": "string"}
+          },
+          "required": ["planName", "category"]
+        },
+        "Scheme": {
+          "type": "object",
+          "properties": {
+            "schemeName": { "type": "string" },
+            "description": { "type": "string" },
+            "planId": { "type": "string" },
+            "eligibilityCriteria": { "type": "string" },
+            "premium": { "type": "number", "format": "float" },
+            "maturityPeriod": { "type": "number" },
+            "coverage": { "type": "number" }
+          }
+        }
       },
-      "Agent": {
-        "type": "object",
-        "properties": {
-          "username": { "type": "string" },
-          "email": { "type": "string", "format": "email" },
-          "password": { "type": "string" },
-          "phno": { "type": "string", "pattern": "^[0-9]{10}$" },
-          "region": { "type": "string" },
-          "num_of_customers": { "type": "integer", "default": 0 },
-          "num_of_policies": { "type": "integer", "default": 0 },
-          "commission": { "type": "number", "default": 0 },
-          "refreshToken": { "type": "string", "default": null }
-        },
-        "required": ["username", "email", "password", "phno", "region"]
-      },
-      "Customer": {
-        "type": "object",
-        "properties": {
-          "username": { "type": "string" },
-          "email": { "type": "string", "format": "email" },
-          "password": { "type": "string" },
-          "phno": { "type": "string", "pattern": "^[0-9]{10}$" },
-          "address": { "type": "string" },
-          "age": { "type": "integer" },
-          "region": { "type": "string" },
-          "profilePhoto": { "type": "string", "format": "binary" }
-        },
-        "required": ["username", "email", "password", "phno", "age", "region"]
+      "securitySchemes": {
+        "JWT": {
+          "type": "apiKey",
+          "name": "Authorization",
+          "scheme": "bearer",
+           "bearerFormat": "JWT",
+          "in": "header"
+        }
       }
     },
-    "securitySchemes": {
-      "JWT": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "scheme": "bearer",
-         "bearerFormat": "JWT",
-        "in": "header"
+    "security": [
+      {
+        "JWT": []
       }
-    }
-  },
-  "security": [
-    {
-      "JWT": []
-    }
-  ]
-}
+    ]
+  }
