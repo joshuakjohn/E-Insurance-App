@@ -2,6 +2,7 @@ import express, { IRouter } from 'express';
 import SchemeController from '../controllers/scheme.controller';
 import SchemeValidator from '../validators/scheme.validator';
 import { adminAuth, agentAuth, customerAuth, employeeAuth } from '../middlewares/auth.middleware';
+import { cacheData } from '../middlewares/rediscache.middleware';
 
 class SchemeRoutes {
     private router = express.Router();
@@ -17,16 +18,16 @@ class SchemeRoutes {
          this.router.post('/', adminAuth, this.schemeValidator.createScheme, this.schemeController.createScheme);
          
          //route to get all schemes by admin
-         this.router.get('/', adminAuth, this.schemeValidator.validatePagination, this.schemeController.getAllSchemes);
+         this.router.get('/', adminAuth, this.schemeValidator.validatePagination, cacheData, this.schemeController.getAllSchemes);
 
          //route to get all schemes by customer
-         this.router.get('/customer', customerAuth, this.schemeValidator.validatePagination, this.schemeController.getAllSchemes);
+         this.router.get('/customer', customerAuth, this.schemeValidator.validatePagination, cacheData, this.schemeController.getAllSchemes);
 
          //route to get all schemes by agent
-         this.router.get('/agent', agentAuth, this.schemeValidator.validatePagination, this.schemeController.getAllSchemes);
+         this.router.get('/agent', agentAuth, this.schemeValidator.validatePagination, cacheData, this.schemeController.getAllSchemes);
 
          //route to get all schemes by employee
-         this.router.get('/employee', employeeAuth, this.schemeValidator.validatePagination, this.schemeController.getAllSchemes);
+         this.router.get('/employee', employeeAuth, this.schemeValidator.validatePagination, cacheData, this.schemeController.getAllSchemes);
 
          //route to get the scheme which match with search key
          this.router.get('/search',this.schemeController.search)

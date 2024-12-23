@@ -3,6 +3,7 @@ import employeeModel from "../models/employee.model";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 import { sendEmail } from "../utils/user.util";
+import redisClient from "../config/redis";
 
 
 class EmployeeService{
@@ -18,6 +19,9 @@ class EmployeeService{
             const hashedPassword = await bcrypt.hash(body.password, 10);
             body.password = hashedPassword;
             await employeeModel.create(body);
+
+            // Invalidate cache for all agents
+            await redisClient.del('employees:all');
 
             return 'Employee registerd successfully';
         } catch (error) {
@@ -49,15 +53,32 @@ class EmployeeService{
     };
 
     // Get all employee
-    public getAllEmployee = async (): Promise<any> => {
-        try {
-            const res = await employeeModel.find().select('-password');
-            if(!res || res.length === 0) {
-                throw new Error('No employee found');
+    public getAllEmployee = async (): Promise<{data: IEmployee[], source: string}> => {
+        try {    
+            // Check if the data is cached in Redis
+            const cachedData = await redisClient.get('employees:all');
+            if (cachedData) {
+                return {
+                    data: JSON.parse(cachedData),
+                    source: 'Redis Cache',
+                };
             }
-            return res;
+    
+            // Fetch employee data from the database
+            const employees = await employeeModel.find().select('-password -refreshToken');
+            if (!employees || employees.length === 0) {
+                throw new Error('No employees found.');
+            }
+    
+            // Cache the employee data for 60 seconds
+            await redisClient.setEx('employees:all', 60, JSON.stringify(employees));
+    
+            return {
+                data: employees,
+                source: 'Database',
+            };
         } catch (error) {
-            throw error;
+            throw new Error(`Error retrieving employees: ${error.message}`);
         }
     };
 
@@ -84,7 +105,7 @@ class EmployeeService{
         if (!employeeData) {
             throw new Error('Email not found');
         }
-        const token = jwt.sign({ id: employeeData._id }, process.env.EMPLOYEE_RESET_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: employeeData._id }, process.env.EMPLOYEE_RESET_SECRET, { expiresIn: '1h' });
         await sendEmail(email, token);
         } catch(error){
         throw new Error("Error occured cannot send email: "+error)
