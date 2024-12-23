@@ -70,7 +70,7 @@ class AdminService {
         if (!adminData) {
             throw new Error('Email not found');
         }
-        const token = jwt.sign({ id: adminData._id }, process.env.ADMIN_RESET_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: adminData._id }, process.env.ADMIN_RESET_SECRET, { expiresIn: '1h' });
         await sendEmail(email, token);
         } catch(error){
         throw new Error("Error occured cannot send email: "+error)
