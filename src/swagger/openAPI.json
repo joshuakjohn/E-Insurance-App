@@ -516,7 +516,7 @@
 },
 "/plan/": {
   "get": {
-    "tags": ["Admin"],
+    "tags": ["Plan"],
     "summary": "Get all plans by admin",
     "operationId": "getAllPlansAdmin",
     "parameters": [
@@ -554,7 +554,7 @@
 },
 "/plan/customer": {
   "get": {
-    "tags": ["Customer"],
+    "tags": ["Plan"],
     "summary": "Get all plans by customer",
     "operationId": "getAllPlansCustomer",
     "parameters": [
@@ -592,7 +592,7 @@
 },
 "/plan/agent": {
   "get": {
-    "tags": ["Agent"],
+    "tags": ["Plan"],
     "summary": "Get all plans by agent",
     "operationId": "getAllPlansAgent",
     "parameters": [
@@ -630,7 +630,7 @@
 },
 "/plan/employee":{
   "get":{
-      "tags": ["Employee"],
+      "tags": ["Plan"],
       "summary": "Get all plans by employee",
       "operationId": "getAllPlansEmployee",
       "parameters": [
@@ -668,7 +668,7 @@
 },
 "/plan/{id}":{
   "get":{
-    "tags": ["Admin"],
+    "tags": ["Plan"],
     "summary": "Get plan by ID for admin",
     "operationId": "getPlanByIdAdmin",
     "parameters": [
@@ -700,7 +700,7 @@
 },
 "/plan/{id}/customer": {
   "get": {
-    "tags": ["Customer"],
+    "tags": ["Plan"],
     "summary": "Get plan details by ID for customer",
     "operationId": "getPlanByIdCustomer",
     "parameters": [
@@ -732,7 +732,7 @@
 },
 "/plan/{id}/agent": {
   "get": {
-    "tags": ["Agent"],
+    "tags": ["Plan"],
     "summary": "Get plan details by ID for agent",
     "operationId": "getPlanByIdAgent",
     "parameters": [
@@ -764,7 +764,7 @@
 },
 "/plan/{id}/employee": {
   "get": {
-    "tags": ["Employee"],
+    "tags": ["Plan"],
     "summary": "Get plan details by ID for employee",
     "operationId": "getPlanByIdEmployee",
     "parameters": [
@@ -796,7 +796,7 @@
 },
 "/plan/{id}/": {
   "put": {
-    "tags": ["Admin"],
+    "tags": ["Plan"],
     "summary": "Update a plan by ID",
     "operationId": "updatePlan",
     "parameters": [
@@ -836,7 +836,7 @@
     }
   },
   "delete": {
-    "tags": ["Admin"],
+    "tags": ["Plan"],
     "summary": "Delete a plan by ID",
     "operationId": "deletePlan",
     "parameters": [
@@ -868,7 +868,7 @@
 },
   "/scheme": {
     "post": {
-      "tags": ["Admin"],
+      "tags": ["Scheme"],
       "summary": "Create a new scheme",
       "operationId": "createScheme",
       "requestBody": {
@@ -897,7 +897,7 @@
       }
     },
     "get": {
-      "tags": ["Admin"],
+      "tags": ["Scheme"],
       "summary": "Get all schemes with pagination",
       "operationId": "getAllSchemes",
       "parameters": [
@@ -937,7 +937,7 @@
 },
 "/scheme/customer": {
     "get": {
-      "tags": ["Customer"],
+      "tags": ["Scheme"],
       "summary": "Get all schemes for customer with pagination",
       "operationId": "getAllSchemesForCustomer",
       "parameters": [
@@ -977,7 +977,7 @@
   },
   "/scheme/agent": {
     "get": {
-      "tags": ["Agent"],
+      "tags": ["Scheme"],
       "summary": "Get all schemes for agent with pagination",
       "operationId": "getAllSchemesForAgent",
       "parameters": [
@@ -1017,7 +1017,7 @@
   },
   "/scheme/employee": {
     "get": {
-      "tags": ["Employee"],
+      "tags": ["Scheme"],
       "summary": "Get all schemes for employee with pagination",
       "operationId": "getAllSchemesForEmployee",
       "parameters": [
