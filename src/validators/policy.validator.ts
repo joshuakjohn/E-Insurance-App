@@ -23,6 +23,7 @@ export class PolicyValidator {
         code: HttpStatus.BAD_REQUEST,
         message: error.message,
       });
+      return;
     }
     next();
   };
