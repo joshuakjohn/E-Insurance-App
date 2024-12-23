@@ -11,7 +11,7 @@ import { Request, Response, NextFunction } from 'express';
  * @param {Object} res
  * @param {Function} next
  */
-const auth = (secret_token1: string, secret_token2?:string) => {
+const auth = (secret_token: string) => {
   return async (
   req: Request,
   res: Response,
@@ -25,20 +25,8 @@ const auth = (secret_token1: string, secret_token2?:string) => {
           message: 'Authorization token is required'
         };
       bearerToken = bearerToken.split(' ')[1];
-      if(secret_token2 === undefined){
-        const { userId }: any = await jwt.verify(bearerToken, secret_token1);
-        res.locals.id = userId;
-      } else {
-        try{
-          const { userId }: any = await jwt.verify(bearerToken, secret_token1);
-          res.locals.id = userId;
-        } catch(error){
-          console.log('customer validation failed')
-          await jwt.verify(bearerToken, secret_token2);
-        }
-        // res.locals.id = userId;
-      }
-      
+      const { userId }: any = await jwt.verify(bearerToken, secret_token);
+      res.locals.id = userId;      
       next();
     } catch (error) {
       next(error);

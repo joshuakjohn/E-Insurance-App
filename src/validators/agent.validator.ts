@@ -66,7 +66,7 @@ class AgentValidator{
       // Validation for reset password
       public validateResetPassword = (req: Request, res: Response, next: NextFunction): void => {
         const schema = Joi.object({
-          password: Joi.string()
+          newPassword: Joi.string()
             .min(6)
             .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])/)
             .message("Password must contain at least one uppercase letter, one lowercase letter, and one special character")
