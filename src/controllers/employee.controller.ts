@@ -44,10 +44,11 @@ class EmployeeController{
     // Get all Employee
     public getAllEmployee = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const data = await this.employeeService.getAllEmployee();
+            const employees = await this.employeeService.getAllEmployee();
             res.status(HttpStatus.OK).json({ 
                 code: HttpStatus.OK, 
-                data 
+                data: employees.data,
+                source: employees.source
             });
         } catch (error) {
             next(error);

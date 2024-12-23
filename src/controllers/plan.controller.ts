@@ -53,6 +53,7 @@ class PlanController {
                 total: plans.total,       // Total number of records
                 page: plans.page,         // Current page
                 totalPages: plans.totalPages, // Total pages
+                source: plans.source       // Include the source(cache or database)
             });
         } catch (error) {
             next(error);

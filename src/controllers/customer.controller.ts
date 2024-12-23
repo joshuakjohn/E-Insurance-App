@@ -70,7 +70,8 @@ class UserController {
       const data = await this.CustomerService.getAllCustomers(agentId);
       res.status(HttpStatus.OK).json({ 
           code: HttpStatus.OK, 
-          data 
+          data: data.data,
+          source: data.source
       });
     } catch (error) {
         next(error);
