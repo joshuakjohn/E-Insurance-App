@@ -43,10 +43,11 @@ class AgentController{
     // Get all Agents
     public getAllAgents = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const data = await this.agentService.getAllAgents();
+            const agents = await this.agentService.getAllAgents();
             res.status(httpstatus.OK).json({ 
                 code: httpstatus.OK, 
-                data 
+                data: agents.data,
+                source: agents.source
             });
         } catch (error) {
             next(error);

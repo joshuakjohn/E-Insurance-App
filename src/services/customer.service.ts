@@ -8,6 +8,7 @@ import Policy from '../models/policy.model';
 import Agent from '../models/agent.model'
 import { sendEmail } from '../utils/user.util';
 import { error } from 'winston';
+import redisClient from '../config/redis';
 
 
 class CustomerService {
@@ -32,6 +33,10 @@ class CustomerService {
       if (assignedAgent) {
         await agent.updateOne({ _id: assignedAgent._id }, { $inc: { num_of_customers: 1 } });
       }
+
+      // Invalidate the cache for the agent's customers
+      const cacheKey = `customers:agent:${assignedAgent._id}`;
+      await redisClient.del(cacheKey);  // Remove the cache for this agent
 
       return newCustomer;
     } catch (error) {
@@ -61,15 +66,35 @@ class CustomerService {
     return { token, refreshToken, username: customerData.username };
   };
 
-  public getAllCustomers = async (agentId: ObjectId): Promise<Customer[]> => {
+  public getAllCustomers = async (agentId: ObjectId): Promise<{data: Customer[], source: string}> => {
     try {
-      const customers = await customer.find({ agentId }).select('-password'); 
-      if (!customers || customers.length === 0) {
-        throw new Error('No customers found for this agent.');
-      }
-      return customers;
+        // Create a cache key based on the agentId
+        const cacheKey = `customers:agent:${agentId}`;
+
+        // Check if the data is already cached in Redis
+        const cachedData = await redisClient.get(cacheKey);
+        if (cachedData) {
+            return {
+                data: JSON.parse(cachedData),
+                source: 'Redis Cache',
+            };
+        }
+
+        // If no cached data, fetch from the database
+        const customers = await customer.find({ agentId }).select('-password -refreshToken');
+        if (!customers || customers.length === 0) {
+            throw new Error('No customers found for this agent.');
+        }
+
+        // Cache the data for 60 seconds
+        await redisClient.setEx(cacheKey, 60, JSON.stringify(customers));
+
+        return {
+            data: customers,
+            source: 'Database',
+        };
     } catch (error) {
-      throw new Error(`Error retrieving customers: ${error.message}`);
+        throw new Error(`Error retrieving customers: ${error.message}`);
     }
   };
 
@@ -126,14 +151,18 @@ class CustomerService {
   };
 
   //reset password
-  public resetPassword = async (body: any, userId): Promise<void> => {
-    const customerData = await customer.findById(userId);
-    if (!customerData) {
-      throw new Error('User not found');
+  public resetPassword = async (body: any, userId: string): Promise<void> => {
+    try{
+      const customerData = await customer.findById(userId);
+      if (!customerData) {
+        throw new Error('User not found');
+      }
+      const hashedPassword = await bcrypt.hash(body.newPassword, 10);
+      customerData.password = hashedPassword;
+      await customerData.save();
+    } catch (error) {
+      throw new Error(`Error resetting password: ${error.message}`);
     }
-    const hashedPassword = await bcrypt.hash(body.newPassword, 10);
-    customerData.password = hashedPassword;
-    await customerData.save();
   };
       
 }

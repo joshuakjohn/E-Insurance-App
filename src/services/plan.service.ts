@@ -1,5 +1,6 @@
 import Plan from '../models/plan.model';
 import { IPlan } from '../interfaces/plan.interface';
+import redisClient from '../config/redis';
 
 class PlanService {
 
@@ -7,6 +8,10 @@ class PlanService {
     public createPlan = async (body: IPlan): Promise<IPlan> => {
         try {
             const res = await Plan.create(body);
+
+            // Invalidate cache for "all plans"
+            await redisClient.del('plans:all');
+
             return res;
         } catch (error) {
             throw new Error('Error creating plan');
@@ -27,25 +32,31 @@ class PlanService {
     };
 
     // Get all plans
-    public getAllPlans = async (page: number, limit: number): Promise<{ data: IPlan[]; total: number; page: number; totalPages: number }> => {
+    public getAllPlans = async (page: number, limit: number): Promise<{ data: IPlan[]; total: number; page: number; totalPages: number; source: string }> => {
+        const cacheKey = `plans:page=${page}:limit=${limit}`;
+    
         try {
-            const total = await Plan.countDocuments(); // Total number of plans
-            const totalPages = Math.ceil(total / limit); // Total number of pages
+            const total = await Plan.countDocuments();
+            const totalPages = Math.ceil(total / limit);
             const data = await Plan.find()
-                .skip((page - 1) * limit) // Skip records for previous pages
-                .limit(limit);           // Limit the number of records fetched
+                .skip((page - 1) * limit)
+                .limit(limit);
+    
+            // Cache the data for 60 seconds
+            await redisClient.setEx(cacheKey, 60, JSON.stringify({ data, total, page, totalPages }));
     
             return {
                 data,
                 total,
                 page,
                 totalPages,
+                source: 'Database', // Indicate data is from the database
             };
         } catch (error) {
             throw error;
         }
-    };        
-
+    };
+    
     // Update a plan by ID
     public updatePlan = async (planId: string, updatedData: Partial<IPlan>): Promise<IPlan | null> => {
         try {
@@ -53,6 +64,11 @@ class PlanService {
             if (!res) {
                 throw new Error('Plan not found'); 
             }
+
+            // Invalidate cache for this specific plan and all plans
+            await redisClient.del(`plans:${planId}`);
+            await redisClient.del('plans:all');
+
             return res;
         } catch (error) {
             throw error;
@@ -68,6 +84,11 @@ class PlanService {
                 throw new Error('Plan not found');
             }
             await Plan.findByIdAndDelete(planId);
+
+             // Invalidate cache for this specific plan and all plans
+             await redisClient.del(`plans:${planId}`);
+             await redisClient.del('plans:all');
+
             return true;
         } catch (error) {
             throw error;

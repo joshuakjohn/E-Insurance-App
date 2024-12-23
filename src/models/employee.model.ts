@@ -7,7 +7,7 @@ const employeeSchema = new Schema<IEmployee>(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     phno: {type: Number, match: /^[0-9]{10}$/},
-    refreshToken: {type: String, default: null,  required: false }
+    refreshToken: {type: String, default: null, required: false }
   },
   { timestamps: true }
 );

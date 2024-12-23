@@ -40,6 +40,7 @@ class PolicyController{
                 total: policies.total,
                 page: policies.page,
                 totalPages: policies.totalPages,
+                source: policies.source
             });
         } catch (error) {
             res.status(HttpStatus.BAD_REQUEST).json({
