@@ -1327,9 +1327,8 @@
   "/plan/": {
       "get": {
       "tags": ["Plan"],
-      "summary": "Get all plans by admin",
+      "summary": "Get all plans",
       "operationId": "getAllPlansAdmin",
-      "security": [{ "JWT": [] }],
       "parameters": [
           {
           "name": "page",
@@ -1362,130 +1361,12 @@
           }
           }
       }
-  },
-  "/plan/customer": {
-      "get": {
-      "tags": ["Plan"],
-      "summary": "Get all plans by customer",
-      "operationId": "getAllPlansCustomer",
-      "security": [{ "JWT": [] }],
-      "parameters": [
-          {
-          "name": "page",
-          "in": "query",
-          "required": false,
-          "schema": {
-              "type": "integer",
-              "default": 1
-          }
-          },
-          {
-          "name": "limit",
-          "in": "query",
-          "required": false,
-          "schema": {
-              "type": "integer",
-              "default": 10
-          }
-          }
-      ],
-      "responses": {
-          "200": {
-          "description": "List of plans"
-          },
-          "400": {
-          "description": "Bad request"
-          },
-          "500": {
-          "description": "Internal server error"
-          }
-      }
-      }
-  },
-  "/plan/agent": {
-      "get": {
-      "tags": ["Plan"],
-      "summary": "Get all plans by agent",
-      "operationId": "getAllPlansAgent",
-      "security": [{ "JWT": [] }],
-      "parameters": [
-          {
-          "name": "page",
-          "in": "query",
-          "required": false,
-          "schema": {
-              "type": "integer",
-              "default": 1
-          }
-          },
-          {
-          "name": "limit",
-          "in": "query",
-          "required": false,
-          "schema": {
-              "type": "integer",
-              "default": 10
-          }
-          }
-      ],
-      "responses": {
-          "200": {
-          "description": "List of plans"
-          },
-          "400": {
-          "description": "Bad request"
-          },
-          "500": {
-          "description": "Internal server error"
-          }
-      }
-      }
-  },
-  "/plan/employee":{
-      "get":{
-          "tags": ["Plan"],
-          "summary": "Get all plans by employee",
-          "operationId": "getAllPlansEmployee",
-          "security": [{ "JWT": [] }],
-          "parameters": [
-          {
-              "name": "page",
-              "in": "query",
-              "required": false,
-              "schema": {
-              "type": "integer",
-              "default": 1
-              }
-          },
-          {
-              "name": "limit",
-              "in": "query",
-              "required": false,
-              "schema": {
-              "type": "integer",
-              "default": 10
-              }
-          }
-          ],
-          "responses": {
-          "200": {
-              "description": "List of plans"
-          },
-          "400": {
-              "description": "Bad request"
-          },
-          "500": {
-          "description": "Internal server error"
-          }
-          }
-      }   
   },
   "/plan/{id}":{
       "get":{
       "tags": ["Plan"],
-      "summary": "Get plan by ID for admin",
-      "operationId": "getPlanByIdAdmin",
-      "security": [{ "JWT": [] }],
+      "summary": "Get plan by ID",
+      "operationId": "getPlanById",
       "parameters": [
           {
           "name": "id",
@@ -1512,105 +1393,6 @@
           }
       }
       }  
-  },
-  "/plan/{id}/customer": {
-      "get": {
-      "tags": ["Plan"],
-      "summary": "Get plan details by ID for customer",
-      "security": [{ "JWT": [] }],
-      "operationId": "getPlanByIdCustomer",
-      "parameters": [
-          {
-          "name": "id",
-          "in": "path",
-          "required": true,
-          "description": "Plan ID",
-          "schema": {
-              "type": "string"
-          }
-          }
-      ],
-      "responses": {
-          "200": {
-          "description": "Plan details retrieved successfully"
-          },
-          "400": {
-          "description": "Bad request"
-          },
-          "404": {
-          "description": "Plan not found"
-          },
-          "500": {
-          "description": "Internal server error"
-          }
-      }
-      }
-  },
-  "/plan/{id}/agent": {
-      "get": {
-      "tags": ["Plan"],
-      "summary": "Get plan details by ID for agent",
-      "security": [{ "JWT": [] }],
-      "operationId": "getPlanByIdAgent",
-      "parameters": [
-          {
-          "name": "id",
-          "in": "path",
-          "required": true,
-          "description": "Plan ID",
-          "schema": {
-              "type": "string"
-          }
-          }
-      ],
-      "responses": {
-          "200": {
-          "description": "Plan details retrieved successfully"
-          },
-          "400": {
-          "description": "Bad request"
-          },
-          "404": {
-          "description": "Plan not found"
-          },
-          "500": {
-          "description": "Internal server error"
-          }
-      }
-      }
-  },
-  "/plan/{id}/employee": {
-      "get": {
-      "tags": ["Plan"],
-      "summary": "Get plan details by ID for employee",
-      "operationId": "getPlanByIdEmployee",
-      "security": [{ "JWT": [] }],
-      "parameters": [
-          {
-          "name": "id",
-          "in": "path",
-          "required": true,
-          "description": "Plan ID",
-          "schema": {
-              "type": "string"
-          }
-          }
-      ],
-      "responses": {
-          "200": {
-          "description": "Plan details retrieved successfully"
-          },
-          "400": {
-          "description": "Bad request"
-          },
-          "404": {
-          "description": "Plan not found"
-          },
-          "500": {
-          "description": "Internal server error"
-          }
-      }
-      }
   },
   "/plan/{id}/": {
       "put": {
@@ -1721,7 +1503,6 @@
           "tags": ["Scheme"],
           "summary": "Get all schemes with pagination",
           "operationId": "getAllSchemes",
-          "security": [{ "JWT": [] }],
           "parameters": [
           {
               "name": "page",
@@ -1750,129 +1531,6 @@
           },
           "401": {
               "description": "Unauthorized, admin privileges required"
-          },
-          "500": {
-              "description": "Internal server error"
-          }
-          }
-      }
-  },
-  "/scheme/customer": {
-      "get": {
-          "tags": ["Scheme"],
-          "summary": "Get all schemes for customer with pagination",
-          "operationId": "getAllSchemesForCustomer",
-          "security": [{ "JWT": [] }],
-          "parameters": [
-          {
-              "name": "page",
-              "in": "query",
-              "description": "Page number for pagination",
-              "required": false,
-              "schema": {
-              "type": "integer",
-              "default": 1
-              }
-          },
-          {
-              "name": "limit",
-              "in": "query",
-              "description": "Number of items per page for pagination",
-              "required": false,
-              "schema": {
-              "type": "integer",
-              "default": 10
-              }
-          }
-          ],
-          "responses": {
-          "200": {
-              "description": "A list of schemes for customer with pagination"            
-          },
-          "401": {
-              "description": "Unauthorized, customer privileges required"
-          },
-          "500": {
-              "description": "Internal server error"
-          }
-          }
-      }
-  },
-  "/scheme/agent": {
-      "get": {
-          "tags": ["Scheme"],
-          "summary": "Get all schemes for agent with pagination",
-          "operationId": "getAllSchemesForAgent",
-          "security": [{ "JWT": [] }],
-          "parameters": [
-          {
-              "name": "page",
-              "in": "query",
-              "description": "Page number for pagination",
-              "required": false,
-              "schema": {
-              "type": "integer",
-              "default": 1
-              }
-          },
-          {
-              "name": "limit",
-              "in": "query",
-              "description": "Number of items per page for pagination",
-              "required": false,
-              "schema": {
-              "type": "integer",
-              "default": 10
-              }
-          }
-          ],
-          "responses": {
-          "200": {
-              "description": "A list of schemes for agent with pagination"
-          },
-          "400": {
-              "description": "Unauthorized, agent privileges required"
-          },
-          "500": {
-              "description": "Internal server error"
-          }
-          }
-      }
-  },
-  "/scheme/employee": {
-      "get": {
-          "tags": ["Scheme"],
-          "summary": "Get all schemes for employee with pagination",
-          "operationId": "getAllSchemesForEmployee",
-          "security": [{ "JWT": [] }],
-          "parameters": [
-          {
-              "name": "page",
-              "in": "query",
-              "description": "Page number for pagination",
-              "required": false,
-              "schema": {
-              "type": "integer",
-              "default": 1
-              }
-          },
-          {
-              "name": "limit",
-              "in": "query",
-              "description": "Number of items per page for pagination",
-              "required": false,
-              "schema": {
-              "type": "integer",
-              "default": 10
-              }
-          }
-          ],
-          "responses": {
-          "200": {
-              "description": "A list of schemes for employee with pagination"
-          },
-          "400": {
-              "description": "Unauthorized, employee privileges required"
           },
           "500": {
               "description": "Internal server error"
@@ -1967,9 +1625,8 @@
   }, 
   "/scheme/{id}": {
       "get": {
-          "summary": "Get scheme by ID (admin access)",
+          "summary": "Get scheme by ID",
           "tags": ["Scheme"],
-          "security": [{ "JWT": [] }],
           "parameters": [
           {
               "name": "id",
@@ -1987,102 +1644,6 @@
           },
           "401": {
               "description": "Unauthorized, admin privileges required"
-          },
-          "404": {
-              "description": "Scheme not found"
-          },
-          "500": {
-              "description": "Internal server error"
-          }
-          }
-      }
-  },
-  "/scheme/{id}/customer": {
-      "get": {
-          "tags": ["Scheme"],
-          "summary": "Get scheme by ID (customer access)",
-          "security": [{ "JWT": [] }],
-          "parameters": [
-          {
-              "name": "id",
-              "in": "path",
-              "description": "ID of the scheme to retrieve",
-              "required": true,
-              "schema": {
-              "type": "string"
-              }
-          }
-          ],
-          "responses": {
-          "200": {
-              "description": "Scheme details retrieved successfully"
-          },
-          "401": {
-              "description": "Unauthorized, customer privileges required"
-          },
-          "404": {
-              "description": "Scheme not found"
-          },
-          "500": {
-              "description": "Internal server error"
-          }
-          }
-      }
-  },
-  "/scheme/{id}/agent": {
-      "get": {
-          "summary": "Get scheme by ID (agent access)",
-          "tags": ["Scheme"],
-          "security": [{ "JWT": [] }],
-          "parameters": [
-          {
-              "name": "id",
-              "in": "path",
-              "description": "ID of the scheme to retrieve",
-              "required": true,
-              "schema": {
-              "type": "string"
-              }
-          }
-          ],
-          "responses": {
-          "200": {
-              "description": "Scheme details retrieved successfully"
-          },
-          "401": {
-              "description": "Unauthorized, agent privileges required"
-          },
-          "404": {
-              "description": "Scheme not found"
-          },
-          "500": {
-              "description": "Internal server error"
-          }
-          }
-      }
-  },
-  "/scheme/{id}/employee": {
-      "get": {
-          "tags": ["Scheme"],
-          "summary": "Get scheme by ID (employee access)",
-          "security": [{ "JWT": [] }],
-          "parameters": [
-          {
-              "name": "id",
-              "in": "path",
-              "description": "ID of the scheme to retrieve",
-              "required": true,
-              "schema": {
-              "type": "string"
-              }
-          }
-          ],
-          "responses": {
-          "200": {
-              "description": "Scheme details retrieved successfully"
-          },
-          "401": {
-              "description": "Unauthorized, employee privileges required"
           },
           "404": {
               "description": "Scheme not found"
