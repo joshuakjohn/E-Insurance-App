@@ -30,11 +30,7 @@ class AdminValidator {
     public loginAdmin = (req: Request, res: Response, next: NextFunction): void => {
         const schema = Joi.object({
           email: Joi.string().email().required(),
-          password: Joi.string()
-            .min(6)
-            .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])/)
-            .message("Password must contain at least one uppercase letter, one lowercase letter, and one special character")
-            .required()
+          password: Joi.string().required()
         });
     
         const { error } = schema.validate(req.body);
