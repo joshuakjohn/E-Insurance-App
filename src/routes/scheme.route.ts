@@ -17,9 +17,6 @@ class SchemeRoutes {
          // route to create a scheme by admin
          this.router.post('/', adminAuth, this.schemeValidator.createScheme, this.schemeController.createScheme);
          
-         //route to get all schemes by admin
-         this.router.get('/', this.schemeValidator.validatePagination, cacheData, this.schemeController.getAllSchemes);
-
          //route to get the scheme which match with search key
          this.router.get('/search',this.schemeController.search)
 
@@ -34,6 +31,9 @@ class SchemeRoutes {
 
          //route to delete a scheme by admin
          this.router.delete('/:id', adminAuth, this.schemeController.deleteScheme);
+
+         //route to get all schemes by admin
+         this.router.get('/:id/getall', this.schemeValidator.validatePagination, cacheData, this.schemeController.getAllSchemes);
 
      }
      public getRoutes = (): IRouter => {

@@ -23,8 +23,9 @@ class SchemeController{
 
     public getAllSchemes = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            const planId=req.params.id
             const { page, limit } = req.query as unknown as { page: number; limit: number };
-            const schemes = await this.schemeService.getAllSchemes(page, limit);
+            const schemes = await this.schemeService.getAllSchemes(planId,page, limit);
 
             res.status(HttpStatus.OK).json({
                 code: HttpStatus.OK,

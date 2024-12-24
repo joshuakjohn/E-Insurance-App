@@ -16,16 +16,15 @@ import redisClient from '../config/redis';
         }
     }
     
-      public getAllSchemes = async (page: number, limit: number): Promise<{ data: IScheme[]; total: number; page: number; totalPages: number; source: string }> => {
-        const cacheKey = `schemes:page=${page}:limit=${limit}`;
+      public getAllSchemes = async (planId:string,page: number, limit: number): Promise<{ data: IScheme[]; total: number; page: number; totalPages: number; source: string }> => {
+        const cacheKey = `schemes:planId=${planId}:page=${page}:limit=${limit}`;
 
         try {
             const total = await Scheme.countDocuments(); // Total number of schemes
             const totalPages = Math.ceil(total / limit); // Total number of pages
-            const data = await Scheme.find()
-                .skip((page - 1) * limit) // Skip records for previous pages
-                .limit(limit);           // Limit the number of records fetched
-
+            const data = await Scheme.find({ planId })
+            .skip((page - 1) * limit)
+            .limit(limit);
             // Cache the data for 60 seconds
             await redisClient.setEx(cacheKey, 60, JSON.stringify({ data, total, page, totalPages }));
 
