@@ -97,6 +97,18 @@ class CustomerService {
         throw new Error(`Error retrieving customers: ${error.message}`);
     }
   };
+   
+  public getCustomerById=async(customerId:string):Promise<any> =>{
+    try {
+      const res = await customer.findById(customerId);
+      if(!res) {
+        throw new Error('customer not found');
+      }
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  };
 
   public refreshToken = async (customerId: string): Promise<string> => {
     try {
