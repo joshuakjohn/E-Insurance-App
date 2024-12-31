@@ -70,9 +70,9 @@ import redisClient from '../config/redis';
       }
     };
 
-    public updateStatus = async (id: string ): Promise<any> => {
+    public updateStatus = async (id: string, status: string ): Promise<any> => {
       const doc: IPolicy = await policyModel.findOne({_id: id});
-          return {data: await policyModel.findByIdAndUpdate(id, {status: 'Waiting for approval'}, {new: true}),
+          return {data: await policyModel.findByIdAndUpdate(id, {status: status}, {new: true}),
                   message: "Status updated successfully"
               }  
   }
