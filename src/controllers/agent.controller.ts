@@ -13,7 +13,9 @@ class AgentController{
             const data = await this.agentService.signin(req.body)
             res.status(httpstatus.ACCEPTED).json({
                 code: httpstatus.ACCEPTED,
-                data: data
+                message: data.message,
+                username: data.username,
+                token: data.token
             })
         } catch(error) {
             res.status(httpstatus.UNAUTHORIZED).json({

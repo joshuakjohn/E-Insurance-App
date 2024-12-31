@@ -28,6 +28,7 @@ class AdminController {
                 code: HttpStatus.OK,
                 token,
                 email,
+                username,
                 message: `${username} logged in successfully as admin`,
             });
         } catch (error) {

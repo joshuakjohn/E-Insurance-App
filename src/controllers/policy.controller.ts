@@ -50,6 +50,34 @@ class PolicyController{
         }
     };
 
+    public getAllAgentPolicies = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const agentId = res.locals.id;  
+            const policies = await this.policyService.getAllAgentPolicies(agentId);
+            res.status(HttpStatus.OK).json({
+                code: HttpStatus.OK,
+                data: policies.data,
+                source: policies.source
+            });
+        } catch (error) {
+            res.status(HttpStatus.BAD_REQUEST).json({
+                code: HttpStatus.BAD_REQUEST,
+                message: `${error}`,
+            });
+        }
+    };
+
+    public updateStatus = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+        try{
+            res.status(HttpStatus.CREATED).json({
+                code: HttpStatus.CREATED,
+                data: await this.policyService.updateStatus(req.params.id)
+            });
+        }catch(error){
+            next(error);
+        }
+    };
+
     public getPolicyById = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const policy = await this.policyService.getPolicyById(req.params.id);
