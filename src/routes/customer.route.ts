@@ -21,6 +21,7 @@ class UserRoutes {
     //route to get all customer, by agent
     this.router.get('', agentAuth, this.CustomerController.getAllCustomers);
 
+    this.router.get('/getcustomer',customerAuth,this.CustomerController.getCustomerById)
     //route to register a customer
     this.router.post( '/register', upload.single('profilePhoto'), this.CustomerValidator.createCustomer, this.CustomerController.createCustomer);
     
@@ -41,6 +42,8 @@ class UserRoutes {
 
     //route to get all customer, by employee
     this.router.get('/:id/employee', employeeAuth, this.CustomerController.getAllCustomers);
+
+   
 
   };
 

@@ -78,7 +78,23 @@ class UserController {
         next(error);
     }
   };
-  
+  public getCustomerById=async(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> => {
+    try{
+     const customer=await this.CustomerService.getCustomerById(res.locals.id)
+     res.status(HttpStatus.OK).json({
+      code: HttpStatus.OK,
+      data:customer,
+    });
+  } catch (error) {
+    res.status(HttpStatus.BAD_REQUEST).json({
+      code: HttpStatus.BAD_REQUEST,
+      message: `${error}`})
+  }
+}
   public refreshToken = async (req: Request,
      res: Response, 
      next: NextFunction
