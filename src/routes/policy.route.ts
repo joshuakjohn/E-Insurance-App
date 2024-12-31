@@ -20,6 +20,12 @@ class PolicyRoute {
          //route to get all policy by customer
          this.router.get('/', customerAuth, this.policyValidator.validatePagination, cacheData, this.policyController.getAllPolicies);
 
+         //route to get all policy by customer
+         this.router.get('/agent', agentAuth, cacheData, this.policyController.getAllAgentPolicies);
+
+         //route to update status of policy
+         this.router.patch('/:id', this.policyController.updateStatus);
+
          //route to update policy by customer
          this.router.put('/:id', customerAuth, this.policyValidator.createPolicy, this.policyController.updatePolicy);
 
@@ -47,7 +53,7 @@ class PolicyRoute {
          //route to delete policy by admin
          this.router.delete('/:id/admin', adminAuth, this.policyController.deletePolicy);
 
-         //route to get all policy by agent
+         //route to get all customer policy by agent
          this.router.get('/:id/getall/agent', agentAuth, this.policyValidator.validatePagination, cacheData, this.policyController.getAllPolicies);
 
          //route to get all policy by admin
