@@ -8,6 +8,7 @@ class PlanValidator {
             planName: Joi.string().min(3).required(),
             description: Joi.string().optional(),
             category: Joi.string().required(),
+            highlight: Joi.array().items(Joi.string().max(31)).max(5).optional()
         });
     
         const { error } = schema.validate(req.body);
@@ -28,6 +29,7 @@ class PlanValidator {
             planName: Joi.string().optional(),
             description: Joi.string().optional(),
             category: Joi.string().optional(),
+            highlight: Joi.array().items(Joi.string().max(31)).max(5).optional()
         });
     
         const { error } = schema.validate(req.body);
