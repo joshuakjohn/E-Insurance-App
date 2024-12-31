@@ -10,7 +10,7 @@ class PlanService {
             const res = await Plan.create(body);
 
             // Invalidate cache for "all plans"
-            await redisClient.del('plans:all');
+            await redisClient.flushAll();
 
             return res;
         } catch (error) {
