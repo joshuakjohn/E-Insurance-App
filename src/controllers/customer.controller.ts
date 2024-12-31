@@ -46,6 +46,7 @@ class UserController {
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
         token:customerData.token,
+        username: customerData.username,
         message: ` ${customerData.username} logged in successfully`
       });
     } catch (error) {

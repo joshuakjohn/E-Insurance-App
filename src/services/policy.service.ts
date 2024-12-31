@@ -47,6 +47,36 @@ import redisClient from '../config/redis';
       }
     };
 
+    public getAllAgentPolicies = async (agentId: string): Promise<any> => {
+      const cacheKey = `policies:agent:${agentId}`;
+
+      try {
+          // Fetch data from the database
+          const policies = await policyModel.find({ agentId })            
+        
+          if(!policies || policies.length === 0) {
+            throw new Error('No policy found');
+          }
+          // Cache the data for 60 seconds
+          const cacheData = { data: policies };
+          await redisClient.setEx(cacheKey, 600, JSON.stringify(cacheData));
+
+          return {
+              ...cacheData,
+              source: 'Database', // Indicate data is from the database
+          };
+      } catch (error) {
+          throw new Error(`Error fetching policy: ${error.message}`);
+      }
+    };
+
+    public updateStatus = async (id: string ): Promise<any> => {
+      const doc: IPolicy = await policyModel.findOne({_id: id});
+          return {data: await policyModel.findByIdAndUpdate(id, {status: 'Waiting for approval'}, {new: true}),
+                  message: "Status updated successfully"
+              }  
+  }
+
     public getPolicyById = async (id: string): Promise<any> => {
       try {
           const policy = await policyModel.findById(id);
