@@ -144,7 +144,7 @@ class CustomerService {
     if (agentId) {
       await Agent.findByIdAndUpdate(agentId,{ $inc: { commission: commissionEarned } }, { new: true } );
     }
-  
+      await redisClient.flushAll();
     return { totalMonthsPaid: policy.premiumPaid,monthsRemaining: policy.pendingPremium};
   };
   

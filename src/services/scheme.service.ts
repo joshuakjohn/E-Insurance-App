@@ -8,7 +8,7 @@ import redisClient from '../config/redis';
           const scheme = await Scheme.create(body);
 
            // Invalidate cache for all schemes
-           await redisClient.del('schemes:all');
+           await redisClient.flushAll();
 
           return scheme;
         } catch (error) {
