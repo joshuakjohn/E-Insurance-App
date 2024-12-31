@@ -71,7 +71,7 @@ class PolicyController{
         try{
             res.status(HttpStatus.CREATED).json({
                 code: HttpStatus.CREATED,
-                data: await this.policyService.updateStatus(req.params.id)
+                data: await this.policyService.updateStatus(req.params.id, req.body.status)
             });
         }catch(error){
             next(error);
