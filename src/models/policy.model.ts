@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { IPolicy } from '../interfaces/policy.interface';
-import { ref, required } from '@hapi/joi';
+import { ref, required, string } from '@hapi/joi';
 
 const policySchema = new Schema<IPolicy>(
   {
@@ -18,8 +18,8 @@ const policySchema = new Schema<IPolicy>(
     pendingPremium: {type: Number, required: true, default: function() {
       return this.duration;
     }},
-    status: { type: String, required: true, default: "submitted"}
-  },
+    status: { type: String, required: true, default: "submitted"},
+    uploadedDocuments: {  type: Buffer, required: true }},
   { timestamps: true }
 );
 

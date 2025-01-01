@@ -3,6 +3,7 @@ import PolicyValidator from "../validators/policy.validator";
 import PolicyController from "../controllers/policy.controller";
 import { adminAuth, agentAuth, customerAuth, employeeAuth } from "../middlewares/auth.middleware";
 import { cacheData } from "../middlewares/rediscache.middleware";
+import { upload, uploadHandler } from "../config/multer";
 
 class PolicyRoute {
     private router = express.Router();
@@ -15,7 +16,7 @@ class PolicyRoute {
      private routes = () => {
 
          //route to create a policy by customer
-         this.router.post('/', customerAuth, this.policyValidator.createPolicy, this.policyController.createPolicy);
+         this.router.post('/', customerAuth, upload,uploadHandler, this.policyValidator.createPolicy, this.policyController.createPolicy);
          
          //route to get all policy by customer
          this.router.get('/', customerAuth, this.policyValidator.validatePagination, cacheData, this.policyController.getAllPolicies);

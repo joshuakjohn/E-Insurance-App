@@ -9,20 +9,40 @@ class PolicyController{
     
     public createPolicy = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const policy = await this.policyService.createPolicy(req.body);
-            res.status(HttpStatus.CREATED).json({
-                code: HttpStatus.CREATED,
-                message: 'Policy created successfully',
-                data: policy
+          const Documents = req.files['uploadedDocuments'] as Express.Multer.File[];
+          if (!Documents || Documents.length === 0) {
+            return res.status(HttpStatus.BAD_REQUEST).json({
+              code: HttpStatus.BAD_REQUEST,
+              message: 'No uploaded documents found or wrong field name.',
             });
+          }
+      
+          const uploadedDocuments = Documents.map((file) => ({
+            originalName: file.originalname,
+            mimeType: file.mimetype,
+            size: file.size,
+            buffer: file.buffer,
+          }));
+      
+          req.body.uploadedDocuments = uploadedDocuments[0].buffer;
+      
+          const policy = await this.policyService.createPolicy(req.body);
+      
+          // Send success response
+          res.status(HttpStatus.CREATED).json({
+            code: HttpStatus.CREATED,
+            message: 'Policy created successfully',
+            data: policy,
+          });
         } catch (error) {
-            res.status(HttpStatus.BAD_REQUEST).json({
-                code: HttpStatus.BAD_REQUEST,
-                message: `${error}`,
-            });
+          // Handle errors
+          res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+            code: HttpStatus.INTERNAL_SERVER_ERROR,
+            message: `Error creating policy: ${error.message}`,
+          });
         }
-    };
-
+      };
+      
 
     public getAllPolicies = async (req: Request, res: Response, next: NextFunction) => {
         try {

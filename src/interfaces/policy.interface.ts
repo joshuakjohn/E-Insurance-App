@@ -12,4 +12,5 @@ export interface IPolicy extends Document {
   coverage: number;
   pendingPremium:number;
   premiumPaid:number;
+  uploadedDocuments:Buffer;
 }
