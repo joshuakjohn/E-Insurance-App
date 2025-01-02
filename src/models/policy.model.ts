@@ -19,7 +19,13 @@ const policySchema = new Schema<IPolicy>(
       return this.duration;
     }},
     status: { type: String, required: true, default: "submitted"},
-    uploadedDocuments: {  type: Buffer, required: true }},
+    photograph: {  type: Buffer, required: true },
+    incomeProof: {  type: Buffer, required: true },
+    ageProof: {  type: Buffer, required: true },
+    idProof: {  type: Buffer, required: true },
+    policyApplication: {  type: Buffer, required: true }
+  },
+
   { timestamps: true }
 );
 
