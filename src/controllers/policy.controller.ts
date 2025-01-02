@@ -9,23 +9,46 @@ class PolicyController{
     
     public createPolicy = async (req: Request, res: Response, next: NextFunction) => {
         try {
-          const Documents = req.files['uploadedDocuments'] as Express.Multer.File[];
-          if (!Documents || Documents.length === 0) {
-            return res.status(HttpStatus.BAD_REQUEST).json({
-              code: HttpStatus.BAD_REQUEST,
-              message: 'No uploaded documents found or wrong field name.',
-            });
-          }
-      
-          const uploadedDocuments = Documents.map((file) => ({
-            originalName: file.originalname,
-            mimeType: file.mimetype,
-            size: file.size,
-            buffer: file.buffer,
-          }));
-      
-          req.body.uploadedDocuments = uploadedDocuments[0].buffer;
-      
+            console.log('controller')
+            // Expecting individual file fields: policyApplication, idproof, ageproof, incomeproof
+            const policyApplication = req.files['policyApplication']?.[0];
+            const idProof = req.files['idproof']?.[0];
+            const ageProof = req.files['ageproof']?.[0];
+            const incomeProof = req.files['incomeproof']?.[0];
+            const photograph = req.files['photograph']?.[0];
+
+          
+            if (!policyApplication) {
+              return res.status(HttpStatus.BAD_REQUEST).json({
+                code: HttpStatus.BAD_REQUEST,
+                message: 'Policy PDF is required.',
+              });
+            }
+          
+            const uploadedFiles = {
+              policyApplication: policyApplication
+                ? policyApplication.buffer
+                : null,
+              idProof: idProof
+                ? idProof.buffer
+                : null,
+              ageProof: ageProof
+                ? ageProof.buffer
+                : null,
+              incomeProof: incomeProof
+                ? incomeProof.buffer
+                : null,
+              photograph: photograph
+                ? incomeProof.buffer
+                : null,
+            };
+          
+            // Attach files to req.body
+            req.body = {...req.body, ...uploadedFiles}
+
+            console.log(req.body);
+            
+            
           const policy = await this.policyService.createPolicy(req.body);
       
           // Send success response
@@ -67,6 +90,34 @@ class PolicyController{
                 code: HttpStatus.BAD_REQUEST,
                 message: `${error}`,
             });
+        }
+    };
+
+    public getAllAgentPolicies = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const agentId = res.locals.id;  
+            const policies = await this.policyService.getAllAgentPolicies(agentId);
+            res.status(HttpStatus.OK).json({
+                code: HttpStatus.OK,
+                data: policies.data,
+                source: policies.source
+            });
+        } catch (error) {
+            res.status(HttpStatus.BAD_REQUEST).json({
+                code: HttpStatus.BAD_REQUEST,
+                message: `${error}`,
+            });
+        }
+    };
+
+    public updateStatus = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+        try{
+            res.status(HttpStatus.CREATED).json({
+                code: HttpStatus.CREATED,
+                data: await this.policyService.updateStatus(req.params.id, req.body.status)
+            });
+        }catch(error){
+            next(error);
         }
     };
 
