@@ -4,21 +4,18 @@ import policyModel from '../models/policy.model';
 import redisClient from '../config/redis';
 
  class PolicyService{
-    public createPolicy = async (body: IPolicy): Promise<any> => {
-        try{
-            const data = policyModel.create(body)
-            await Agent.updateOne({ _id: body.agentId }, { $inc: { num_of_policies: 1 } });
+   // Create the policy
+  public createPolicy = async (policyData: IPolicy): Promise<any> => {
+    try {
+        const createdPolicy = await policyModel.create(policyData);
+        await Agent.updateOne( { _id: policyData.agentId }, { $inc: { num_of_policies: 1 } } );
+        await redisClient.del(`policies:customer:${policyData.customerId}:all`);
+        return createdPolicy;
+      } catch (error) {
+        throw new Error(`Failed to create policy: ${error.message}`);
+      }
+    };
 
-            // Invalidate cache for the customer, since new policy is created
-            await redisClient.del(`policies:customer:${body.customerId}:all`); // Invalidate customer-specific policies cache
-
-            return data
-        } catch(error) {
-            throw new Error(error.message)
-        }
-        
-    }
-    
     public getAllPolicies = async (customerId: string, page: number, limit: number): Promise<{ data: IPolicy[]; total: number; page: number; totalPages: number; source: string }> => {
       const cacheKey = `policies:customer:${customerId}:page=${page}:limit=${limit}`;
 

@@ -12,4 +12,8 @@ export interface IPolicy extends Document {
   coverage: number;
   pendingPremium:number;
   premiumPaid:number;
+  incomeproof:Buffer;
+  ageproof:Buffer;
+  idproof:Buffer;
+  policyApplication:Buffer
 }
