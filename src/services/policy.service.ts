@@ -69,7 +69,49 @@ import redisClient from '../config/redis';
           throw new Error(`Error fetching policy: ${error.message}`);
       }
     };
+    
 
+    public getPoliciesByAgentId = async (agentId: string): Promise<any> => {
+      try {
+          const policies = await policyModel.find({ agentId });
+          return policies;
+      } catch (error) {
+          throw new Error(`Error fetching policies for agent ID ${agentId}: ${error.message}`);
+      }
+    };
+
+    public getAllPoliciesByAdmin = async (): Promise<any> => {
+      const cacheKey = `policies:admin`;
+  
+      try {
+          // Check cache for data
+          const cachedPolicies = await redisClient.get(cacheKey);
+          if (cachedPolicies) {
+              return {
+                  data: JSON.parse(cachedPolicies).data,
+                  source: 'Redis cache', // Indicate data is from cache
+              };
+          }
+  
+          // Fetch data from the database
+          const policies = await policyModel.find();
+          if (!policies || policies.length === 0) {
+              throw new Error('No policies found');
+          }
+  
+          // Cache the data for 10 minutes
+          const cacheData = { data: policies };
+          await redisClient.setEx(cacheKey, 60, JSON.stringify(cacheData));
+  
+          return {
+              ...cacheData,
+              source: 'Database', // Indicate data is from the database
+          };
+      } catch (error) {
+          throw new Error(`Error fetching policies: ${error.message}`);
+      }
+    };
+  
     public updateStatus = async (id: string, status: string ): Promise<any> => {
       const doc: IPolicy = await policyModel.findOne({_id: id});
           return {data: await policyModel.findByIdAndUpdate(id, {status: status}, {new: true}),
