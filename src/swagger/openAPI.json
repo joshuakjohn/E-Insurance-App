@@ -418,62 +418,71 @@
         }
       }
     },
-    "/policy": {
-      "post": {
-        "tags": ["Policy"],
-        "summary": "Create a policy by customer, require authorization token from customer",
-        "security": [{ "JWT": [] }],
-        "requestBody": {
-          "description": "Policy creation details",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "policyName": { "type": "string" },
-                  "description": { "type": "string" },
-                  "planId": { "type": "string" },
-                  "customerId": { "type": "string" },
-                  "schemeId": { "type": "string" },
-                  "agentId": { "type": "string" },
-                  "premiumAmount": { "type": "number" },
-                  "duration": { "type": "number" },
-                  "coverage": { "type": "number" }
+      "/policy": {
+        "post": {
+          "tags": ["Policy"],
+          "summary": "Create a policy by customer, requires authorization token from customer",
+          "security": [{ "JWT": [] }],
+          "requestBody": {
+            "description": "Policy creation details, including file uploads for required documents",
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "policyName": { "type": "string" },
+                    "description": { "type": "string" },
+                    "planId": { "type": "string" },
+                    "customerId": { "type": "string" },
+                    "schemeId": { "type": "string" },
+                    "agentId": { "type": "string" },
+                    "premiumAmount": { "type": "number" },
+                    "duration": { "type": "number" },
+                    "coverage": { "type": "number" },
+                    "uploadedDocuments": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "binary"
+                      },
+                      "description": "Upload required documents (e.g., Aadhaar, others specified in the scheme)"
+                    }
+                  },
+                  "required": ["policyName", "description", "planId", "customerId", "schemeId", "agentId", "premiumAmount", "duration", "coverage"]
                 }
               }
             }
+          },
+          "responses": {
+            "201": {
+              "description": "Policy created successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
           }
         },
-        "responses": {
-          "201": {
-            "description": "Policy created successfully"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal server error"
+        "get": {
+          "tags": ["Policy"],
+          "summary": "Get all policies by customer, requires authorization token from customer",
+          "security": [{ "JWT": [] }],
+          "responses": {
+            "200": {
+              "description": "All policies fetched successfully"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
           }
         }
-      },
-      "get": {
-        "tags": ["Policy"],
-        "summary": "get all policy by customer, require authorization token from customer",
-        "security": [{ "JWT": [] }],
-        "responses": {
-          "201": {
-            "description": "All policies fetched successfully"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
+      },    
     "/policy/{id}": {
       "put": {
         "tags": ["Policy"],

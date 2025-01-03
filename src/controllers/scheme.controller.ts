@@ -89,9 +89,10 @@ class SchemeController{
 
     public search =async(req:Request,res:Response,next:NextFunction)=>{
         try{
-            const searchText=req.query.q as string
+            const searchText=req.query.search as string;
             let page = Number(req.query.page);
             let limit = Number(req.query.limit);
+            console.log(searchText,page,limit)
             const searchResult=await this.schemeService.search(searchText,page,limit)
             res.status(HttpStatus.OK).json({ 
                 code: HttpStatus.OK, 
