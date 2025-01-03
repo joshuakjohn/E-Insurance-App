@@ -20,8 +20,14 @@ class PolicyRoute {
          //route to get all policy by customer
          this.router.get('/', customerAuth, this.policyValidator.validatePagination, cacheData, this.policyController.getAllPolicies);
 
-         //route to get all policy by customer
+         //route to get all policy by agent
          this.router.get('/agent', agentAuth, cacheData, this.policyController.getAllAgentPolicies);
+
+        //route to get all policy by admin
+        this.router.get('/admin', adminAuth, cacheData, this.policyController.getAllPoliciesByAdmin);
+
+        // route to get all policies associated with an agent by admin
+        this.router.get('/:id', adminAuth, cacheData, this.policyController.getPoliciesByAgentId);
 
          //route to update status of policy
          this.router.patch('/:id', this.policyController.updateStatus);

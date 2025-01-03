@@ -38,6 +38,9 @@ class AgentService{
     }
     const match = await bcrypt.compare(body.password, res.password);
     if(match){
+      if(res.status === 'Waiting for approval'){
+        throw new Error("Agent not approved");
+      }
       const payload = { userId: res._id, email: res.email };
       const token = jwt.sign({ userId: res._id, email: res.email }, process.env.AGENT_SECRET);
       const refreshToken = jwt.sign(payload, process.env.AGENT_SECRET, { expiresIn: '7d' });
@@ -80,6 +83,14 @@ class AgentService{
         }
     };
     
+    public updateStatus = async (id: string, status: string ): Promise<any> => {
+      const doc: IAgent = await agentModel.findOne({_id: id});
+      await redisClient.flushAll();
+      return {data: await agentModel.findByIdAndUpdate(id, {status: status}, {new: true}),
+        message: "Status updated successfully"
+      }  
+    }
+
     public refreshToken = async (agentId: string): Promise<any> => {
       try {
         const agentRecord=await agentModel.findById(agentId);

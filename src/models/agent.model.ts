@@ -23,6 +23,11 @@ const agentSchema = new Schema(
         type: String,
         required: true
     },
+    status: {
+      type: String,
+      required: true,
+      default: 'Waiting for approval'
+    },
     num_of_customers: {
       type: Number,
       required: true,

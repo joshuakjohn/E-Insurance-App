@@ -25,6 +25,9 @@ class UserRoutes {
     //route to register an agent    
     this.router.post('/register', this.agentValidator.newAgent, this.agentController.agentSignup);
 
+    //route to update status of agent
+    this.router.patch('/:id', this.agentController.updateStatus);
+
     // forget password route
     this.router.post('/forgot-password', this.agentValidator.validateForgotPassword, this.agentController.forgotPassword);
 
