@@ -110,6 +110,35 @@ class PolicyController{
         }
     };
 
+    public getPoliciesByAgentId = async (req: Request, res: Response,  next: NextFunction) => {
+        const { id } = req.params; // agentId from the route
+        try {
+            const policies = await this.policyService.getPoliciesByAgentId(id); 
+            if (!policies.length) {
+                return res.status(HttpStatus.NOT_FOUND).json({ message: "No policies found for this agent." });
+            }
+            return res.status(HttpStatus.OK).json({ message: "Policies fetched successfully", data: policies });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    public getAllPoliciesByAdmin = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const policies = await this.policyService.getAllPoliciesByAdmin();
+            res.status(HttpStatus.OK).json({
+                code: HttpStatus.OK,
+                data: policies.data,
+                source: policies.source,
+            });
+        } catch (error) {
+            res.status(HttpStatus.BAD_REQUEST).json({
+                code: HttpStatus.BAD_REQUEST,
+                message: `${error}`,
+            });
+        }
+    };
+    
     public updateStatus = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
         try{
             res.status(HttpStatus.CREATED).json({
