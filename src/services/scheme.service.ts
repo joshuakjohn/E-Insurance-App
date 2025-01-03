@@ -99,18 +99,21 @@ import redisClient from '../config/redis';
         }
     };
 
-    public filter = async (): Promise<any> => {
-        try {
-          const filterResult = await Scheme.find().sort({ premium: 1 });
-          if (filterResult.length === 0) {
-            throw new Error('No results found');
-          }
-          return filterResult;
-        } catch (error) {
-          throw new Error(`Error sorting the schemes: ${error.message}`);
+    public filter = async (sortOrder: 'asc' | 'desc'): Promise<any> => {
+      try {
+        const sortDirection = sortOrder === 'asc' ? 1 : -1;
+        const filterResult = await Scheme.find().sort({ premium: sortDirection });
+    
+        if (filterResult.length === 0) {
+          throw new Error('No results found');
         }
-      };
-           
+    
+        return filterResult;
+      } catch (error) {
+        throw new Error(`Error sorting the schemes: ${error.message}`);
+      }
+    };
+     
 }
    
  export default SchemaService;  
