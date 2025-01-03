@@ -38,6 +38,9 @@ class AgentService{
     }
     const match = await bcrypt.compare(body.password, res.password);
     if(match){
+      if(res.status === 'Waiting for approval'){
+        throw new Error("Agent not approved");
+      }
       const payload = { userId: res._id, email: res.email };
       const token = jwt.sign({ userId: res._id, email: res.email }, process.env.AGENT_SECRET);
       const refreshToken = jwt.sign(payload, process.env.AGENT_SECRET, { expiresIn: '7d' });
