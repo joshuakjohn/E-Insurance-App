@@ -6,5 +6,6 @@ export interface IAgent extends Document {
   password: string;
   phno: number;
   region: string;
+  status: string;
   refreshToken?:string;
 }
