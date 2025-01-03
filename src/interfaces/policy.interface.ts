@@ -15,5 +15,6 @@ export interface IPolicy extends Document {
   incomeproof:Buffer;
   ageproof:Buffer;
   idproof:Buffer;
-  policyApplication:Buffer
+  policyApplication:Buffer;
+  status:string
 }
