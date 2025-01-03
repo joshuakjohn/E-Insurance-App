@@ -106,19 +106,27 @@ class SchemeController{
         }
     }
 
-    public filter=async(req:Request,res:Response,next:NextFunction)=>{
-        try{
-            const filterResult=await this.schemeService.filter()
-            res.status(HttpStatus.OK).json({ 
-                code: HttpStatus.OK, 
-                data:filterResult
-            });
-        }catch (error) {
-            res.status(HttpStatus.BAD_REQUEST).json({
-                code: HttpStatus.BAD_REQUEST,
-                message: `${error}`,
-                });
-            }
+    public filter = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+          // Retrieve the sortOrder from the request query (default to 'asc' if not provided)
+          const sortOrder: 'asc' | 'desc' = req.query.sortOrder === 'desc' ? 'desc' : 'asc';
+      
+          // Call the filter function from the service with the sortOrder
+          const filterResult = await this.schemeService.filter(sortOrder);
+      
+          // Return the sorted result in the response
+          res.status(HttpStatus.OK).json({
+            code: HttpStatus.OK,
+            data: filterResult,
+          });
+        } catch (error) {
+          // Handle any errors and return a BAD_REQUEST response
+          res.status(HttpStatus.BAD_REQUEST).json({
+            code: HttpStatus.BAD_REQUEST,
+            message: `${error}`,
+          });
         }
+      };
+      
 }
 export default SchemeController;
