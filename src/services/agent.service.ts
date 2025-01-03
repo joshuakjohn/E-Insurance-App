@@ -83,6 +83,14 @@ class AgentService{
         }
     };
     
+    public updateStatus = async (id: string, status: string ): Promise<any> => {
+      const doc: IAgent = await agentModel.findOne({_id: id});
+      await redisClient.flushAll();
+      return {data: await agentModel.findByIdAndUpdate(id, {status: status}, {new: true}),
+        message: "Status updated successfully"
+      }  
+    }
+
     public refreshToken = async (agentId: string): Promise<any> => {
       try {
         const agentRecord=await agentModel.findById(agentId);

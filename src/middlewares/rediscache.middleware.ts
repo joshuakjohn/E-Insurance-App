@@ -8,6 +8,7 @@ export const cacheData = async (req: Request, res: Response, next: NextFunction)
     let cacheKey = '';
 
     try {
+        console.log('cache hit')
         if (basePath === 'plan') {
             cacheKey = `plans:page=${page}:limit=${limit}`;
         } else if (basePath === 'policy') {
