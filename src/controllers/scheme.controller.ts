@@ -87,37 +87,42 @@ class SchemeController{
         }
     };
 
-    public search =async(req:Request,res:Response,next:NextFunction)=>{
-        try{
-            const searchText=req.query.q as string
+    public search = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const searchText = req.query.search as string;
             let page = Number(req.query.page);
             let limit = Number(req.query.limit);
-            const searchResult=await this.schemeService.search(searchText,page,limit)
-            res.status(HttpStatus.OK).json({ 
-                code: HttpStatus.OK, 
-                data:searchResult 
-               });
-        }catch (error) {
+            const sortOrder = req.query.sortOrder as 'asc' | 'desc' || 'asc'; 
+            const searchResult = await this.schemeService.search(searchText, page, limit, sortOrder);
+    
+            res.status(HttpStatus.OK).json({
+                code: HttpStatus.OK,
+                data: searchResult,
+            });
+        } catch (error) {
             res.status(HttpStatus.BAD_REQUEST).json({
                 code: HttpStatus.BAD_REQUEST,
                 message: `${error}`,
             });
         }
-    }
+    };
+    
 
-    public filter=async(req:Request,res:Response,next:NextFunction)=>{
-        try{
-            const filterResult=await this.schemeService.filter()
-            res.status(HttpStatus.OK).json({ 
-                code: HttpStatus.OK, 
-                data:filterResult
-            });
-        }catch (error) {
-            res.status(HttpStatus.BAD_REQUEST).json({
-                code: HttpStatus.BAD_REQUEST,
-                message: `${error}`,
-                });
-            }
+    public filter = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+          const sortOrder: 'asc' | 'desc' = req.query.sortOrder === 'desc' ? 'desc' : 'asc';
+          const filterResult = await this.schemeService.filter(sortOrder);
+          res.status(HttpStatus.OK).json({
+            code: HttpStatus.OK,
+            data: filterResult,
+          });
+        } catch (error) {
+          res.status(HttpStatus.BAD_REQUEST).json({
+            code: HttpStatus.BAD_REQUEST,
+            message: `${error}`,
+          });
         }
+      };
+      
 }
 export default SchemeController;

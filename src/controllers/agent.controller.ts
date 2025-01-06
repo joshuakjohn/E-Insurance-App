@@ -57,6 +57,18 @@ class AgentController{
         }
     };
 
+    // update the status of agent 
+    public updateStatus = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+        try{
+            res.status(httpstatus.CREATED).json({
+                code: httpstatus.CREATED,
+                data: await this.agentService.updateStatus(req.params.id, req.body.status)
+            });
+        }catch(error){
+            next(error);
+        }
+    };
+
     public refreshToken=async (
         req: Request,
         res: Response,

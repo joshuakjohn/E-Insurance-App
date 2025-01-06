@@ -87,30 +87,41 @@ import redisClient from '../config/redis';
         }
       };
 
-      public search = async (search: string, page: number, limit: number): Promise<any> => {
+      public search = async (search: string, page: number, limit: number, sortOrder: string): Promise<any> => {
         try {
-            const searchResult = await Scheme.find({$or: [{ schemeName: { $regex: search, $options:'i' } },{ description: { $regex: search, $options:'i' } }]}).skip((page - 1) * limit) .limit(limit); 
+            const sortQuery = { premium: sortOrder === 'asc' ? 1 : -1 };
+            const searchResult = await Scheme.find({
+                $or: [
+                    { schemeName: { $regex: search, $options: 'i' } },
+                    { description: { $regex: search, $options: 'i' } }
+                ]
+            })
+            .sort(sortQuery) 
+            .skip((page - 1) * limit)  
+            .limit(limit);  
             if (searchResult.length === 0) {
                 throw new Error('No results found');
             }
-            return { results: searchResult};
-         } catch (error) {
+            return { results: searchResult };
+        } catch (error) {
             throw new Error(`Error performing search: ${error.message}`);
         }
-    };
-
-    public filter = async (): Promise<any> => {
-        try {
-          const filterResult = await Scheme.find().sort({ premium: 1 });
-          if (filterResult.length === 0) {
-            throw new Error('No results found');
-          }
-          return filterResult;
-        } catch (error) {
-          throw new Error(`Error sorting the schemes: ${error.message}`);
+      }; 
+      public filter = async (sortOrder: 'asc' | 'desc'): Promise<any> => {
+      try {
+        const sortDirection = sortOrder === 'asc' ? 1 : -1;
+        const filterResult = await Scheme.find().sort({ premium: sortDirection });
+    
+        if (filterResult.length === 0) {
+          throw new Error('No results found');
         }
-      };
-           
+    
+        return filterResult;
+      } catch (error) {
+        throw new Error(`Error sorting the schemes: ${error.message}`);
+      }
+    };
+     
 }
    
  export default SchemaService;  
