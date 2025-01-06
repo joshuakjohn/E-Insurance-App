@@ -2,6 +2,7 @@ import express, { IRouter } from 'express';
 import CustomerController from '../controllers/customer.controller';
 import CustomerValidator from '../validators/customer.validator'; 
 import { adminAuth, agentAuth, customerAuth, customerResetAuth, employeeAuth } from '../middlewares/auth.middleware';
+import { customerImage } from '../config/multer';
 
 class UserRoutes {
   private CustomerController = new CustomerController();
@@ -20,9 +21,9 @@ class UserRoutes {
     //route to get all customer, by agent
     this.router.get('', agentAuth, this.CustomerController.getAllCustomers);
 
-    this.router.get('/getcustomer',customerAuth,this.CustomerController.getCustomerById)
+    this.router.get('/getcustomer',customerAuth, this.CustomerController.getCustomerById)
     //route to register a customer
-    this.router.post( '/register', this.CustomerValidator.createCustomer, this.CustomerController.createCustomer);
+    this.router.post( '/register', customerImage, this.CustomerValidator.createCustomer, this.CustomerController.createCustomer);
     
     //route for customer to pay premium
     this.router.post('/paypremium', customerAuth, this.CustomerController.payPremium);

@@ -20,8 +20,13 @@ class UserController {
     next: NextFunction
   ): Promise<any> => {
     try {
-      if(req.file)
-      req.body.profilePhoto=req.file.buffer
+
+      const customerImage = req.files['customerImage']?.[0];
+
+      req.body.profilePhoto = customerImage
+        ? customerImage.buffer
+        : null
+
       await this.CustomerService.createCustomer(req.body);
       
       res.status(HttpStatus.CREATED).json({
@@ -47,6 +52,8 @@ class UserController {
         code: HttpStatus.OK,
         token:customerData.token,
         username: customerData.username,
+        email: customerData.email,
+        profilePhoto: customerData.customerImage,
         message: ` ${customerData.username} logged in successfully`
       });
     } catch (error) {
