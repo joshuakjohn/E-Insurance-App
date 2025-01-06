@@ -48,6 +48,7 @@ class AgentService{
 
       return {
         message: "Login Successful",
+        email: res.email,
         username: res.username,
         token: token,
       }   

@@ -14,6 +14,7 @@ class AgentController{
             res.status(httpstatus.ACCEPTED).json({
                 code: httpstatus.ACCEPTED,
                 message: data.message,
+                email: data.email,
                 username: data.username,
                 token: data.token
             })

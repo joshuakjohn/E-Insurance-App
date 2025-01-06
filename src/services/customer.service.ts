@@ -63,7 +63,7 @@ class CustomerService {
 
     await customer.findOneAndUpdate({ _id: customerData._id }, { refreshToken });
 
-    return { token, refreshToken, username: customerData.username };
+    return { token, refreshToken, username: customerData.username, customerImage: customerData.profilePhoto, email: customerData.email };
   };
 
   public getAllCustomers = async (agentId: ObjectId): Promise<{data: Customer[], source: string}> => {
