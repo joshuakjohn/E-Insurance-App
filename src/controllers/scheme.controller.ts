@@ -87,40 +87,36 @@ class SchemeController{
         }
     };
 
-    public search =async(req:Request,res:Response,next:NextFunction)=>{
-        try{
-            const searchText=req.query.search as string;
+    public search = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const searchText = req.query.search as string;
             let page = Number(req.query.page);
             let limit = Number(req.query.limit);
-            console.log(searchText,page,limit)
-            const searchResult=await this.schemeService.search(searchText,page,limit)
-            res.status(HttpStatus.OK).json({ 
-                code: HttpStatus.OK, 
-                data:searchResult 
-               });
-        }catch (error) {
+            const sortOrder = req.query.sortOrder as 'asc' | 'desc' || 'asc'; 
+            const searchResult = await this.schemeService.search(searchText, page, limit, sortOrder);
+    
+            res.status(HttpStatus.OK).json({
+                code: HttpStatus.OK,
+                data: searchResult,
+            });
+        } catch (error) {
             res.status(HttpStatus.BAD_REQUEST).json({
                 code: HttpStatus.BAD_REQUEST,
                 message: `${error}`,
             });
         }
-    }
+    };
+    
 
     public filter = async (req: Request, res: Response, next: NextFunction) => {
         try {
-          // Retrieve the sortOrder from the request query (default to 'asc' if not provided)
           const sortOrder: 'asc' | 'desc' = req.query.sortOrder === 'desc' ? 'desc' : 'asc';
-      
-          // Call the filter function from the service with the sortOrder
           const filterResult = await this.schemeService.filter(sortOrder);
-      
-          // Return the sorted result in the response
           res.status(HttpStatus.OK).json({
             code: HttpStatus.OK,
             data: filterResult,
           });
         } catch (error) {
-          // Handle any errors and return a BAD_REQUEST response
           res.status(HttpStatus.BAD_REQUEST).json({
             code: HttpStatus.BAD_REQUEST,
             message: `${error}`,
