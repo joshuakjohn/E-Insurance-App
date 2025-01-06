@@ -4,7 +4,7 @@ import multer, { StorageEngine } from 'multer';
 const storage: StorageEngine = multer.memoryStorage()
 
 // Set up Multer
-const upload = multer({
+export const policyProof = multer({
   storage: storage,
 }).fields([
   { name: 'policyApplication', maxCount: 1 },
@@ -14,4 +14,8 @@ const upload = multer({
   { name: 'incomeproof', maxCount: 1 }
 ]);
 
-export default upload
+export const customerImage = multer({
+  storage: storage,
+}).fields([
+  { name: 'customerImage', maxCount: 1 },
+]);
