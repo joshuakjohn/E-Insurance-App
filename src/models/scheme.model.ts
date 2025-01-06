@@ -10,7 +10,6 @@ const schemeSchema = new Schema<IScheme>(
     premium: { type: Number, required: true },
     maturityPeriod: { type: Number, required: true },
     coverage: { type: Number, required: true },
-    requiredDocuments: [{ type: String,reuired:true }]
   },
   { timestamps: true }
 );
