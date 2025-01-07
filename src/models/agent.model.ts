@@ -47,6 +47,11 @@ const agentSchema = new Schema(
       type: String,
       default: null,
       required: false, 
+    },
+    profilePhoto: {
+      type: Buffer,
+      required:false,
+      default: null
     }
   },
   {

@@ -116,7 +116,7 @@ class CustomerService {
    
   public getCustomerById=async(customerId:string):Promise<any> =>{
     try {
-      const res = await customer.findById(customerId);
+      const res = await customer.findById(customerId).select('-password -refreshToken');
       if(!res) {
         throw new Error('customer not found');
       }
