@@ -3,6 +3,8 @@ import CustomerController from '../controllers/customer.controller';
 import CustomerValidator from '../validators/customer.validator'; 
 import { adminAuth, agentAuth, customerAuth, customerResetAuth, employeeAuth } from '../middlewares/auth.middleware';
 import { image } from '../config/multer';
+import { cacheData } from '../middlewares/rediscache.middleware';
+
 
 class UserRoutes {
   private CustomerController = new CustomerController();
@@ -19,7 +21,7 @@ class UserRoutes {
     this.router.post('', this.CustomerValidator.customerLogin, this.CustomerController.customerLogin); 
 
     //route to get all customer, by agent
-    this.router.get('', agentAuth, this.CustomerController.getAllCustomers);
+    this.router.get('', agentAuth,   this.CustomerValidator.validatePagination, cacheData, this.CustomerController.getAllCustomers);
 
     this.router.get('/getcustomer',customerAuth, this.CustomerController.getCustomerById)
     //route to register a customer

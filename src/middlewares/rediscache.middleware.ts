@@ -8,7 +8,6 @@ export const cacheData = async (req: Request, res: Response, next: NextFunction)
     let cacheKey = '';
 
     try {
-        console.log('cache hit')
         if (basePath === 'plan') {
             cacheKey = `plans:page=${page}:limit=${limit}`;
         } else if (basePath === 'policy') {
@@ -16,8 +15,11 @@ export const cacheData = async (req: Request, res: Response, next: NextFunction)
             cacheKey = `policies:customer:${customerId}:page=${page}:limit=${limit}`;
         } else if (basePath === 'scheme') {
             cacheKey = `schemes:page=${page}:limit=${limit}`;
+        } else if (basePath === 'customer') {
+            const agentId = req.params.id || res.locals.id; // Agent ID from route params or middleware
+            cacheKey = `customers:agent:${agentId}:page=${page}:limit=${limit}`;
         } else {
-            return next(); // Skip caching if the route doesn't match 'plan', 'policy' or 'scheme'
+            return next(); // Skip caching if the route doesn't match 'plan', 'policy', 'scheme' or 'customer'
         }
 
         const cachedData = await redisClient.get(cacheKey);
