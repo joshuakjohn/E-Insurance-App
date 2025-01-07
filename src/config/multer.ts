@@ -14,8 +14,8 @@ export const policyProof = multer({
   { name: 'incomeproof', maxCount: 1 }
 ]);
 
-export const customerImage = multer({
+export const image = multer({
   storage: storage,
 }).fields([
-  { name: 'customerImage', maxCount: 1 },
+  { name: 'image', maxCount: 1 },
 ]);

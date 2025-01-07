@@ -8,4 +8,5 @@ export interface IAgent extends Document {
   region: string;
   status: string;
   refreshToken?:string;
+  profilePhoto?: Buffer;
 }
