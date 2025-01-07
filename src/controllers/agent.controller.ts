@@ -16,6 +16,7 @@ class AgentController{
                 message: data.message,
                 email: data.email,
                 username: data.username,
+                profilePhoto: data.profilePhoto,
                 token: data.token
             })
         } catch(error) {
@@ -30,6 +31,13 @@ class AgentController{
     // Agent Registration
     public agentSignup = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
         try{
+
+            const customerImage = req.files['image']?.[0];
+
+            req.body.profilePhoto = customerImage
+              ? customerImage.buffer
+              : null
+              
             const data = await this.agentService.signup(req.body)
             res.status(httpstatus.CREATED).json({
                 code: httpstatus.CREATED,
@@ -56,6 +64,20 @@ class AgentController{
             next(error);
         }
     };
+
+    public getAgentById=async(req: Request, res: Response, next: NextFunction): Promise<any> => {
+        try{
+         const agent = await this.agentService.getAgentById(res.locals.id)
+         res.status(httpstatus.OK).json({
+          code: httpstatus.OK,
+          data: agent,
+        });
+      } catch (error) {
+        res.status(httpstatus.BAD_REQUEST).json({
+          code: httpstatus.BAD_REQUEST,
+          message: `${error}`})
+      }
+    }
 
     // update the status of agent 
     public updateStatus = async (req: Request, res: Response, next: NextFunction): Promise<any> => {

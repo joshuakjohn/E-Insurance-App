@@ -21,7 +21,7 @@ class UserController {
   ): Promise<any> => {
     try {
 
-      const customerImage = req.files['customerImage']?.[0];
+      const customerImage = req.files['image']?.[0];
 
       req.body.profilePhoto = customerImage
         ? customerImage.buffer
