@@ -1,5 +1,6 @@
+import { image } from '../config/multer';
 import AgentController from '../controllers/agent.controller';
-import { adminAuth, agentResetAuth, employeeAuth } from '../middlewares/auth.middleware';
+import { adminAuth, agentAuth, agentResetAuth, employeeAuth } from '../middlewares/auth.middleware';
 import AgentValidator from '../validators/agent.validator';
 import express, { IRouter } from 'express';
 
@@ -23,16 +24,18 @@ class UserRoutes {
     this.router.get('/employee', employeeAuth, this.agentController.getAllAgents);
 
     //route to register an agent    
-    this.router.post('/register', this.agentValidator.newAgent, this.agentController.agentSignup);
+    this.router.post('/register', image, this.agentValidator.newAgent, this.agentController.agentSignup);
 
-    //route to update status of agent
-    this.router.patch('/:id', this.agentController.updateStatus);
+    this.router.get('/get-agent', agentAuth, this.agentController.getAgentById)
 
     // forget password route
     this.router.post('/forgot-password', this.agentValidator.validateForgotPassword, this.agentController.forgotPassword);
 
     // Reset Password route
     this.router.post('/reset-password', agentResetAuth, this.agentValidator.validateResetPassword, this.agentController.resetPassword);
+
+    //route to update status of agent
+    this.router.patch('/:id', this.agentController.updateStatus);
 
     //route to refresh token
     this.router.get('/:id/refreshtoken',this.agentController.refreshToken)

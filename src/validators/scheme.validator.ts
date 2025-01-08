@@ -12,7 +12,6 @@ export class SchemeValidator {
       premium: Joi.number().positive().required(),
       maturityPeriod: Joi.number().positive().required(),
       coverage: Joi.number().positive().required(),
-      requiredDocuments: Joi.array().items(Joi.string().required()).required(), 
     });
    
     const { error } = schema.validate(req.body);

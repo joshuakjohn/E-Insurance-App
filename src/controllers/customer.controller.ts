@@ -21,7 +21,7 @@ class UserController {
   ): Promise<any> => {
     try {
 
-      const customerImage = req.files['customerImage']?.[0];
+      const customerImage = req.files['image']?.[0];
 
       req.body.profilePhoto = customerImage
         ? customerImage.buffer
@@ -63,28 +63,35 @@ class UserController {
     }
   };
 
-  // Get all customers
-  public getAllCustomers = async (req: Request,
-     res: Response,
-     next: NextFunction
-    ) => {
+  // Get all agent specific customers
+  public getAllCustomers = async (req: Request, res: Response, next: NextFunction) => {
     try {
       let agentId;
-      if(req.params.id === undefined){
-        agentId = res.locals.id;
+      const { page, limit } = req.query as unknown as { page: number; limit: number };
+  
+      if (req.params.id === undefined) {
+        agentId = res.locals.id; // Retrieve agentId from middleware
       } else {
         agentId = req.params.id;
       }
-      const data = await this.CustomerService.getAllCustomers(agentId);
-      res.status(HttpStatus.OK).json({ 
-          code: HttpStatus.OK, 
-          data: data.data,
-          source: data.source
+  
+      const customers = await this.CustomerService.getAllCustomers(agentId, page, limit);
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data: customers.data,
+        total: customers.total,
+        page: customers.page,
+        totalPages: customers.totalPages,
+        source: customers.source,
       });
     } catch (error) {
-        next(error);
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        message: `${error}`,
+      });
     }
   };
+  
   public getCustomerById=async(
     req: Request,
     res: Response,

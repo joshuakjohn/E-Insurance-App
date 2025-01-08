@@ -66,41 +66,57 @@ class CustomerService {
     return { token, refreshToken, username: customerData.username, customerImage: customerData.profilePhoto, email: customerData.email };
   };
 
-  public getAllCustomers = async (agentId: ObjectId): Promise<{data: Customer[], source: string}> => {
+  // Get all agent apecific customers 
+  public getAllCustomers = async (
+    agentId: ObjectId,
+    page: number,
+    limit: number
+  ): Promise<{ data: Customer[]; total: number; page: number; totalPages: number; source: string }> => {
+    const cacheKey = `customers:agent:${agentId}:page=${page}:limit=${limit}`;
+  
     try {
-        // Create a cache key based on the agentId
-        const cacheKey = `customers:agent:${agentId}`;
-
-        // Check if the data is already cached in Redis
-        const cachedData = await redisClient.get(cacheKey);
-        if (cachedData) {
-            return {
-                data: JSON.parse(cachedData),
-                source: 'Redis Cache',
-            };
-        }
-
-        // If no cached data, fetch from the database
-        const customers = await customer.find({ agentId }).select('-password -refreshToken');
-        if (!customers || customers.length === 0) {
-            throw new Error('No customers found for this agent.');
-        }
-
-        // Cache the data for 60 seconds
-        await redisClient.setEx(cacheKey, 60, JSON.stringify(customers));
-
+      // Check Redis cache
+      const cachedData = await redisClient.get(cacheKey);
+      if (cachedData) {
         return {
-            data: customers,
-            source: 'Database',
+          ...JSON.parse(cachedData),
+          source: 'Redis Cache',
         };
+      }
+  
+      // Fetch total count
+      const total = await customer.countDocuments({ agentId });
+  
+      // Fetch paginated data
+      const customers = await customer
+        .find({ agentId })
+        .select('-password -refreshToken') // Exclude sensitive fields
+        .skip((page - 1) * limit)
+        .limit(limit);
+  
+      if (!customers || customers.length === 0) {
+        throw new Error('No customers found for this agent.');
+      }
+  
+      const totalPages = Math.ceil(total / limit);
+  
+      // Cache the data
+      const cacheData = { data: customers, total, page, totalPages };
+      await redisClient.setEx(cacheKey, 60, JSON.stringify(cacheData));
+  
+      return {
+        ...cacheData,
+        source: 'Database',
+      };
     } catch (error) {
-        throw new Error(`Error retrieving customers: ${error.message}`);
+      throw new Error(`Error retrieving customers: ${error.message}`);
     }
   };
+  
    
   public getCustomerById=async(customerId:string):Promise<any> =>{
     try {
-      const res = await customer.findById(customerId);
+      const res = await customer.findById(customerId).select('-password -refreshToken');
       if(!res) {
         throw new Error('customer not found');
       }

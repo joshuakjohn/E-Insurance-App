@@ -56,7 +56,7 @@ import redisClient from '../config/redis';
           }
           // Cache the data for 60 seconds
           const cacheData = { data: policies };
-          await redisClient.setEx(cacheKey, 600, JSON.stringify(cacheData));
+          await redisClient.setEx(cacheKey, 60, JSON.stringify(cacheData));
 
           return {
               ...cacheData,

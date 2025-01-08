@@ -50,6 +50,7 @@ class AgentService{
         message: "Login Successful",
         email: res.email,
         username: res.username,
+        profilePhoto: res.profilePhoto,
         token: token,
       }   
     }
@@ -82,6 +83,18 @@ class AgentService{
         } catch (error) {
             throw error;
         }
+    };
+
+    public getAgentById = async(agentId:string):Promise<any> =>{
+      try {
+        const res = await agentModel.findById(agentId).select('-password -refreshToken');
+        if(!res) {
+          throw new Error('agent not found');
+        }
+        return res;
+      } catch (error) {
+        throw error;
+      }
     };
     
     public updateStatus = async (id: string, status: string ): Promise<any> => {
