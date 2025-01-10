@@ -34,6 +34,9 @@ class UserRoutes {
     // Reset Password route
     this.router.post('/reset-password', agentResetAuth, this.agentValidator.validateResetPassword, this.agentController.resetPassword);
 
+    //route to get the available region
+    this.router.get('/getregion', this.agentController.getAgentRegion)
+
     //route to update status of agent
     this.router.patch('/:id', this.agentController.updateStatus);
 

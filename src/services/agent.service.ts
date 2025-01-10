@@ -4,6 +4,8 @@ import agentModel from "../models/agent.model"
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../utils/user.util';
 import redisClient from '../config/redis';
+import Levenshtein from 'fast-levenshtein'; // Default import
+
 
 class AgentService{
 
@@ -151,8 +153,36 @@ class AgentService{
           throw new Error(`Error resetting password: ${error.message}`);
       }
     };
+    public getAgentRegion = async (): Promise<string> => {
+      try {
+        const agentRegions = await agentModel.find({}, { region: 1, _id: 0 });
     
-
+        // Normalize regions to lowercase, trim spaces, and remove duplicates
+        const normalizedRegions = [...new Set(
+          agentRegions
+            .map(doc => doc.region.trim().toLowerCase().replace(/\s+/g, ' ')) // Normalize case and spaces
+        )];
+    
+        // Function to group similar regions using Levenshtein distance
+        const normalizeRegion = (region: string, allRegions: string[]): string => {
+          return allRegions.find(existingRegion => Levenshtein.get(region, existingRegion) < 3) || region;
+        };
+    
+        // Group similar regions dynamically
+        const groupedRegions = normalizedRegions.reduce<string[]>((acc, region) => {
+          const existingRegion = normalizeRegion(region, acc);
+          if (!acc.includes(existingRegion)) acc.push(existingRegion);
+          return acc;
+        }, []);
+    
+        // Capitalize each region and join them into a string
+        return groupedRegions
+          .map(region => region.replace(/\b\w/g, char => char.toUpperCase()))
+          .join(", ");
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    };
 }
 
 export default AgentService
