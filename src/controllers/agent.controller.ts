@@ -147,6 +147,23 @@ class AgentController{
         }
       };
 
+    public getAgentRegion = async(req:Request,res:Response,next:NextFunction):Promise<any> => {
+      
+        try{
+            const agentRegion=await this.agentService.getAgentRegion();
+            res.status(httpstatus.OK).json({
+                code:httpstatus.OK,
+                data:agentRegion,
+                message:'available agent regions '
+            })
+        }catch(error){
+            res.status(httpstatus.BAD_REQUEST).json({
+                code: httpstatus.BAD_REQUEST,
+                message: error.message 
+            })
+
+        }
+    }
 }
 
 

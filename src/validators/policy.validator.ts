@@ -30,12 +30,18 @@ export class PolicyValidator {
 
 
   public validatePagination = (req: Request, res: Response, next: NextFunction): void => {
+    console.log(req.query);
+    
     const schema = Joi.object({
         page: Joi.number().integer().min(1).optional().default(1),
         limit: Joi.number().integer().min(1).max(100).optional().default(10),
     });
 
     const { error, value } = schema.validate(req.query);
+    console.log(`error :`+ error);
+    console.log(`value :`+ value.page);
+
+    
 
     if (error) {
         res.status(HttpStatus.BAD_REQUEST).send({

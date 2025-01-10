@@ -25,13 +25,21 @@ const auth = (secret_token: string) => {
           message: 'Authorization token is required'
         };
       bearerToken = bearerToken.split(' ')[1];
-      const { userId }: any = await jwt.verify(bearerToken, secret_token);
-      res.locals.id = userId;      
-      next();
-    } catch (error) {
-      next(error);
-    }
-  };
+      try {
+        const { userId }: any = jwt.verify(bearerToken, secret_token);
+        res.locals.id = userId;
+        next();
+      }catch(error:any){
+        if (error.message === 'jwt expired') {
+           res.status(HttpStatus.UNAUTHORIZED).json({
+            message: 'Token expired.',
+          });
+      }
+    } 
+  }catch (error) {
+    next(error);
+  }
+}
 }
 
 export const agentAuth = auth(process.env.AGENT_SECRET);

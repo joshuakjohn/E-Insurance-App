@@ -44,26 +44,46 @@ import redisClient from '../config/redis';
       }
     };
 
-    public getAllAgentPolicies = async (agentId: string): Promise<any> => {
-      const cacheKey = `policies:agent:${agentId}`;
+    public getAllAgentPolicies = async (agentId: string, page: number, limit: number): Promise<{ data: IPolicy[]; total: number; page: number; totalPages: number; source: string }> => {
+      const cacheKey = `policies:agent:${agentId}:page=${page}:limit=${limit}`;
 
       try {
-          // Fetch data from the database
-          const policies = await policyModel.find({ agentId })            
-        
-          if(!policies || policies.length === 0) {
-            throw new Error('No policy found');
-          }
-          // Cache the data for 60 seconds
-          const cacheData = { data: policies };
-          await redisClient.setEx(cacheKey, 60, JSON.stringify(cacheData));
+          // Check Redis cache
+        const cachedData = await redisClient.get(cacheKey);
+        if (cachedData) {
+            return {
+                ...JSON.parse(cachedData),
+                source: 'Redis Cache',
+            };
+        }
 
-          return {
-              ...cacheData,
-              source: 'Database', // Indicate data is from the database
-          };
+        // Fetch total count
+        const total = await policyModel.countDocuments({ agentId });
+        console.log(total);
+        
+
+        // Fetch paginated data
+        const policies = await policyModel
+            .find({ agentId })
+            .skip((page - 1) * limit)
+            .limit(limit);
+
+        if (!policies || policies.length === 0) {
+            throw new Error('No policies found for this agent.');
+        }
+
+        const totalPages = Math.ceil(total / limit);
+
+        // Cache the data
+        const cacheData = { data: policies, total, page, totalPages };
+        await redisClient.setEx(cacheKey, 60, JSON.stringify(cacheData));
+
+        return {
+            ...cacheData,
+            source: 'Database',
+        };
       } catch (error) {
-          throw new Error(`Error fetching policy: ${error.message}`);
+          throw new Error(`Error retrieving policies: ${error.message}`);
       }
     };
     

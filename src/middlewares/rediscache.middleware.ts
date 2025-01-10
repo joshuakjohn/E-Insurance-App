@@ -13,6 +13,9 @@ export const cacheData = async (req: Request, res: Response, next: NextFunction)
         } else if (basePath === 'policy') {
             const customerId = req.params.id || res.locals.id; // Customer ID from route params or middleware
             cacheKey = `policies:customer:${customerId}:page=${page}:limit=${limit}`;
+        } else if (basePath === 'policy' && res.locals.id) {
+            const agentId = res.locals.id; // Agent ID from middleware
+            cacheKey = `policies:agent:${agentId}:page=${page}:limit=${limit}`;
         } else if (basePath === 'scheme') {
             cacheKey = `schemes:page=${page}:limit=${limit}`;
         } else if (basePath === 'customer') {

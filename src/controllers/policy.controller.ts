@@ -95,12 +95,17 @@ class PolicyController{
 
     public getAllAgentPolicies = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const agentId = res.locals.id;  
-            const policies = await this.policyService.getAllAgentPolicies(agentId);
+            const agentId = res.locals.id; 
+            const { page, limit } = req.query as unknown as { page: number; limit: number };
+            const policies = await this.policyService.getAllAgentPolicies(agentId, page, limit);
+             
             res.status(HttpStatus.OK).json({
                 code: HttpStatus.OK,
                 data: policies.data,
-                source: policies.source
+                total: policies.total,
+                page: policies.page,
+                totalPages: policies.totalPages,
+                source: policies.source,
             });
         } catch (error) {
             res.status(HttpStatus.BAD_REQUEST).json({
