@@ -97,6 +97,25 @@ class customerValidator {
     req.query = value;
     next();
   };
+  public paypremium = (req: Request, res: Response, next: NextFunction): void => {
+    // Sample payload expected: { policyId, agentId, paymentAmount }
+    const schema = Joi.object({
+      policyId: Joi.string().required(),  // Assuming policyId is a valid ObjectId (24 chars)
+      agentId: Joi.string().required(),   // Assuming agentId is also a valid ObjectId
+      paymentAmount: Joi.number().positive().required() // Payment amount should be a positive number
+    });
+
+    const { error } = schema.validate(req.body);
+    
+    if (error) {
+      res.status(HttpStatus.BAD_REQUEST).send({
+        code: HttpStatus.BAD_REQUEST,
+        message: error.message,
+      });
+      return;
+    }
+    next();
+  };
   
 }
 

@@ -16,5 +16,6 @@ export interface IPolicy extends Document {
   ageproof:Buffer;
   idproof:Buffer;
   policyApplication:Buffer;
-  status:string
+  status:string;
+  updatedAt:Date;
 }
