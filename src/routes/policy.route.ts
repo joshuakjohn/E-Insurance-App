@@ -60,7 +60,7 @@ class PolicyRoute {
          this.router.delete('/:id/admin', adminAuth, this.policyController.deletePolicy);
 
          //route to get all customer policy by agent
-         this.router.get('/:id/getall/agent', agentAuth, this.policyValidator.validatePagination, cacheData, this.policyController.getAllPolicies);
+         this.router.get('/:id/getall/agent', agentAuth, cacheData, this.policyController.getAllPolicies);
 
          //route to get all policy by admin
          this.router.get('/:id/getall/admin', adminAuth, this.policyValidator.validatePagination, cacheData, this.policyController.getAllPolicies);
