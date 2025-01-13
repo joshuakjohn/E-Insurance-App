@@ -18,6 +18,7 @@ class customerValidator {
       region:Joi.string().required(),
       age: Joi.number().min(18).required(),
       address: Joi.string().optional(),
+      gender:Joi.string().required()
     });
     const { error } = schema.validate(req.body, { abortEarly: false });
 

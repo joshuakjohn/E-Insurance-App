@@ -14,4 +14,5 @@ export interface Customer extends Document {
   updatedAt?: Date; 
   refreshToken?:string;
   profilePhoto?: Buffer;
+  gender:string;
 }
