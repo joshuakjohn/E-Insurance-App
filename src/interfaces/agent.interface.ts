@@ -9,4 +9,5 @@ export interface IAgent extends Document {
   status: string;
   refreshToken?:string;
   profilePhoto?: Buffer;
+  gender:string;
 }
