@@ -16,23 +16,20 @@ import redisClient from '../config/redis';
       }
     };
 
-    public getAllPolicies = async (customerId: string, page: number, limit: number): Promise<{ data: IPolicy[]; total: number; page: number; totalPages: number; source: string }> => {
-      const cacheKey = `policies:customer:${customerId}:page=${page}:limit=${limit}`;
+    public getAllPolicies = async (customerId: string): Promise<any> => {
+      const cacheKey = `policies:customer:${customerId}`;
 
       try {
           // Fetch data from the database
           const total = await policyModel.countDocuments({ customerId });
           const policies = await policyModel
             .find({ customerId })
-            .skip((page - 1) * limit)
-            .limit(limit);
         
           if(!policies || policies.length === 0) {
             throw new Error('No policy found');
           }
-          const totalPages = Math.ceil(total / limit);
           // Cache the data for 60 seconds
-          const cacheData = { data: policies, total, page, totalPages };
+          const cacheData = { data: policies };
           await redisClient.setEx(cacheKey, 60, JSON.stringify(cacheData));
 
           return {
@@ -58,13 +55,13 @@ import redisClient from '../config/redis';
         }
 
         // Fetch total count
-        const total = await policyModel.countDocuments({ agentId });
+        const total = await policyModel.countDocuments({ agentId, status: 'submitted' });
         console.log(total);
         
 
         // Fetch paginated data
         const policies = await policyModel
-            .find({ agentId })
+            .find({ agentId, status: 'submitted' })
             .skip((page - 1) * limit)
             .limit(limit);
 
