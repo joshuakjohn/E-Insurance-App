@@ -21,7 +21,7 @@ class AgentService{
                 await agentModel.create(body)
 
                 // Invalidate cache for all agents
-                await redisClient.del('agents:all');
+                await redisClient.flushAll();
 
                 return "Agent created successfully"
             }

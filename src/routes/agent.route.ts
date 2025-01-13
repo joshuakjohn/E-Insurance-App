@@ -38,7 +38,7 @@ class UserRoutes {
     this.router.get('/getregion', this.agentController.getAgentRegion)
 
     //route to update status of agent
-    this.router.patch('/:id', this.agentController.updateStatus);
+    this.router.patch('/:id', employeeAuth, this.agentController.updateStatus);
 
     //route to refresh token
     this.router.get('/:id/refreshtoken',this.agentController.refreshToken)
