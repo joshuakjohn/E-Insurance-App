@@ -143,28 +143,64 @@ class CustomerService {
   };
 
   public payPremium = async (body): Promise<any> => {
-    const { policyId, paymentAmount, agentId, commissionRate = 5 } = body;
-    const policy = await Policy.findById(policyId);
-    if(policy.status==='Active'){
-    if(policy.duration===policy.premiumPaid){
-       throw new Error(`your policy is matured don't need to pay`)
+    try {
+      const { policyId, paymentAmount, agentId, commissionRate = 5 } = body;
+  
+      // Fetch the policy
+      const policy = await Policy.findById(policyId);
+      if (!policy) {
+        throw new Error('Policy not found');
+      }
+  
+      // Check if policy is active
+      if (policy.status !== 'Active') {
+        throw new Error('Your policy is not active');
+      }
+  
+      // Check if policy is matured
+      if (policy.duration === policy.premiumPaid) {
+        throw new Error('Your policy is matured, no further payments required');
+      }
+  
+      // Amount per month validation
+      const amountPerMonth = policy.premiumAmount;
+  
+      // Calculate how many months are covered by the payment
+      const monthsToPay = Math.floor(paymentAmount / amountPerMonth); // Determine the full months that can be paid
+      if (monthsToPay <= 0) {
+        throw new Error('Payment amount is insufficient to cover at least one month of premium');
+      }
+  
+      // Update the premium details
+      const newPremiumPaid = policy.premiumPaid + monthsToPay; // Increase premiumPaid by the number of months paid
+      const newPendingPremium = Math.max(0, policy.pendingPremium - monthsToPay); // Decrease pendingPremium by the months paid, not going below 0
+  
+      // Update the policy
+      policy.premiumPaid = newPremiumPaid;
+      policy.pendingPremium = newPendingPremium;
+  
+      // Save the updated policy details
+      await policy.save({ validateBeforeSave: false });
+  
+      // Calculate commission for the agent
+      const commissionEarned = paymentAmount * (commissionRate / 100);
+      if (agentId) {
+        await Agent.findByIdAndUpdate(agentId, { $inc: { commission: commissionEarned } }, { new: true });
+      }
+  
+      // Clear relevant Redis data (instead of flushing the entire cache)
+      await redisClient.del(`policy:${policyId}`);  // Delete only the policy cache, adjust as necessary
+  
+      return {
+        totalMonthsPaid: policy.premiumPaid,
+        monthsRemaining: policy.pendingPremium,
+        id: policy._id,
+        paymentDate: policy.updatedAt,
+      };
+    } catch (error) {
+      console.error('Error during premium payment:', error);
+      throw new Error(error.message);  // Corrected error handling
     }
-    const amountPerMonth = policy.premiumAmount;
-    if (paymentAmount !== amountPerMonth) {
-      throw new Error(`Payment amount must match the monthly premium of ${amountPerMonth}`);
-    }
-    policy.premiumPaid += 1;
-    policy.pendingPremium = Math.max(0, policy.pendingPremium - 1);
-    await policy.save();
-    const commissionEarned = paymentAmount * (commissionRate / 100);
-    if (agentId) {
-      await Agent.findByIdAndUpdate(agentId,{ $inc: { commission: commissionEarned } }, { new: true } );
-    }
-      await redisClient.flushAll();
-    return { totalMonthsPaid: policy.premiumPaid,monthsRemaining: policy.pendingPremium};
-  }else{
-    throw new Error('Your policy is not active');
-  }
   };
   
   // forget password

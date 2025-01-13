@@ -28,7 +28,7 @@ class UserRoutes {
     this.router.post( '/register', image, this.CustomerValidator.createCustomer, this.CustomerController.createCustomer);
     
     //route for customer to pay premium
-    this.router.post('/paypremium', customerAuth, this.CustomerController.payPremium);
+    this.router.post('/paypremium', customerAuth, this.CustomerValidator.paypremium,this.CustomerController.payPremium);
 
     // forget password route
     this.router.post('/forgot-password', this.CustomerValidator.validateForgotPassword, this.CustomerController.forgotPassword);
