@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { Customer } from '../interfaces/customer.interface';
+import { required } from '@hapi/joi';
 
 const customerSchema = new Schema<Customer>(
   {
@@ -49,6 +50,10 @@ const customerSchema = new Schema<Customer>(
        type: Buffer,
        required:false,
        default: null
+     },
+     gender:{
+      type:String,
+      required:true
      }
   },
   {
