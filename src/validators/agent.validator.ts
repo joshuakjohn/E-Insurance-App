@@ -14,7 +14,8 @@ class AgentValidator{
             .message("Password must contain at least one uppercase letter, one lowercase letter, and one special character")
             .required(),
           phno: Joi.string().pattern(/^[0-9]{10}$/).required(),
-          region: Joi.string().required()
+          region: Joi.string().required(),
+           gender:Joi.string().required().valid('Male', 'Female', 'Other')
         });
         const { error } = schema.validate(req.body);
         if (error) {

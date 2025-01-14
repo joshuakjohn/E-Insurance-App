@@ -14,35 +14,31 @@ import redisClient from '../config/redis';
 class CustomerService {
   public createCustomer = async (body: Customer): Promise<Customer> => {
     try {
-      const agents = await agent.find({ region: body.region }).sort({ num_of_customers: 1 }).exec();
+      const normalizedRegion = body.region.replace(/\s+/g, '').toLowerCase(); 
+      const agents = await agent.find({ region: normalizedRegion }).sort({ num_of_customers: 1 }).exec();
       if (agents.length === 0) {
         throw new Error('No agent available in this region');
       }
-      const assignedAgent = agents[0] ;
+      const assignedAgent = agents[0];
       const existingCustomer = await customer.findOne({ email: body.email });
       if (existingCustomer) {
         throw new Error('Customer with this email already exists.');
       }
-
       const hashedPassword = await bcrypt.hash(body.password, 10);
       body.password = hashedPassword;
       body.agentId = assignedAgent ? assignedAgent._id : null;
-
       const newCustomer = await customer.create(body);
-
       if (assignedAgent) {
         await agent.updateOne({ _id: assignedAgent._id }, { $inc: { num_of_customers: 1 } });
       }
-
-      // Invalidate the cache for the agent's customers
       const cacheKey = `customers:agent:${assignedAgent._id}`;
-      await redisClient.del(cacheKey);  // Remove the cache for this agent
-
+      await redisClient.del(cacheKey);  
       return newCustomer;
     } catch (error) {
       throw new Error(`Error creating customer: ${error.message}`);
     }
-   };
+  };
+  
 
   // customer login
   public customerLogin = async (body: Customer): Promise<any> => {
@@ -143,64 +139,28 @@ class CustomerService {
   };
 
   public payPremium = async (body): Promise<any> => {
-    try {
-      const { policyId, paymentAmount, agentId, commissionRate = 5 } = body;
-  
-      // Fetch the policy
-      const policy = await Policy.findById(policyId);
-      if (!policy) {
-        throw new Error('Policy not found');
-      }
-  
-      // Check if policy is active
-      if (policy.status !== 'Active') {
-        throw new Error('Your policy is not active');
-      }
-  
-      // Check if policy is matured
-      if (policy.duration === policy.premiumPaid) {
-        throw new Error('Your policy is matured, no further payments required');
-      }
-  
-      // Amount per month validation
-      const amountPerMonth = policy.premiumAmount;
-  
-      // Calculate how many months are covered by the payment
-      const monthsToPay = Math.floor(paymentAmount / amountPerMonth); // Determine the full months that can be paid
-      if (monthsToPay <= 0) {
-        throw new Error('Payment amount is insufficient to cover at least one month of premium');
-      }
-  
-      // Update the premium details
-      const newPremiumPaid = policy.premiumPaid + monthsToPay; // Increase premiumPaid by the number of months paid
-      const newPendingPremium = Math.max(0, policy.pendingPremium - monthsToPay); // Decrease pendingPremium by the months paid, not going below 0
-  
-      // Update the policy
-      policy.premiumPaid = newPremiumPaid;
-      policy.pendingPremium = newPendingPremium;
-  
-      // Save the updated policy details
-      await policy.save({ validateBeforeSave: false });
-  
-      // Calculate commission for the agent
-      const commissionEarned = paymentAmount * (commissionRate / 100);
-      if (agentId) {
-        await Agent.findByIdAndUpdate(agentId, { $inc: { commission: commissionEarned } }, { new: true });
-      }
-  
-      // Clear relevant Redis data (instead of flushing the entire cache)
-      await redisClient.del(`policy:${policyId}`);  // Delete only the policy cache, adjust as necessary
-  
-      return {
-        totalMonthsPaid: policy.premiumPaid,
-        monthsRemaining: policy.pendingPremium,
-        id: policy._id,
-        paymentDate: policy.updatedAt,
-      };
-    } catch (error) {
-      console.error('Error during premium payment:', error);
-      throw new Error(error.message);  // Corrected error handling
+    const { policyId, paymentAmount, agentId, commissionRate = 5 } = body;
+    const policy = await Policy.findById(policyId);
+    if(policy.status==='Active'){
+    if(policy.duration===policy.premiumPaid){
+       throw new Error(`your policy is matured don't need to pay`)
     }
+    const amountPerMonth = policy.premiumAmount;
+    if (paymentAmount !== amountPerMonth) {
+      throw new Error(`Payment amount must match the monthly premium of ${amountPerMonth}`);
+    }
+    policy.premiumPaid += 1;
+    policy.pendingPremium = Math.max(0, policy.pendingPremium - 1);
+    await policy.save();
+    const commissionEarned = paymentAmount * (commissionRate / 100);
+    if (agentId) {
+      await Agent.findByIdAndUpdate(agentId,{ $inc: { commission: commissionEarned } }, { new: true } );
+    }
+      await redisClient.flushAll();
+    return { totalMonthsPaid: policy.premiumPaid,monthsRemaining: policy.pendingPremium};
+  }else{
+    throw new Error('Your policy is not active');
+  }
   };
   
   // forget password

@@ -52,7 +52,11 @@ const agentSchema = new Schema(
       type: Buffer,
       required:false,
       default: null
-    }
+    },
+    gender:{
+      type:String,
+      required:true
+     }
   },
   {
     timestamps: true
