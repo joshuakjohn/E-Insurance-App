@@ -14,35 +14,31 @@ import redisClient from '../config/redis';
 class CustomerService {
   public createCustomer = async (body: Customer): Promise<Customer> => {
     try {
-      const agents = await agent.find({ region: body.region }).sort({ num_of_customers: 1 }).exec();
+      const normalizedRegion = body.region.replace(/\s+/g, '').toLowerCase(); 
+      const agents = await agent.find({ region: normalizedRegion }).sort({ num_of_customers: 1 }).exec();
       if (agents.length === 0) {
         throw new Error('No agent available in this region');
       }
-      const assignedAgent = agents[0] ;
+      const assignedAgent = agents[0];
       const existingCustomer = await customer.findOne({ email: body.email });
       if (existingCustomer) {
         throw new Error('Customer with this email already exists.');
       }
-
       const hashedPassword = await bcrypt.hash(body.password, 10);
       body.password = hashedPassword;
       body.agentId = assignedAgent ? assignedAgent._id : null;
-
       const newCustomer = await customer.create(body);
-
       if (assignedAgent) {
         await agent.updateOne({ _id: assignedAgent._id }, { $inc: { num_of_customers: 1 } });
       }
-
-      // Invalidate the cache for the agent's customers
       const cacheKey = `customers:agent:${assignedAgent._id}`;
-      await redisClient.del(cacheKey);  // Remove the cache for this agent
-
+      await redisClient.del(cacheKey);  
       return newCustomer;
     } catch (error) {
       throw new Error(`Error creating customer: ${error.message}`);
     }
-   };
+  };
+  
 
   // customer login
   public customerLogin = async (body: Customer): Promise<any> => {

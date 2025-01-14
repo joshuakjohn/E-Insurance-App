@@ -14,6 +14,8 @@ class AgentService{
             const res = await agentModel.findOne({email: body.email});
             if(!res){
                 try{
+                  const normalizedRegion = body.region.replace(/\s+/g, '').toLowerCase();
+                  body.region = normalizedRegion;
                     body.password = await bcrypt.hash(body.password, 10);
                 }catch(err){
                     throw new Error("Error occured in hash: "+err);
