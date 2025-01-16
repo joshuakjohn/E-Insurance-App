@@ -70,7 +70,6 @@ class UserController {
             res.status(HttpStatus.OK).json({ 
                 code: HttpStatus.OK, 
                 data: customers.data,
-                source: customers.source
             });
         } catch (error) {
             next(error);
