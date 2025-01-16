@@ -63,6 +63,19 @@ class UserController {
     }
   };
 
+      // Get all Agents
+      public getAllCustomer = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const customers = await this.CustomerService.getAllCustomer();
+            res.status(HttpStatus.OK).json({ 
+                code: HttpStatus.OK, 
+                data: customers.data,
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
+
   // Get all agent specific customers
   public getAllCustomers = async (req: Request, res: Response, next: NextFunction) => {
     try {

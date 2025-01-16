@@ -62,6 +62,21 @@ class CustomerService {
     return { token, refreshToken, username: customerData.username, customerImage: customerData.profilePhoto, email: customerData.email };
   };
 
+  public getAllCustomer = async (): Promise<{ data: any[] }> => {
+    try {
+      const res = await customer.find().select('-password -refreshToken');
+      if (!res || res.length === 0) {
+        throw new Error('No customers found');
+      }
+  
+      return {
+        data: res
+      };
+    } catch (error) {
+      throw error;
+    }
+  };
+  
   // Get all agent apecific customers 
   public getAllCustomers = async (
     agentId: ObjectId,
