@@ -39,8 +39,11 @@ class UserRoutes {
     //route to refresh token
     this.router.get('/:id/refreshtoken', this.CustomerController.refreshToken);
 
-    //route to get all customer, by admin
+    //route to get all agent specific customers, by admin
     this.router.get('/:id/admin', adminAuth, this.CustomerController.getAllCustomers);
+
+    //route to get all customer, by admin
+    this.router.get('/admin', adminAuth, this.CustomerController.getAllCustomer);
 
     //route to get all customer, by employee
     this.router.get('/:id/employee', employeeAuth, this.CustomerController.getAllCustomers);
